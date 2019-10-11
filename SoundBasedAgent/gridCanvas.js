@@ -14,20 +14,40 @@ let distUser;
 let distBookShelf;
 let distVendingMachine;
 
-let emotionStore;
-let happinessStore = [];
-let neutralStore = [];
-let angerStore = [];
-let happinessSum = 0;
-let neutralSum = 0;
-let angerSum = 0;
-let happinessLevel;
-let neutralLevel;
-let angerLevel;
+//---User's emos relevant---
+let userEmosStore;
+let userNeutralStore = [];
+let userHappyStore = [];
+let userSurprisedStore = [];
+let userFearfulStore = [];
+let userAngerStore = [];
+let userDisgustedStore = [];
+let userSadStore = [];
 
+let userNeutralSum = 0;
+let userHappySum = 0;
+let userSurprisedSum = 0;
+let userFearfulSum = 0;
+let userAngerSum = 0;
+let userDisgustedSum = 0;
+let userSadSum = 0;
+
+let userNeutralLevel;
+let userHappyLevel;
+let userSurprisedLevel;
+let userFearfulLevel;
+let userAngerLevel;
+let userDisgustedLevel;
+let userSadLevel;
+let rayaState;
+
+//---Raya relevant---
 let isNearByUser = false;
 let isAttractedByUser = false;
 let changeBehaviorTime = 0;
+
+let generateStateTime = 0;
+let generateTimeStore = 0;
 
 let walkSound = [];
 let coughSound = [];
@@ -91,6 +111,7 @@ canvas1 = p => {
     gridCanvas.id("gridCanvas");
     rayaRadius = 15;
     raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40), rayaRadius);
+    rayaState = new CircumplexModel(0.85, 1.6, 1.5, 0.75, 0.9, 1.8);
     user = new User();
     grid = new MatrixObject();
     bookShelf0 = new MatrixObject();
@@ -117,42 +138,50 @@ canvas1 = p => {
       waitingTime++;
     }, 1000);
 
-    emotionStore = setInterval(() => {
-      happinessStore.push(happy);
-      neutralStore.push(neutral);
-      angerStore.push(angry);
-      if(happinessStore.length > 30){
-        happinessStore.splice(0, 1);//Erase index 0
+    userEmosStore = setInterval(() => {
+      userHappyStore.push(happy);
+      userNeutralStore.push(neutral);
+      userAngerStore.push(angry);
+
+      if(userHappyStore.length > 30){
+        userHappyStore.splice(0, 1);//Erase index 0
       }
-      if(neutralStore.length > 30){
-        neutralStore.splice(0, 1);//Erase index 0
+      if(userNeutralStore.length > 30){
+        userNeutralStore.splice(0, 1);//Erase index 0
       }
-      if(angerStore.length > 30){
-        angerStore.splice(0, 1);//Erase index 0
+      if(userAngerStore.length > 30){
+        userAngerStore.splice(0, 1);//Erase index 0
       }
-      for(let i=0; i<happinessStore.length; i++){
-        if(happinessStore[i] != undefined){
-          happinessSum += happinessStore[i];
+
+      for(let i=0; i<userHappyStore.length; i++){
+        if(userHappyStore[i] != undefined){
+          userHappySum += userHappyStore[i];
         }
-        if(neutralStore[i] != undefined){
-          neutralSum += neutralStore[i];
+        if(userNeutralStore[i] != undefined){
+          userNeutralSum += userNeutralStore[i];
         }
-        if(angerStore[i] != undefined){
-          angerSum += angerStore[i];
+        if(userAngerStore[i] != undefined){
+          userAngerSum += userAngerStore[i];
         }
       }
 
-      happinessLevel = happinessSum;
-      neutralLevel = neutralSum;
-      angerLevel = angerSum;
+      userHappyLevel = userHappySum/userHappyStore.length;
+      userNeutralLevel = userNeutralSum/userNeutralStore.length;
+      userAngerLevel = userAngerSum/userAngerStore.length;
 
-      happinessSum = 0;
-      neutralSum = 0;
-      angerSum = 0;
+      userHappySum = 0;
+      userNeutralSum = 0;
+      userAngerSum = 0;
 
-      // console.log(happinessLevel);
-      // console.log(neutralLevel);
-      // console.log(angerLevel);
+      // console.log("userHappyLevel: " + userHappyLevel);
+      // console.log("userNeutralLevel: " + userNeutralLevel);
+      // console.log("userAngerLevel: " + userAngerLevel);
+
+      generateStateTime++;
+      if(generateStateTime > 10){
+        generateStateTime = 0;
+      }
+      // console.log(generateStateTime);
 
     }, 200);
 
@@ -224,6 +253,9 @@ canvas1 = p => {
     raya.stop();
     raya.cough(20000, 19997, 'sustain');
 
+    rayaState.cognition();
+    rayaState.internalState();
+
     toUser = p.createVector(user.position.x, user.position.y);
     toVendingMachine = p.createVector(vendingMachine.vendingMachinePos.x, vendingMachine.vendingMachinePos.y+25);
     toBookShelf = p.createVector(bookShelf0.bookShelfPos.x+10, bookShelf0.bookShelfPos.y);
@@ -233,7 +265,7 @@ canvas1 = p => {
     distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
 
     //move close or run away from user for their facial expression.
-    if(happinessLevel > neutralLevel){
+    if(userHappyLevel > userNeutralLevel){
       if(distUser.mag() > 50){
         raya.attracted(toUser, 50);
       }
@@ -244,7 +276,7 @@ canvas1 = p => {
       isAttractedByUser = false;
     }
 
-    if(angerLevel > 10 || microphone.getLevel()*600 > 200){
+    if(userAngerLevel > userHappyLevel || microphone.getLevel()*600 > 200){
       if(distUser.mag() < 120){
         raya.leave(toUser);
       }
@@ -617,6 +649,65 @@ canvas1 = p => {
 
   }
   //----- Raya class end -----
+
+
+  class CircumplexModel{
+    constructor(happyD, surpriseD, fearD, angerD, disgustD, sadnessD){
+      this.r = 1.0;
+      this.happy;
+      this.surprise;
+      this.fear;
+      this.anger;
+      this.disgust;
+      this.sadness;
+
+      this.happyDistortion = happyD;
+      this.surpriseDistortion = surpriseD;
+      this.fearDistortion = fearD;
+      this.angerDistortion = angerD;
+      this.disgustDistortion = disgustD;
+      this.sadnessDistortion = sadnessD;
+
+      this.emosLog = [];
+      this.currentEmos = [];
+
+    }
+
+    cognition(){
+      this.happy = userHappyLevel + this.happyDistortion;
+      this.surprise = userSurprisedLevel + this.surpriseDistortion;
+      this.fear = userFearfulLevel + this.fearDistortion;
+      this.anger = userAngerLevel + this.angerDistortion;
+      this.disgust = userDisgustedLevel + this.disgustDistortion;
+      this.sadness = userSadLevel + this.sadnessDistortion;
+    }
+
+    internalState(){
+      if(generateStateTime != generateTimeStore){
+        this.currentEmos = [
+          this.happy,
+          this.surprise,
+          this.fear,
+          this.anger,
+          this.disgust,
+          this.sadness
+        ];
+
+        this.emosLog.push(this.currentEmos); //Create 2d array
+
+        if(this.emosLog.length > 10){
+          this.emosLog.splice(0, 1);
+        }
+
+        // console.log(this.emosLog);
+      }
+
+      generateTimeStore = generateStateTime;
+    }
+
+
+
+  }
 
   class MatrixObject{
     constructor(){
