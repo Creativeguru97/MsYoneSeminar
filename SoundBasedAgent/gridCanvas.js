@@ -49,6 +49,8 @@ let changeBehaviorTime = 0;
 let generateStateTime = 0;
 let generateTimeStore = 0;
 
+let delayEffect;
+
 let walkSound = [];
 let coughSound = [];
 let flipPageSound = [];
@@ -139,39 +141,76 @@ canvas1 = p => {
     }, 1000);
 
     userEmosStore = setInterval(() => {
-      userHappyStore.push(happy);
       userNeutralStore.push(neutral);
+      userHappyStore.push(happy);
+      userSurprisedStore.push(surprised);
+      userFearfulStore.push(fearful);
       userAngerStore.push(angry);
+      userDisgustedStore.push(disgusted);
+      userSadStore.push(sad);
 
+      if(userNeutralStore.length > 30){
+        userNeutralStore.splice(0, 1);//Erase index 0
+      }
       if(userHappyStore.length > 30){
         userHappyStore.splice(0, 1);//Erase index 0
       }
-      if(userNeutralStore.length > 30){
-        userNeutralStore.splice(0, 1);//Erase index 0
+      if(userSurprisedStore.length > 30){
+        userSurprisedStore.splice(0, 1);//Erase index 0
+      }
+      if(userFearfulStore.length > 30){
+        userFearfulStore.splice(0, 1);//Erase index 0
       }
       if(userAngerStore.length > 30){
         userAngerStore.splice(0, 1);//Erase index 0
       }
+      if(userDisgustedStore.length > 30){
+        userDisgustedStore.splice(0, 1);//Erase index 0
+      }
+      if(userSadStore.length > 30){
+        userSadStore.splice(0, 1);//Erase index 0
+      }
 
       for(let i=0; i<userHappyStore.length; i++){
+        if(userNeutralStore[i] != undefined){
+          userNeutralSum += userNeutralStore[i];
+        }
         if(userHappyStore[i] != undefined){
           userHappySum += userHappyStore[i];
         }
-        if(userNeutralStore[i] != undefined){
-          userNeutralSum += userNeutralStore[i];
+        if(userSurprisedStore[i] != undefined){
+          userSurprisedSum += userSurprisedStore[i];
+        }
+        if(userFearfulStore[i] != undefined){
+          userFearfulSum += userFearfulStore[i];
         }
         if(userAngerStore[i] != undefined){
           userAngerSum += userAngerStore[i];
         }
+        if(userDisgustedStore[i] != undefined){
+          userDisgustedSum += userDisgustedStore[i];
+        }
+        if(userSadStore[i] != undefined){
+          userSadSum += userSadStore[i];
+        }
+
       }
 
-      userHappyLevel = userHappySum/userHappyStore.length;
       userNeutralLevel = userNeutralSum/userNeutralStore.length;
+      userHappyLevel = userHappySum/userHappyStore.length;
+      userSurprisedLevel = userSurprisedSum/userSurprisedStore.length;
+      userFearfulLevel = userFearfulSum/userFearfulStore.length;
       userAngerLevel = userAngerSum/userAngerStore.length;
+      userDisgustedLevel = userDisgustedSum/userDisgustedStore.length;
+      userSadLevel = userSadSum/userSadStore.length;
 
-      userHappySum = 0;
       userNeutralSum = 0;
+      userHappySum = 0;
+      userSurprisedSum = 0;
+      userFearfulSum = 0;
       userAngerSum = 0;
+      userDisgustedSum = 0;
+      userSadSum = 0;
 
       // console.log("userHappyLevel: " + userHappyLevel);
       // console.log("userNeutralLevel: " + userNeutralLevel);
@@ -674,40 +713,39 @@ canvas1 = p => {
     }
 
     cognition(){
-      this.happy = userHappyLevel + this.happyDistortion;
-      this.surprise = userSurprisedLevel + this.surpriseDistortion;
-      this.fear = userFearfulLevel + this.fearDistortion;
-      this.anger = userAngerLevel + this.angerDistortion;
-      this.disgust = userDisgustedLevel + this.disgustDistortion;
-      this.sadness = userSadLevel + this.sadnessDistortion;
+      this.happy = userHappyLevel * this.happyDistortion;
+      this.surprise = userSurprisedLevel * this.surpriseDistortion;
+      this.fear = userFearfulLevel * this.fearDistortion;
+      this.anger = userAngerLevel * this.angerDistortion;
+      this.disgust = userDisgustedLevel * this.disgustDistortion;
+      this.sadness = userSadLevel * this.sadnessDistortion;
     }
 
     internalState(){
       if(generateStateTime != generateTimeStore){
         this.currentEmos = [
-          this.happy,
-          this.surprise,
-          this.fear,
-          this.anger,
-          this.disgust,
-          this.sadness
+          this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
         ];
 
         this.emosLog.push(this.currentEmos); //Create 2d array
 
-        if(this.emosLog.length > 10){
+        if(this.emosLog.length > 1000){ //1000: which means 200 seconds
           this.emosLog.splice(0, 1);
         }
 
         // console.log(this.emosLog);
-      }
 
+
+        
+      }
       generateTimeStore = generateStateTime;
     }
 
 
 
+
   }
+
 
   class MatrixObject{
     constructor(){
