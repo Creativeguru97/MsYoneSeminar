@@ -715,9 +715,24 @@ canvas1 = p => {
       this.convolutedDisgust = [];
       this.convolutedSadness = [];
 
+      this.convolutedHappySum = 0;
+      this.convolutedSurpriseSum = 0;
+      this.convolutedFearSum = 0;
+      this.convolutedAngerSum = 0;
+      this.convolutedDisgustSum = 0;
+      this.convolutedSadnessSum = 0;
+
+      this.happyDelay = 1.0;
+      this.surpriseDelay = 1.0;
+      this.fearDelay = 1.0;
+      this.angerDelay = 1.0;
+      this.disgustDelay = 1.0;
+      this.sadnessDelay = 1.0;
+
+
+
+      this.currentCognition = [];
       this.currentEmos = [];
-
-
     }
 
     cognition(){
@@ -733,18 +748,19 @@ canvas1 = p => {
       return a * Math.pow(n, x);
     }
 
+
     internalState(){
       if(generateStateTime != generateTimeStore){
 
         this.cognition();
 
-        this.currentEmos = [
+        this.currentCognition = [
           this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
         ];
 
         // console.log(this.currentEmos);
 
-        this.emosLog.push(this.currentEmos); //Create 2d array
+        this.emosLog.push(this.currentCognition); //Create 2d array
 
         if(this.emosLog.length > 10){ //1000: which means 200 seconds
           this.emosLog.splice(0,1);
@@ -781,7 +797,48 @@ canvas1 = p => {
           }
         }
 
-        console.log(this.convolutedSurprise);
+        for(let i=0; i<this.convolutedHappy.length; i++){
+          if(this.convolutedHappy[i] != undefined){
+            this.convolutedHappySum += this.convolutedHappy[i];
+          }
+          if(this.convolutedSurprise[i] != undefined){
+            this.convolutedSurpriseSum += this.convolutedSurprise[i];
+          }
+          if(this.convolutedFear[i] != undefined){
+            this.convolutedFearSum += this.convolutedFear[i];
+          }
+          if(this.convolutedAnger[i] != undefined){
+            this.convolutedAngerSum += this.convolutedAnger[i];
+          }
+          if(this.convolutedDisgust[i] != undefined){
+            this.convolutedDisgustSum += this.convolutedDisgust[i];
+          }
+          if(this.convolutedSadness[i] != undefined){
+            this.convolutedSadnessSum += this.convolutedSadness[i];
+          }
+        }
+
+        this.happyDelay = this.convolutedHappySum/this.convolutedHappy.length;
+        this.surpriseDelay = this.convolutedSurpriseSum/this.convolutedSurprise.length;
+        this.fearDelay = this.convolutedFearSum/this.convolutedFear.length;
+        this.angerDelay = this.convolutedAngerSum/this.convolutedAnger.length;
+        this.disgustDelay = this.convolutedDisgustSum/this.convolutedDisgust.length;
+        this.sadnessDelay = this.convolutedSadnessSum/this.convolutedSadness.length;
+
+        console.log(this.convolutedHappySum);
+
+        this.currentEmos = [
+          this.happy * this.happyDelay,
+          this.surprise * this.surpriseDelay,
+          this.fear * this.fearDelay,
+          this.anger * this.angerDelay,
+          this.disgust * this.disgustDelay,
+          this.sadness * this.sadnessDelay
+        ];
+
+
+
+        // console.log(this.happyDelay);
 
       }
       generateTimeStore = generateStateTime;
