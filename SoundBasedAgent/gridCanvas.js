@@ -292,7 +292,6 @@ canvas1 = p => {
     raya.stop();
     raya.cough(20000, 19997, 'sustain');
 
-    rayaState.cognition();
     rayaState.internalState();
 
     toUser = p.createVector(user.position.x, user.position.y);
@@ -708,7 +707,16 @@ canvas1 = p => {
       this.sadnessDistortion = sadnessD;
 
       this.emosLog = [];
+
+      this.convolutedHappy = [];
+      this.convolutedSurprise = [];
+      this.convolutedFear = [];
+      this.convolutedAnger = [];
+      this.convolutedDisgust = [];
+      this.convolutedSadness = [];
+
       this.currentEmos = [];
+
 
     }
 
@@ -721,28 +729,63 @@ canvas1 = p => {
       this.sadness = userSadLevel * this.sadnessDistortion;
     }
 
+    convolution(a, n, x){
+      return a * Math.pow(n, x);
+    }
+
     internalState(){
       if(generateStateTime != generateTimeStore){
+
+        this.cognition();
+
         this.currentEmos = [
           this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
         ];
 
+        // console.log(this.currentEmos);
+
         this.emosLog.push(this.currentEmos); //Create 2d array
 
-        if(this.emosLog.length > 1000){ //1000: which means 200 seconds
-          this.emosLog.splice(0, 1);
+        if(this.emosLog.length > 10){ //1000: which means 200 seconds
+          this.emosLog.splice(0,1);
         }
 
-        // console.log(this.emosLog);
+        for(let i = 0; i < this.emosLog.length; i++){
+          for(let j = 0; j < 6; j++){
+            // console.log(this.emosLog[i][j]);
+            let value = this.convolution(this.emosLog[i][j], 0.99, i);
 
+            if(j == 0){
+              this.convolutedHappy.push(value);
+            }else if(j == 1){
+              this.convolutedSurprise.push(value);
+            }else if(j == 2){
+              this.convolutedFear.push(value);
+            }else if(j == 3){
+              this.convolutedAnger.push(value);
+            }else if(j == 4){
+              this.convolutedDisgust.push(value);
+            }else if(j == 5){
+              this.convolutedSadness.push(value);
+            }
 
-        
+            if(this.convolutedHappy.length > 10){
+              this.convolutedHappy.splice(0,1);
+              this.convolutedSurprise.splice(0,1);
+              this.convolutedFear.splice(0,1);
+              this.convolutedAnger.splice(0,1);
+              this.convolutedDisgust.splice(0,1);
+              this.convolutedSadness.splice(0,1);
+            }
+
+          }
+        }
+
+        console.log(this.convolutedSurprise);
+
       }
       generateTimeStore = generateStateTime;
     }
-
-
-
 
   }
 
