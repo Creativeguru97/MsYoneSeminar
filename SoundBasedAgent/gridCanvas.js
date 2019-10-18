@@ -374,6 +374,9 @@ canvas1 = p => {
     p.keyTyped = () => {
       if (p.key === "l") {
         console.log(rayaState.convolutedHappy.length);
+        console.log(rayaState.emosLog.length);
+        console.log("------------");
+        console.log("            ")
       }
     }
   //-----------------------------------------------------//
@@ -695,6 +698,7 @@ canvas1 = p => {
 
 
   class CircumplexModel{
+
     constructor(happyD, surpriseD, fearD, angerD, disgustD, sadnessD){
       this.r = 1.0;
       this.happy;
@@ -734,8 +738,10 @@ canvas1 = p => {
       this.disgustDelay = 1.0;
       this.sadnessDelay = 1.0;
 
-      this.currentCognition = [];
+      this.newLog = [];
       this.currentEmos = [];
+
+      this.samplingTime = 0;
     }
 
     cognition(){
@@ -776,38 +782,47 @@ canvas1 = p => {
 
         this.cognition();
 
-        this.currentCognition = [
+        this.newLog = [
           this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
         ];
 
-        // console.log(this.currentEmos);
+        if(this.samplingTime < 50){
+          this.emosLog.push(this.newLog); //Create 2d array
+        }else{
+          this.emosLog.push(this.currentEmos);
+        }
 
-        this.emosLog.push(this.currentCognition); //Create 2d array
-
-        if(this.emosLog.length > 10){ //1000: which means 200 seconds
+        if(this.emosLog.length > 9000){ //1000: which means 200 seconds
           this.emosLog.splice(0,1);
         }
 
+        //Copy all of the emosLog
         for(let i = 0; i < this.emosLog.length; i++){
           for(let j = 0; j < 6; j++){
             // console.log(this.emosLog[i][j]);
             let value = this.convolution(this.emosLog[i][j], 0.99, i);
 
             if(j == 0){
-              this.convolutedHappy.push(value);
+              // this.convolutedHappy.push(value);
+              this.convolutedHappy[i] = value;
             }else if(j == 1){
-              this.convolutedSurprise.push(value);
+              // this.convolutedSurprise.push(value);
+              this.convolutedSurprise[i] = value;
             }else if(j == 2){
-              this.convolutedFear.push(value);
+              // this.convolutedFear.push(value);
+              this.convolutedFear[i] = value;
             }else if(j == 3){
-              this.convolutedAnger.push(value);
+              // this.convolutedAnger.push(value);
+              this.convolutedAnger[i] = value;
             }else if(j == 4){
-              this.convolutedDisgust.push(value);
+              // this.convolutedDisgust.push(value);
+              this.convolutedDisgust[i] = value;
             }else if(j == 5){
-              this.convolutedSadness.push(value);
+              // this.convolutedSadness.push(value);
+              this.convolutedSadness[i] = value;
             }
 
-            if(this.convolutedHappy.length > 9000){
+            if(this.convolutedHappy.length > this.emosLog.length){
               this.convolutedHappy.splice(0,1);
               this.convolutedSurprise.splice(0,1);
               this.convolutedFear.splice(0,1);
@@ -858,6 +873,8 @@ canvas1 = p => {
           this.sadness * this.sadnessDelay
         ];
 
+        console.log(this.currentEmos);
+
         this.convolutedHappySum = 0;
         this.convolutedSurpriseSum = 0;
         this.convolutedFearSum = 0;
@@ -865,8 +882,7 @@ canvas1 = p => {
         this.convolutedDisgustSum = 0;
         this.convolutedSadnessSum = 0;
 
-        // console.log(this.happyDelay);
-
+        this.samplingTime++;
       }
       generateTimeStore = generateStateTime;
     }
