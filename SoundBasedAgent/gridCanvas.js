@@ -369,8 +369,13 @@ canvas1 = p => {
     // console.log(val);
     outData = val;  // setup the serial output
     serial.write(outData); // write to serial for Arduino to pickup
-
   }
+
+    p.keyTyped = () => {
+      if (p.key === "l") {
+        console.log(rayaState.convolutedHappy.length);
+      }
+    }
   //-----------------------------------------------------//
   //----- This is the place all interactions happen -----//
 
@@ -729,8 +734,6 @@ canvas1 = p => {
       this.disgustDelay = 1.0;
       this.sadnessDelay = 1.0;
 
-
-
       this.currentCognition = [];
       this.currentEmos = [];
     }
@@ -742,6 +745,25 @@ canvas1 = p => {
       this.anger = userAngerLevel * this.angerDistortion;
       this.disgust = userDisgustedLevel * this.disgustDistortion;
       this.sadness = userSadLevel * this.sadnessDistortion;
+
+      if(this.happy > 1.0){
+        this.happy = 1.0;
+      }
+      if(this.surprise > 1.0){
+        this.surprise = 1.0;
+      }
+      if(this.fear > 1.0){
+        this.fear = 1.0;
+      }
+      if(this.anger > 1.0){
+        this.anger = 1.0;
+      }
+      if(this.disgust > 1.0){
+        this.disgust = 1.0;
+      }
+      if(this.sadness > 1.0){
+        this.sadness = 1.0;
+      }
     }
 
     convolution(a, n, x){
@@ -785,7 +807,7 @@ canvas1 = p => {
               this.convolutedSadness.push(value);
             }
 
-            if(this.convolutedHappy.length > 10){
+            if(this.convolutedHappy.length > 9000){
               this.convolutedHappy.splice(0,1);
               this.convolutedSurprise.splice(0,1);
               this.convolutedFear.splice(0,1);
@@ -825,7 +847,7 @@ canvas1 = p => {
         this.disgustDelay = this.convolutedDisgustSum/this.convolutedDisgust.length;
         this.sadnessDelay = this.convolutedSadnessSum/this.convolutedSadness.length;
 
-        console.log(this.convolutedHappySum);
+        // console.log(this.surprise);
 
         this.currentEmos = [
           this.happy * this.happyDelay,
@@ -836,14 +858,18 @@ canvas1 = p => {
           this.sadness * this.sadnessDelay
         ];
 
-
+        this.convolutedHappySum = 0;
+        this.convolutedSurpriseSum = 0;
+        this.convolutedFearSum = 0;
+        this.convolutedAngerSum = 0;
+        this.convolutedDisgustSum = 0;
+        this.convolutedSadnessSum = 0;
 
         // console.log(this.happyDelay);
 
       }
       generateTimeStore = generateStateTime;
     }
-
   }
 
 
@@ -887,7 +913,6 @@ canvas1 = p => {
       p.rectMode(p.CORNER);
       p.rect(x, y, w, h, 4);
     }
-
   }
 
 }
