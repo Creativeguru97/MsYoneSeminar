@@ -786,13 +786,15 @@ canvas1 = p => {
           this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
         ];
 
-        if(this.samplingTime < 50){
-          this.emosLog.push(this.newLog); //Create 2d array
-        }else{
-          this.emosLog.push(this.currentEmos);
-        }
+        // if(this.samplingTime < 50){
+        //   this.emosLog.push(this.newLog); //Create 2d array
+        // }else{
+        //   this.emosLog.push(this.currentEmos);
+        // }
 
-        if(this.emosLog.length > 9000){ //1000: which means 200 seconds
+        this.emosLog.push(this.newLog); //Create 2d array
+
+        if(this.emosLog.length > 200){ //1000: which means 200 seconds
           this.emosLog.splice(0,1);
         }
 
@@ -834,6 +836,8 @@ canvas1 = p => {
           }
         }
 
+        // console.log(this.convolutedHappy);
+
         for(let i=0; i<this.convolutedHappy.length; i++){
           if(this.convolutedHappy[i] != undefined){
             this.convolutedHappySum += this.convolutedHappy[i];
@@ -855,6 +859,8 @@ canvas1 = p => {
           }
         }
 
+        // console.log(this.convolutedHappySum);
+
         this.happyDelay = this.convolutedHappySum/this.convolutedHappy.length;
         this.surpriseDelay = this.convolutedSurpriseSum/this.convolutedSurprise.length;
         this.fearDelay = this.convolutedFearSum/this.convolutedFear.length;
@@ -862,7 +868,7 @@ canvas1 = p => {
         this.disgustDelay = this.convolutedDisgustSum/this.convolutedDisgust.length;
         this.sadnessDelay = this.convolutedSadnessSum/this.convolutedSadness.length;
 
-        // console.log(this.surprise);
+        // console.log("this.happyDelay: " + this.happyDelay);
 
         this.currentEmos = [
           this.happy * this.happyDelay,
@@ -873,7 +879,12 @@ canvas1 = p => {
           this.sadness * this.sadnessDelay
         ];
 
-        console.log(this.currentEmos);
+        console.log("this.happy: " + this.happy);
+        console.log("this.happyDelay: " + this.happyDelay);
+        console.log("current happy: " + this.currentEmos[0]);
+        console.log("---------------------");
+
+        // console.log(this.currentEmos);
 
         this.convolutedHappySum = 0;
         this.convolutedSurpriseSum = 0;
@@ -882,7 +893,7 @@ canvas1 = p => {
         this.convolutedDisgustSum = 0;
         this.convolutedSadnessSum = 0;
 
-        this.samplingTime++;
+        // this.samplingTime++;
       }
       generateTimeStore = generateStateTime;
     }
