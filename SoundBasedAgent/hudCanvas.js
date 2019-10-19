@@ -4,7 +4,7 @@
 let canvas0;
 let hudCanvas;
 
-
+// let expressions;
 let button;
 let microphone;
 let isListening = false;
