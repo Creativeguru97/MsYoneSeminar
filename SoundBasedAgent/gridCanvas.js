@@ -776,6 +776,10 @@ canvas1 = p => {
       return a * Math.pow(n, x);
     }
 
+    tanh(x){
+      return 1 / (1 + Math.exp(-x));
+    }
+
 
     internalState(){
       if(generateStateTime != generateTimeStore){
@@ -879,10 +883,10 @@ canvas1 = p => {
           this.sadness * this.sadnessDelay
         ];
 
-        // console.log("this.happy: " + this.happy);
-        // console.log("this.happyDelay: " + this.happyDelay);
-        // console.log("current happy: " + this.currentEmos[0]);
-        // console.log("---------------------");
+        console.log("this.happy: " + this.happy);
+        console.log("this.happyDelay: " + this.happyDelay);
+        console.log("current happy: " + this.currentEmos[0]);
+        console.log("---------------------");
 
         this.convolutedHappySum = 0;
         this.convolutedSurpriseSum = 0;
