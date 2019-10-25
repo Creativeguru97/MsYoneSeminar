@@ -149,25 +149,25 @@ canvas1 = p => {
       userDisgustedStore.push(disgusted);
       userSadStore.push(sad);
 
-      if(userNeutralStore.length > 30){
+      if(userNeutralStore.length > 5){
         userNeutralStore.splice(0, 1);//Erase index 0
       }
-      if(userHappyStore.length > 30){
+      if(userHappyStore.length > 5){
         userHappyStore.splice(0, 1);//Erase index 0
       }
-      if(userSurprisedStore.length > 30){
+      if(userSurprisedStore.length > 5){
         userSurprisedStore.splice(0, 1);//Erase index 0
       }
-      if(userFearfulStore.length > 30){
+      if(userFearfulStore.length > 5){
         userFearfulStore.splice(0, 1);//Erase index 0
       }
-      if(userAngerStore.length > 30){
+      if(userAngerStore.length > 5){
         userAngerStore.splice(0, 1);//Erase index 0
       }
-      if(userDisgustedStore.length > 30){
+      if(userDisgustedStore.length > 5){
         userDisgustedStore.splice(0, 1);//Erase index 0
       }
-      if(userSadStore.length > 30){
+      if(userSadStore.length > 5){
         userSadStore.splice(0, 1);//Erase index 0
       }
 
@@ -715,8 +715,6 @@ canvas1 = p => {
       this.disgustDistortion = disgustD;
       this.sadnessDistortion = sadnessD;
 
-      this.emosLog = [];
-
       this.convolutedHappy = [];
       this.convolutedSurprise = [];
       this.convolutedFear = [];
@@ -739,7 +737,11 @@ canvas1 = p => {
       this.sadnessDelay = 1.0;
 
       this.newLog = [];
-      this.currentEmos = [];
+      this.currentEmos = [0, 0, 0, 0, 0, 0];
+      this.emosLog = [];
+      for(let i = 0; i < 900; i++){
+        this.emosLog.push(this.currentEmos);
+      }
 
       this.samplingTime = 0;
     }
@@ -776,7 +778,7 @@ canvas1 = p => {
       return a * Math.pow(n, x);
     }
 
-    tanh(x){
+    sigmoid(x){
       return 1 / (1 + Math.exp(-x));
     }
 
@@ -790,41 +792,39 @@ canvas1 = p => {
           this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
         ];
 
-        if(this.samplingTime < 50){
-          this.emosLog.push(this.newLog); //Create 2d array
-        }else{
-          this.emosLog.push(this.currentEmos);
-        }
 
-        // this.emosLog.push(this.newLog); //Create 2d array
+        if(isNaN(this.newLog[0]) == false){
+          if(this.samplingTime < 1){
+            this.emosLog.push(this.newLog); //Create 2d array
+          }else{
+            this.emosLog.push(this.currentEmos);
+          }
 
-        if(this.emosLog.length > 200){ //1000: which means 200 seconds
+          this.samplingTime++;
+        }else{}
+
+        if(this.emosLog.length > 900){ //1000: which means 200 seconds
           this.emosLog.splice(0,1);
         }
+
 
         //Copy all of the emosLog
         for(let i = 0; i < this.emosLog.length; i++){
           for(let j = 0; j < 6; j++){
             // console.log(this.emosLog[i][j]);
-            let value = this.convolution(this.emosLog[i][j], 0.99, i);
+            let value = this.convolution(this.emosLog[i][j], 0.996, i);
 
             if(j == 0){
-              // this.convolutedHappy.push(value);
               this.convolutedHappy[i] = value;
             }else if(j == 1){
-              // this.convolutedSurprise.push(value);
               this.convolutedSurprise[i] = value;
             }else if(j == 2){
-              // this.convolutedFear.push(value);
               this.convolutedFear[i] = value;
             }else if(j == 3){
-              // this.convolutedAnger.push(value);
               this.convolutedAnger[i] = value;
             }else if(j == 4){
-              // this.convolutedDisgust.push(value);
               this.convolutedDisgust[i] = value;
             }else if(j == 5){
-              // this.convolutedSadness.push(value);
               this.convolutedSadness[i] = value;
             }
 
@@ -843,27 +843,13 @@ canvas1 = p => {
         // console.log(this.convolutedHappy);
 
         for(let i=0; i<this.convolutedHappy.length; i++){
-          if(this.convolutedHappy[i] != undefined){
             this.convolutedHappySum += this.convolutedHappy[i];
-          }
-          if(this.convolutedSurprise[i] != undefined){
             this.convolutedSurpriseSum += this.convolutedSurprise[i];
-          }
-          if(this.convolutedFear[i] != undefined){
             this.convolutedFearSum += this.convolutedFear[i];
-          }
-          if(this.convolutedAnger[i] != undefined){
             this.convolutedAngerSum += this.convolutedAnger[i];
-          }
-          if(this.convolutedDisgust[i] != undefined){
             this.convolutedDisgustSum += this.convolutedDisgust[i];
-          }
-          if(this.convolutedSadness[i] != undefined){
             this.convolutedSadnessSum += this.convolutedSadness[i];
-          }
         }
-
-        // console.log(this.convolutedHappySum);
 
         this.happyDelay = this.convolutedHappySum/this.convolutedHappy.length;
         this.surpriseDelay = this.convolutedSurpriseSum/this.convolutedSurprise.length;
@@ -875,13 +861,21 @@ canvas1 = p => {
         // console.log("this.happyDelay: " + this.happyDelay);
 
         this.currentEmos = [
-          this.happy * this.happyDelay,
-          this.surprise * this.surpriseDelay,
-          this.fear * this.fearDelay,
-          this.anger * this.angerDelay,
-          this.disgust * this.disgustDelay,
-          this.sadness * this.sadnessDelay
+          this.happy + this.happyDelay,
+          this.surprise + this.surpriseDelay,
+          this.fear + this.fearDelay,
+          this.anger + this.angerDelay,
+          this.disgust + this.disgustDelay,
+          this.sadness + this.sadnessDelay
         ];
+
+        for(let i = 0; i < this.currentEmos.length; i++){
+          if(this.currentEmos[i] > 1.0){
+            this.currentEmos[i] = 1.0;
+          }else{
+
+          }
+        }
 
         console.log("this.happy: " + this.happy);
         console.log("this.happyDelay: " + this.happyDelay);
