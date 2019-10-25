@@ -8,6 +8,11 @@
  
 #include <M5Stack.h>
 #include <Wire.h>
+#include <HDC1000.h>
+
+HDC1000 mySensor;
+//HDC1000 mySensor(0x41, 2) <-- DRDYn enabled and connected to Arduino pin 2 (allows for faster measurements).
+
 
 #define MyRED 0xe8e4
 #define MyGREEN 0x2589
@@ -19,9 +24,16 @@ int pin = 22;
 unsigned char counter;
 unsigned long temp[21]; // 割り込みの発生した時間（鼓動）
 unsigned long sub;
+
 bool data_effect = true;
 unsigned int heart_rate = 0;//the measurement result of heart rate
 unsigned int prev_heart_rate = 0;
+
+//float divide = 1000;
+
+bool toggleFunc = false;
+int t = 0;
+
  
 const int max_heartpluse_duty = 2000;//you can change it follow your system's request.
                         //2000 meams 2 seconds. System return error 
@@ -54,12 +66,31 @@ void setup() {
   initTemp();
   Serial.println("Heart rate test begin.");
   attachInterrupt(pin, interrupt, RISING);
- 
+
   LCD_Clear();
   M5.Lcd.printf("Measurements in heart rate...");
+  
+  Serial.begin(115200);
+  mySensor.begin();
+  attachInterrupt(pin, interrupt2, RISING);
+}
+
+void toggle(){
+  if(t > 60){
+      t = 0;
+    }
+    
+  if(t > 30){
+      Serial.begin(115200);
+    }else{
+      Serial.begin(9600);
+      }
+    t++;
 }
  
 void loop() {
+
+  toggle();
 //  // put your main code here, to run repeatedly:
   int error = 0;
   for(int i = 0; i < 6; i++){
@@ -76,7 +107,7 @@ void loop() {
 //          M5.Lcd.setCursor(100, i * 40);
 //          M5.Lcd.fillRect(100, i * 40, 280, 40, BLACK);
 //       }
-      delay(1);
+      delay(3);
      }
   }
  
@@ -116,14 +147,15 @@ void sum()
  
 // 割り込み時に実行する関数
 void interrupt() {
+  Serial.println("Hello I'm measuring !!!!!");
   temp[counter]=millis();
   // Serial.print("Heart_beat_time:\t");
   // Serial.println(temp[counter]);
  
   if (counter == 0) {
-    sub = temp[counter]-temp[20];
+    sub = (temp[counter]-temp[20]);
   } else {
-    sub = temp[counter]-temp[counter-1];
+    sub = (temp[counter]-temp[counter-1]);
   }
   Serial.print("Heart_beat_duration_time:\t");
   Serial.println(sub);
@@ -154,4 +186,16 @@ void initTemp() {
     temp[i] = 0;
   }
   temp[20] = millis();
+}
+
+void interrupt2(){
+  Serial.println("Dude I'm measuring !!!!!");
+  
+  Serial.print("Temperature: ");
+  Serial.print(mySensor.getTemp()); 
+  Serial.print("C, Humidity: ");     
+  Serial.print(mySensor.getHumi());
+  Serial.println("%");
+  delay(1000);
+  
 }
