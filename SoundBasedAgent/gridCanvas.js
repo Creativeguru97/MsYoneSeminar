@@ -840,7 +840,6 @@ canvas1 = p => {
           }
         }
 
-        // console.log(this.convolutedHappy);
 
         for(let i=0; i<this.convolutedHappy.length; i++){
             this.convolutedHappySum += this.convolutedHappy[i];
@@ -889,7 +888,6 @@ canvas1 = p => {
         this.convolutedDisgustSum = 0;
         this.convolutedSadnessSum = 0;
 
-        // this.samplingTime++;
       }
       generateTimeStore = generateStateTime;
     }
