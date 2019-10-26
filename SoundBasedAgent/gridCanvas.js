@@ -113,7 +113,7 @@ canvas1 = p => {
     gridCanvas.id("gridCanvas");
     rayaRadius = 15;
     raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40), rayaRadius);
-    rayaState = new CircumplexModel(0.85, 1.6, 1.5, 0.75, 0.9, 1.8);
+    rayaState = new InternalModel(0.85, 1.6, 1.5, 0.75, 0.9, 1.8);
     user = new User();
     grid = new MatrixObject();
     bookShelf0 = new MatrixObject();
@@ -149,68 +149,68 @@ canvas1 = p => {
       userDisgustedStore.push(disgusted);
       userSadStore.push(sad);
 
-      if(userNeutralStore.length > 5){
-        userNeutralStore.splice(0, 1);//Erase index 0
-      }
+      // if(userNeutralStore.length > 5){
+      //   userNeutralStore.splice(0, 1);//Erase index 0
+      // }
       if(userHappyStore.length > 5){
         userHappyStore.splice(0, 1);//Erase index 0
       }
-      if(userSurprisedStore.length > 5){
-        userSurprisedStore.splice(0, 1);//Erase index 0
-      }
-      if(userFearfulStore.length > 5){
-        userFearfulStore.splice(0, 1);//Erase index 0
-      }
+      // if(userSurprisedStore.length > 5){
+      //   userSurprisedStore.splice(0, 1);//Erase index 0
+      // }
+      // if(userFearfulStore.length > 5){
+      //   userFearfulStore.splice(0, 1);//Erase index 0
+      // }
       if(userAngerStore.length > 5){
         userAngerStore.splice(0, 1);//Erase index 0
       }
-      if(userDisgustedStore.length > 5){
-        userDisgustedStore.splice(0, 1);//Erase index 0
-      }
-      if(userSadStore.length > 5){
-        userSadStore.splice(0, 1);//Erase index 0
-      }
+      // if(userDisgustedStore.length > 5){
+      //   userDisgustedStore.splice(0, 1);//Erase index 0
+      // }
+      // if(userSadStore.length > 5){
+      //   userSadStore.splice(0, 1);//Erase index 0
+      // }
 
       for(let i=0; i<userHappyStore.length; i++){
-        if(userNeutralStore[i] != undefined){
-          userNeutralSum += userNeutralStore[i];
-        }
+        // if(userNeutralStore[i] != undefined){
+        //   userNeutralSum += userNeutralStore[i];
+        // }
         if(userHappyStore[i] != undefined){
           userHappySum += userHappyStore[i];
         }
-        if(userSurprisedStore[i] != undefined){
-          userSurprisedSum += userSurprisedStore[i];
-        }
-        if(userFearfulStore[i] != undefined){
-          userFearfulSum += userFearfulStore[i];
-        }
+        // if(userSurprisedStore[i] != undefined){
+        //   userSurprisedSum += userSurprisedStore[i];
+        // }
+        // if(userFearfulStore[i] != undefined){
+        //   userFearfulSum += userFearfulStore[i];
+        // }
         if(userAngerStore[i] != undefined){
           userAngerSum += userAngerStore[i];
         }
-        if(userDisgustedStore[i] != undefined){
-          userDisgustedSum += userDisgustedStore[i];
-        }
-        if(userSadStore[i] != undefined){
-          userSadSum += userSadStore[i];
-        }
+        // if(userDisgustedStore[i] != undefined){
+        //   userDisgustedSum += userDisgustedStore[i];
+        // }
+        // if(userSadStore[i] != undefined){
+        //   userSadSum += userSadStore[i];
+        // }
 
       }
 
-      userNeutralLevel = userNeutralSum/userNeutralStore.length;
+      // userNeutralLevel = userNeutralSum/userNeutralStore.length;
       userHappyLevel = userHappySum/userHappyStore.length;
-      userSurprisedLevel = userSurprisedSum/userSurprisedStore.length;
-      userFearfulLevel = userFearfulSum/userFearfulStore.length;
+      // userSurprisedLevel = userSurprisedSum/userSurprisedStore.length;
+      // userFearfulLevel = userFearfulSum/userFearfulStore.length;
       userAngerLevel = userAngerSum/userAngerStore.length;
-      userDisgustedLevel = userDisgustedSum/userDisgustedStore.length;
-      userSadLevel = userSadSum/userSadStore.length;
+      // userDisgustedLevel = userDisgustedSum/userDisgustedStore.length;
+      // userSadLevel = userSadSum/userSadStore.length;
 
-      userNeutralSum = 0;
+      // userNeutralSum = 0;
       userHappySum = 0;
-      userSurprisedSum = 0;
-      userFearfulSum = 0;
+      // userSurprisedSum = 0;
+      // userFearfulSum = 0;
       userAngerSum = 0;
-      userDisgustedSum = 0;
-      userSadSum = 0;
+      // userDisgustedSum = 0;
+      // userSadSum = 0;
 
       // console.log("userHappyLevel: " + userHappyLevel);
       // console.log("userNeutralLevel: " + userNeutralLevel);
@@ -303,24 +303,25 @@ canvas1 = p => {
     distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
 
     //move close or run away from user for their facial expression.
-    if(userHappyLevel > userNeutralLevel){
+
+    if(rayaState.currentEmos[0] > 0.85+0.05){
       if(distUser.mag() > 50){
         raya.attracted(toUser, 50);
       }
       isAttractedByUser = true;
       waitingTime = 0;
-
     }else{
       isAttractedByUser = false;
     }
 
-    if(userAngerLevel > userHappyLevel || microphone.getLevel()*600 > 200){
-      if(distUser.mag() < 120){
+    if(rayaState.currentEmos[1] > 0.70){
+      if(distUser.mag() < 180){
         raya.leave(toUser);
       }
       isAttractedByUser = false;
       waitingTime = okIgottaGo - 2 ;//Means agent get into the loop 2 seconds later
     }
+
 
     if(distUser.mag() <= 70){//If raya is closer than 70px
       raya.breathe(180, 'sustain');
@@ -697,10 +698,9 @@ canvas1 = p => {
   //----- Raya class end -----
 
 
-  class CircumplexModel{
+  class InternalModel{
 
     constructor(happyD, surpriseD, fearD, angerD, disgustD, sadnessD){
-      this.r = 1.0;
       this.happy;
       this.surprise;
       this.fear;
@@ -737,7 +737,8 @@ canvas1 = p => {
       this.sadnessDelay = 1.0;
 
       this.newLog = [];
-      this.currentEmos = [0, 0, 0, 0, 0, 0];
+      // this.currentEmos = [0, 0, 0, 0, 0, 0];
+      this.currentEmos = [0, 0];
       this.emosLog = [];
       for(let i = 0; i < 900; i++){
         this.emosLog.push(this.currentEmos);
@@ -748,30 +749,30 @@ canvas1 = p => {
 
     cognition(){
       this.happy = userHappyLevel * this.happyDistortion;
-      this.surprise = userSurprisedLevel * this.surpriseDistortion;
-      this.fear = userFearfulLevel * this.fearDistortion;
+      // this.surprise = userSurprisedLevel * this.surpriseDistortion;
+      // this.fear = userFearfulLevel * this.fearDistortion;
       this.anger = userAngerLevel * this.angerDistortion;
-      this.disgust = userDisgustedLevel * this.disgustDistortion;
-      this.sadness = userSadLevel * this.sadnessDistortion;
+      // this.disgust = userDisgustedLevel * this.disgustDistortion;
+      // this.sadness = userSadLevel * this.sadnessDistortion;
 
       if(this.happy > 1.0){
         this.happy = 1.0;
       }
-      if(this.surprise > 1.0){
-        this.surprise = 1.0;
-      }
-      if(this.fear > 1.0){
-        this.fear = 1.0;
-      }
+      // if(this.surprise > 1.0){
+      //   this.surprise = 1.0;
+      // }
+      // if(this.fear > 1.0){
+      //   this.fear = 1.0;
+      // }
       if(this.anger > 1.0){
         this.anger = 1.0;
       }
-      if(this.disgust > 1.0){
-        this.disgust = 1.0;
-      }
-      if(this.sadness > 1.0){
-        this.sadness = 1.0;
-      }
+      // if(this.disgust > 1.0){
+      //   this.disgust = 1.0;
+      // }
+      // if(this.sadness > 1.0){
+      //   this.sadness = 1.0;
+      // }
     }
 
     convolution(a, n, x){
@@ -788,8 +789,11 @@ canvas1 = p => {
 
         this.cognition();
 
+        // this.newLog = [
+        //   this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
+        // ];
         this.newLog = [
-          this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
+          this.happy, this.anger
         ];
 
 
@@ -814,27 +818,33 @@ canvas1 = p => {
             // console.log(this.emosLog[i][j]);
             let value = this.convolution(this.emosLog[i][j], 0.996, i);
 
+            // if(j == 0){
+            //   this.convolutedHappy[i] = value;
+            // }else if(j == 1){
+            //   this.convolutedSurprise[i] = value;
+            // }else if(j == 2){
+            //   this.convolutedFear[i] = value;
+            // }else if(j == 3){
+            //   this.convolutedAnger[i] = value;
+            // }else if(j == 4){
+            //   this.convolutedDisgust[i] = value;
+            // }else if(j == 5){
+            //   this.convolutedSadness[i] = value;
+            // }
+
             if(j == 0){
               this.convolutedHappy[i] = value;
             }else if(j == 1){
-              this.convolutedSurprise[i] = value;
-            }else if(j == 2){
-              this.convolutedFear[i] = value;
-            }else if(j == 3){
               this.convolutedAnger[i] = value;
-            }else if(j == 4){
-              this.convolutedDisgust[i] = value;
-            }else if(j == 5){
-              this.convolutedSadness[i] = value;
             }
 
             if(this.convolutedHappy.length > this.emosLog.length){
               this.convolutedHappy.splice(0,1);
-              this.convolutedSurprise.splice(0,1);
-              this.convolutedFear.splice(0,1);
+              // this.convolutedSurprise.splice(0,1);
+              // this.convolutedFear.splice(0,1);
               this.convolutedAnger.splice(0,1);
-              this.convolutedDisgust.splice(0,1);
-              this.convolutedSadness.splice(0,1);
+              // this.convolutedDisgust.splice(0,1);
+              // this.convolutedSadness.splice(0,1);
             }
 
           }
@@ -843,50 +853,54 @@ canvas1 = p => {
 
         for(let i=0; i<this.convolutedHappy.length; i++){
             this.convolutedHappySum += this.convolutedHappy[i];
-            this.convolutedSurpriseSum += this.convolutedSurprise[i];
-            this.convolutedFearSum += this.convolutedFear[i];
+            // this.convolutedSurpriseSum += this.convolutedSurprise[i];
+            // this.convolutedFearSum += this.convolutedFear[i];
             this.convolutedAngerSum += this.convolutedAnger[i];
-            this.convolutedDisgustSum += this.convolutedDisgust[i];
-            this.convolutedSadnessSum += this.convolutedSadness[i];
+            // this.convolutedDisgustSum += this.convolutedDisgust[i];
+            // this.convolutedSadnessSum += this.convolutedSadness[i];
         }
 
         this.happyDelay = this.convolutedHappySum/this.convolutedHappy.length;
-        this.surpriseDelay = this.convolutedSurpriseSum/this.convolutedSurprise.length;
-        this.fearDelay = this.convolutedFearSum/this.convolutedFear.length;
+        // this.surpriseDelay = this.convolutedSurpriseSum/this.convolutedSurprise.length;
+        // this.fearDelay = this.convolutedFearSum/this.convolutedFear.length;
         this.angerDelay = this.convolutedAngerSum/this.convolutedAnger.length;
-        this.disgustDelay = this.convolutedDisgustSum/this.convolutedDisgust.length;
-        this.sadnessDelay = this.convolutedSadnessSum/this.convolutedSadness.length;
+        // this.disgustDelay = this.convolutedDisgustSum/this.convolutedDisgust.length;
+        // this.sadnessDelay = this.convolutedSadnessSum/this.convolutedSadness.length;
 
         // console.log("this.happyDelay: " + this.happyDelay);
 
         this.currentEmos = [
           this.happy + this.happyDelay,
-          this.surprise + this.surpriseDelay,
-          this.fear + this.fearDelay,
+          // this.surprise + this.surpriseDelay,
+          // this.fear + this.fearDelay,
           this.anger + this.angerDelay,
-          this.disgust + this.disgustDelay,
-          this.sadness + this.sadnessDelay
+          // this.disgust + this.disgustDelay,
+          // this.sadness + this.sadnessDelay
         ];
+
+        if(microphone.getLevel()*600 > 200){
+          console.log("Raya get pissed off");
+          this.currentEmos[1] = this.currentEmos[1] + 0.70;
+        }
 
         for(let i = 0; i < this.currentEmos.length; i++){
           if(this.currentEmos[i] > 1.0){
             this.currentEmos[i] = 1.0;
-          }else{
-
-          }
+          }else{}
         }
 
-        console.log("this.happy: " + this.happy);
-        console.log("this.happyDelay: " + this.happyDelay);
+        // console.log("this.happy: " + this.happy);
+        // console.log("this.happyDelay: " + this.happyDelay);
         console.log("current happy: " + this.currentEmos[0]);
+        console.log("current angry: " + this.currentEmos[1]);
         console.log("---------------------");
 
         this.convolutedHappySum = 0;
-        this.convolutedSurpriseSum = 0;
-        this.convolutedFearSum = 0;
+        // this.convolutedSurpriseSum = 0;
+        // this.convolutedFearSum = 0;
         this.convolutedAngerSum = 0;
-        this.convolutedDisgustSum = 0;
-        this.convolutedSadnessSum = 0;
+        // this.convolutedDisgustSum = 0;
+        // this.convolutedSadnessSum = 0;
 
       }
       generateTimeStore = generateStateTime;
