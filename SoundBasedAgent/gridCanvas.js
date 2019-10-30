@@ -337,8 +337,8 @@ canvas1 = p => {
     console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
     console.log("-------------------------------------------------------");
 
-    if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.06){
-      if(rayaState.currentEmos[1] > 0.10){//which is surprise
+    if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.30){
+      if(rayaState.currentEmos[1] > 0.30){//which is surprise
         console.log("Raya surprised!!!!!!!!!!");
         //Output suprising voice
         raya.surprise('restart');
