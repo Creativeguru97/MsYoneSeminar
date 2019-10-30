@@ -100,6 +100,9 @@ canvas1 = p => {
     for(let i=0; i < 4; i++){
       laughingSound[i] = p.loadSound("/soundEffects/laughingSound/laugh"+i+".mp3");
     }
+    for(let i=0; i < 4; i++){
+      surpriseSound[i] = p.loadSound("/soundEffects/surprise/surprise"+i+".mp3");
+    }
 
     breathSound = p.loadSound("/soundEffects/breath.mp3");
     sitOnChairSound = p.loadSound("/soundEffects/sitOnChair.mp3");
@@ -321,7 +324,6 @@ canvas1 = p => {
       isAttractedByUser = false;
       waitingTime = okIgottaGo - 2 ;//Means agent get into the loop 2 seconds later
     }
-
 
     if(rayaState.currentEmos[1] > 0.70){
       //Output suprising voice
@@ -752,7 +754,7 @@ canvas1 = p => {
       this.samplingTime = 0;
     }
 
-    emosEmerge(){
+    cognition(){
       this.happy = userHappyLevel * this.happyDistortion;
       this.surprise = microphone.getLevel();
 
@@ -781,7 +783,7 @@ canvas1 = p => {
     internalState(){
       if(generateStateTime != generateTimeStore){
 
-        this.emosEmerge();
+        this.cognition();
 
         this.newLog = [
           this.happy, this.surprise, this.fear, this.anger, this.disgust, this.sadness
