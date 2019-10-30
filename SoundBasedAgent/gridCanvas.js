@@ -56,10 +56,14 @@ let coughSound = [];
 let flipPageSound = [];
 let buyDrink = [];
 let laughingSound = [];
+let surpriseSound = [];
 let breathSound;
 let sitOnChairSound;
 let putACupSound;
 let putABookSound;
+
+let pMicrophoneGetLevel;
+let cMicrophoneGetLevel;
 
 
 //For event programing
@@ -101,7 +105,7 @@ canvas1 = p => {
       laughingSound[i] = p.loadSound("/soundEffects/laughingSound/laugh"+i+".mp3");
     }
     for(let i=0; i < 4; i++){
-      surpriseSound[i] = p.loadSound("/soundEffects/surprise/surprise"+i+".mp3");
+      surpriseSound[i] = p.loadSound("/soundEffects/surprise/surprise"+i+".wav");
     }
 
     breathSound = p.loadSound("/soundEffects/breath.mp3");
@@ -325,9 +329,24 @@ canvas1 = p => {
       waitingTime = okIgottaGo - 2 ;//Means agent get into the loop 2 seconds later
     }
 
-    if(rayaState.currentEmos[1] > 0.70){
-      //Output suprising voice
+
+    cMicrophoneGetLevel = microphone.getLevel();
+    // console.log("previous level: "+ pMicrophoneGetLevel);
+    // console.log("current level: "+ cMicrophoneGetLevel);
+    console.log("Surprise level: "+ (cMicrophoneGetLevel-pMicrophoneGetLevel));
+    console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
+    console.log("-------------------------------------------------------");
+
+    if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.06){
+      if(rayaState.currentEmos[1] > 0.10){//which is surprise
+        console.log("Raya surprised!!!!!!!!!!");
+        //Output suprising voice
+        raya.surprise('restart');
+      }
     }
+
+    pMicrophoneGetLevel = cMicrophoneGetLevel;
+
 
 
     if(distUser.mag() <= 70){//If raya is closer than 70px
@@ -627,6 +646,14 @@ canvas1 = p => {
         this.soundDirection(laughingSound, index, p.width/2, 0.5);
         laughingSound[index].play();
       }
+    }
+
+    surprise(mode){
+      let index = p.int(p.random(0, surpriseSound.length));
+      surpriseSound[index].playMode(mode);
+      // this.soundDirection(coughSound, index, p.width/2, 0.04);
+      this.soundDirection(surpriseSound, index, p.width/2, 0.8);
+      surpriseSound[index].play();
     }
 
 
