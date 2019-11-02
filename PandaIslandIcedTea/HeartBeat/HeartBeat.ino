@@ -19,7 +19,7 @@ bool data_effect = true;
 unsigned int heart_rate = 0;//the measurement result of heart rate
 unsigned int prev_heart_rate = 0;
  
-const int max_heartpluse_duty = 2000;//you can change it follow your system's request.
+const int max_heartpulse_duty = 2000;//you can change it follow your system's request.
                         //2000 meams 2 seconds. System return error 
                         //if the duty overtrip 2 second.
  
@@ -88,7 +88,7 @@ void interrupt() {
   Serial.print("Heart_beat_duration_time:\t");
   Serial.println(sub);
   
-  if (sub > max_heartpluse_duty) { //set 2 seconds as max heart pluse duty
+  if (sub > max_heartpulse_duty) { //set 2 seconds as max heart pulse duty
     data_effect = 0; //sign bit
     counter = 0;
     // Serial.println("Heart rate measure error,test will restart!" );

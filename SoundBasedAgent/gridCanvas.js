@@ -331,12 +331,9 @@ canvas1 = p => {
 
 
     cMicrophoneGetLevel = microphone.getLevel();
-    // console.log("previous level: "+ pMicrophoneGetLevel);
-    // console.log("current level: "+ cMicrophoneGetLevel);
-    console.log("Surprise level: "+ (cMicrophoneGetLevel-pMicrophoneGetLevel));
-    console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
-    console.log("-------------------------------------------------------");
-
+    // console.log("Surprise level: "+ (cMicrophoneGetLevel-pMicrophoneGetLevel));
+    // console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
+    // console.log("-------------------------------------------------------");
     if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.30){
       if(rayaState.currentEmos[1] > 0.30){//which is surprise
         console.log("Raya surprised!!!!!!!!!!");
@@ -344,7 +341,6 @@ canvas1 = p => {
         raya.surprise('restart');
       }
     }
-
     pMicrophoneGetLevel = cMicrophoneGetLevel;
 
 
@@ -795,7 +791,6 @@ canvas1 = p => {
       }else if (userSadLevel > userAngerLevel) {
         this.sadness = userSadLevel * this.sadnessDistortion;
       }
-
     }
 
     convolution(a, n, x){
