@@ -1,4 +1,4 @@
-int analogPin = A3;
+int analogPin = A0;
 unsigned char counter;
 unsigned long beatTimes[21];
 unsigned long sub;

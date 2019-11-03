@@ -43,7 +43,7 @@ let rayaState;
 
 //---Raya relevant---
 let isNearByUser = false;
-let isAttractedByUser = false;
+let isAttractedByUser = true;
 let changeBehaviorTime = 0;
 
 let generateStateTime = 0;
@@ -297,7 +297,7 @@ canvas1 = p => {
     raya.move();
     raya.turn(60+rayaRadius, 60+rayaRadius, 20+rayaRadius, 20+rayaRadius);
     raya.stop();
-    raya.cough(20000, 19997, 'sustain');
+    raya.cough(20000, 19998, 'sustain');
 
     rayaState.internalState();
 
@@ -317,9 +317,8 @@ canvas1 = p => {
       }
       isAttractedByUser = true;
       waitingTime = 0;
-    }else{
-      isAttractedByUser = false;
     }
+
 
     if(rayaState.currentEmos[2] > 0.70){//which is get scared
       if(distUser.mag() < 180){
@@ -331,12 +330,12 @@ canvas1 = p => {
 
 
     cMicrophoneGetLevel = microphone.getLevel();
-    // console.log("Surprise level: "+ (cMicrophoneGetLevel-pMicrophoneGetLevel));
-    // console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
-    // console.log("-------------------------------------------------------");
     if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.30){
-      if(rayaState.currentEmos[1] > 0.30){//which is surprise
+      if(rayaState.currentEmos[1] > 0.50){//which is surprise
+        console.log("Surprise level: "+ (cMicrophoneGetLevel-pMicrophoneGetLevel));
+        console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
         console.log("Raya surprised!!!!!!!!!!");
+        console.log("-------------------------------------------------------");
         //Output suprising voice
         raya.surprise('restart');
       }
@@ -348,7 +347,7 @@ canvas1 = p => {
     if(distUser.mag() <= 70){//If raya is closer than 70px
       raya.breathe(180, 'sustain');
 
-      if(raya.velocity.x < 0.01 && raya.velocity.y < 0.01){//And if raya has been settled
+      if(raya.velocity.x < 0.01 && raya.velocity.y < 0.01 && isAttractedByUser == true){//And if raya has been settled
         sittingFrame++;
 
         if(sittingFrame == 80){
@@ -366,7 +365,9 @@ canvas1 = p => {
     }
 
     //Default behavior: Looping between book shelf and vending machine.
-    if(isAttractedByUser == false && waitingTime > okIgottaGo){
+    if(waitingTime > okIgottaGo){
+      isAttractedByUser = false;
+
       if (loopTime < 90){
         if(distBookShelf.mag() > 45){
           raya.attracted(toBookShelf, 40, 0.70);
