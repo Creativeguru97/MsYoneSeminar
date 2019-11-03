@@ -1,25 +1,31 @@
-int analogPin = A0;
+int analogPin = A3;
 unsigned char counter;
 unsigned long beatTimes[21];
 unsigned long sub;
-unsigned int = heart_rate = 0;
+unsigned int heart_rate = 0;
+unsigned int prev_heart_rate = 0;
+
 bool data_isValid = true;
 const int max_heartpulse_duty = 2500;
 
 void setup() {
-  pinMode(data, INPUT);
-  pinMode(start,INPUT_PULLUP);
+  pinMode(analogPin, INPUT);
+//  pinMode(start,INPUT_PULLUP);
   Serial.begin(115200);
   attachInterrupt(analogPin, interrupt, RISING);
 }
 
 void loop() {
-  
+  if (heart_rate != prev_heart_rate) {
+    prev_heart_rate = heart_rate;
+    Serial.print("Heart Rate: ");
+    Serial.println(heart_rate);
+  }
 }
 
 void sum(){
   if(data_isValid){
-    heart_rate = 1200000/(temp[20] - temp[0]);
+    heart_rate = 1200000/(beatTimes[20] - beatTimes[0]);
     // Serial.print("Heart_rate_is:\t");
     // Serial.println(heart_rate);
   }
@@ -45,7 +51,7 @@ void interrupt(){
     data_isValid = false; //sign bit
     counter = 0;
     Serial.println("Heart rate measure error,test will restart!" );
-    initTemp();
+    initializeBeats();
   }
 
   if(data_isValid){
@@ -59,7 +65,7 @@ void interrupt(){
     
   }else{
     counter = 0;
-    data_isValid = 1;
+    data_isValid = true;
   }
   
 }
