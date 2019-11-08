@@ -28,7 +28,7 @@ void setup() {
   M5.begin();
   pinMode(vol_pin1,INPUT);
   //pinMode(vol_pin2,INPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   //---Heart rate relevant stuff---
 //  Serial.println("Please ready your chest belt.");
