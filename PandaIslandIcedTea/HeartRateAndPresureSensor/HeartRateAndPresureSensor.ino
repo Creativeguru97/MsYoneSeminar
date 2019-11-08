@@ -1,17 +1,17 @@
-//--------------------------------------------------------
-// 心拍センサーサンプル
-// M5Stackに心拍センサーを接続して心拍数を測定するサンプルです。
-//
-// 使用センサー：Ear-clip Heart Rate Sensor
-// http://wiki.seeedstudio.com/Grove-Ear-clip_Heart_Rate_Sensor/
-//--------------------------------------------------------
- 
 #include <M5Stack.h>
 #define MyRED 0xe8e4
 #define MyGREEN 0x2589
 #define MyBLUE 0x51d
- 
-int pin = 22;
+
+const int vol_pin1 = 26;
+const int vol_pin2 = 22;
+
+int vol_value1 = 0;
+//int vol_value2 = 0;
+int count = 0;
+int point = 0;
+
+//---Heart rate relevant stuff---
 unsigned char counter;
 unsigned long temp[21]; // 割り込みの発生した時間（鼓動）
 unsigned long sub;
@@ -23,24 +23,50 @@ const int max_heartpluse_duty = 2000;//you can change it follow your system's re
                         //2000 meams 2 seconds. System return error 
                         //if the duty overtrip 2 second.
  
+
 void setup() {
-  // put your setup code here, to run once:
   M5.begin();
+  pinMode(vol_pin1,INPUT);
+  //pinMode(vol_pin2,INPUT);
   Serial.begin(115200);
+
+  //---Heart rate relevant stuff---
   Serial.println("Please ready your chest belt.");
   delay(5000);
   initTemp();
   Serial.println("Heart rate test begin.");
   attachInterrupt(pin, interrupt, RISING);
- 
   LCD_Clear();
   M5.Lcd.printf("Measurements in heart rate...");
+
+  //---Heart rate relevant stuff---
+  
 }
- 
+
 void loop() {
-  // put your main code here, to run repeatedly:
- 
-  if (heart_rate != prev_heart_rate) {
+
+  vol_value1 = analogRead( vol_pin1 );
+ // vol_value2 = analogRead( vol_pin2 );
+
+  //analogWrite( led_pin, vol_value/4 );
+  //Serial.print(vol_pin);
+
+  Serial.print( vol_value1 );
+ // Serial.print( vol_value2 );
+  Serial.print("\n");
+  if(vol_value1>2000){
+    count++;
+    if(count>10){
+       point++;
+       M5.Lcd.clear();
+       M5.Lcd.setCursor(0,0);
+       M5.Lcd.printf("point:%3d",point);
+       count=0;
+    }
+  }
+ delay( 50 );
+
+   if (heart_rate != prev_heart_rate) {
     prev_heart_rate = heart_rate;
     LCD_Clear();
     M5.Lcd.printf("Heart Rate:%3d", heart_rate);
@@ -55,14 +81,14 @@ void loop() {
   }
   M5.update();
 }
- 
+
 void LCD_Clear() {
   M5.Lcd.fillScreen(BLACK);
   M5.Lcd.setCursor(0, 0);
   M5.Lcd.setTextColor(WHITE);
   M5.Lcd.setTextSize(2);
 }
- 
+
 /*Function: calculate the heart rate*/
 void sum()
 {
