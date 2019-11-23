@@ -4,7 +4,7 @@ Servo myservo;  // create servo object to control a servo
 // twelve servo objects can be created on most boards
 
 int pos = 0;    // variable to store the servo position
-int incomingByte;   // variable for holding the data from p5.jsf
+int incomingByte;   // variable for holding the data from p5.js
 
 void setup() {
   Serial.begin(9600);
