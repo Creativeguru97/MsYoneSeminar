@@ -14,7 +14,7 @@ let isListening = false;
 canvas0 = p => { //let canvas0 = function(p){...
   p.setup = () => {
     p.createDiv();
-    gridCanvas = p.createCanvas(720, 405);
+    gridCanvas = p.createCanvas(1280, 720);
     gridCanvas.id("hudCanvas");
 
     microphone = new p5.AudioIn(p.print("Unknown error occured"));

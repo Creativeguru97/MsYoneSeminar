@@ -20,7 +20,7 @@ Promise.all([
   faceapi.nets.faceExpressionNet.loadFromUri("/models/")
 ])
 
-navigator.mediaDevices.getUserMedia({video:{width: 720, height: 405}})
+navigator.mediaDevices.getUserMedia({video:{width: 960, height: 540}})
 .then(mediaStream => {
   var video = document.querySelector('video');
   video.srcObject = mediaStream;
