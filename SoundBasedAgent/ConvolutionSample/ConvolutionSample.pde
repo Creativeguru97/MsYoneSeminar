@@ -80,5 +80,4 @@ float QuadraticFunction(float val, float n, int x){
 
 float CubicFunction(float val, int x){
   return val * -( pow(0.029*x-2, 3) + pow(0.045*x-3, 2) + pow(0.018*x-2, 1));
-  //return -( pow(0.029*x-2, 3) + pow(0.045*x-3, 2) + pow(0.018*x-2, 1));
 }
