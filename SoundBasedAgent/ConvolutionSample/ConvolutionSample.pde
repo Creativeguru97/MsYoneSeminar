@@ -1,5 +1,6 @@
 float mouseValue;
 float[] valueBox = {};
+float[] convolutedValueBox = {};
 int displayLength = 80;
 float valueSum;
 float valueAvg;
@@ -14,27 +15,28 @@ void draw(){
   if(frameCount % 12 == 0){
     mouseValue = map(mouseY, 0, height, 1.0, 0);
     valueBox = append(valueBox, mouseValue);
+    convolutedValueBox = append(convolutedValueBox, 0);
     
-    if(valueBox.length > displayLength){
+    if(convolutedValueBox.length > displayLength){
       
       for(int i=0; i < displayLength; i++){
-        valueBox[valueBox.length-(1+i)] = convolution(valueBox[valueBox.length-(1+i)], 0.999, i);
+        //convolutedValueBox[convolutedValueBox.length-(1+i)] = QuadraticFunction(valueBox[valueBox.length-(1+i)], 0.97, i);
+        convolutedValueBox[convolutedValueBox.length-(1+i)] = CubicFunction(valueBox[valueBox.length-(1+i)], i);
       }
       for(int i = 0; i < displayLength; i++){
-        valueSum += valueBox[valueBox.length-(1+i)];
+        valueSum += convolutedValueBox[convolutedValueBox.length-(1+i)];
       }
       valueAvg = valueSum/displayLength;
       
     }else{
-      
-      for(int i=0; i < valueBox.length-1; i++){
-        valueBox[i] = convolution(valueBox[i], 0.999, valueBox.length-(1+i));
+      for(int i=0; i < valueBox.length; i++){
+        //convolutedValueBox[i] = QuadraticFunction(valueBox[i], 0.97, valueBox.length-(1+i));
+        convolutedValueBox[i] = CubicFunction(valueBox[i], valueBox.length-(1+i));
       }
-      for(int i = 0; i < valueBox.length-1; i++){
-        valueSum += valueBox[valueBox.length-(1+i)];
+      for(int i = 0; i < valueBox.length; i++){
+        valueSum += convolutedValueBox[convolutedValueBox.length-(1+i)];
       }
-      valueAvg = valueSum/valueBox.length;
-      
+      valueAvg = valueSum/convolutedValueBox.length;
     }
    
   }
@@ -44,17 +46,17 @@ void draw(){
   line(50, 20, 50, height-20);
   line(20, height - 50, width - 20, height - 50);
   
-  if(valueBox.length > displayLength){
+  if(convolutedValueBox.length > displayLength){
     for(int i = 0; i < displayLength; i++){
-      float rectHeight = map(valueBox[valueBox.length-1-i], 0, 1, 0, height-100);
+      float rectHeight = map(convolutedValueBox[convolutedValueBox.length-1-i], 0, 1, 0, height-100);
       fill(i/2+130, 255, 255);
       noStroke();
       rect(10*i+55, (height - 50) - rectHeight, 9, rectHeight, 3, 3, 3, 3);
       //rect(10*i+55, (height - 50) - rectHeight, 9, 2, 3, 3, 3, 3);
     }
   }else{
-    for(int i = 0; i < valueBox.length-1; i++){
-      float rectHeight = map(valueBox[valueBox.length-1-i], 0, 1, 0, height-100);
+    for(int i = 0; i < convolutedValueBox.length-1; i++){
+      float rectHeight = map(convolutedValueBox[convolutedValueBox.length-1-i], 0, 1, 0, height-100);
       fill(i/2+130, 255, 255);
       noStroke();
       rect(10*i+55, (height - 50) - rectHeight, 9, rectHeight, 3, 3, 3, 3);
@@ -72,6 +74,11 @@ void draw(){
   valueSum = 0;
 }
 
-float convolution(float val, float n, int x){
-  return val * pow(n, x);
+float QuadraticFunction(float val, float n, int x){
+    return val * pow(n, x);
+}
+
+float CubicFunction(float val, int x){
+  return val * -( pow(0.029*x-2, 3) + pow(0.045*x-3, 2) + pow(0.018*x-2, 1));
+  //return -( pow(0.029*x-2, 3) + pow(0.045*x-3, 2) + pow(0.018*x-2, 1));
 }

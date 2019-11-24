@@ -310,6 +310,7 @@ canvas1 = p => {
     distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
 
 
+    //Raya feels good
     //move close or run away from user for their facial expression.
     if(rayaState.currentEmos[0] > 0.75){//which is happy
       if(distUser.mag() > 50){
@@ -320,7 +321,8 @@ canvas1 = p => {
     }
 
 
-    if(rayaState.currentEmos[2] > 0.70){//which is get scared
+    //Raya get scared
+    if(rayaState.currentEmos[2] > 0.70){
       if(distUser.mag() < 180){
         raya.leave(toUser, rayaState.currentEmos[2]);
       }
@@ -329,6 +331,7 @@ canvas1 = p => {
     }
 
 
+    //Raya get surprised!!!
     cMicrophoneGetLevel = microphone.getLevel();
     if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.30){
       if(rayaState.currentEmos[1] > 0.50){//which is surprise
@@ -833,17 +836,17 @@ canvas1 = p => {
             // console.log(this.emosLog[i][j]);
             let value = this.convolution(this.emosLog[i][j], 0.996, i);
 
-            if(j == 0){
+            if(j == 0){//haooy
               this.convolutedHappy[i] = value;
-            }else if(j == 1){
+            }else if(j == 1){//surprise
               this.convolutedSurprise[i] = value;
-            }else if(j == 2){
+            }else if(j == 2){//fear
               this.convolutedFear[i] = value;
-            }else if(j == 3){
+            }else if(j == 3){//anger
               this.convolutedAnger[i] = value;
-            }else if(j == 4){
+            }else if(j == 4){//disgust
               this.convolutedDisgust[i] = value;
-            }else if(j == 5){
+            }else if(j == 5){//sadness
               this.convolutedSadness[i] = value;
             }
 
