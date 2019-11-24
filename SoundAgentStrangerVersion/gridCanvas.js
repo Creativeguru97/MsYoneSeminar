@@ -5,41 +5,13 @@ let canvas1;
 let gridCanvas;
 
 
-//Objects
-let toMouse;
-let toUser;
-let toVendingMachine;
-let toBookShelf;
-let distUser;
-let distBookShelf;
-let distVendingMachine;
-
 //---User's emos relevant---
 let userEmosStore;
-let userNeutralStore = [];
 let userHappyStore = [];
-let userSurprisedStore = [];
-let userFearfulStore = [];
-let userAngerStore = [];
-let userDisgustedStore = [];
-let userSadStore = [];
-
-let userNeutralSum = 0;
 let userHappySum = 0;
-let userSurprisedSum = 0;
-let userFearfulSum = 0;
-let userAngerSum = 0;
-let userDisgustedSum = 0;
-let userSadSum = 0;
-
 let userNeutralLevel;
-let userHappyLevel;
-let userSurprisedLevel;
-let userFearfulLevel;
-let userAngerLevel;
-let userDisgustedLevel;
-let userSadLevel;
 let rayaState;
+let userState;
 
 //---Raya relevant---
 let isNearByUser = false;
@@ -66,6 +38,7 @@ let pMicrophoneGetLevel;
 let cMicrophoneGetLevel;
 
 
+
 //For event programing
 let timeLoop;
 let timeWait;
@@ -87,6 +60,10 @@ let portName = '/dev/tty.usbmodem14401';  // fill in your serial port name here
 
 //----- Grid canvas -----
 canvas1 = p => {
+  p.convolutedEmotionCopy = [];
+  p.emotionalSequencePointCopy = [];
+  p.emotionAvg;
+
   p.preload = () => {
     for(let i=0; i < 20; i++){
       // walkSound[i] = p.loadSound("/soundEffects/walkSoundSmall/walk"+i+".mp3");
@@ -118,20 +95,9 @@ canvas1 = p => {
     p.createDiv();
     gridCanvas = p.createCanvas(1280, 405);
     gridCanvas.id("gridCanvas");
-    rayaRadius = 15;
-    raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40), rayaRadius);
-    rayaState = new InternalModel(0.85, 1.6, 1.0, 1.2, 0.9, 1.8);
-    grid = new MatrixObject();
-    bookShelf0 = new MatrixObject();
-    bookShelf1 = new MatrixObject();
-    bookShelf2= new MatrixObject();
-    vendingMachine = new MatrixObject();
-
-    leftWall = new MatrixObject();
-    rightUpperWall = new MatrixObject();
-    rightLowerWall = new MatrixObject();
-    topWall = new MatrixObject();
-    bottomWall = new MatrixObject();
+    raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40));
+    rayaState = new InternalModel();
+    userState = new InternalModel();
 
     p.colorMode(p.HSB, 360, 100, 100, 100);//(Mode, Hue, Saturation, Brightness, Alpha)
 
@@ -147,80 +113,22 @@ canvas1 = p => {
     }, 1000);
 
     userEmosStore = setInterval(() => {
-      userNeutralStore.push(neutral);
-      userHappyStore.push(happy);
-      userSurprisedStore.push(surprised);
-      userFearfulStore.push(fearful);
-      userAngerStore.push(angry);
-      userDisgustedStore.push(disgusted);
-      userSadStore.push(sad);
 
-      // if(userNeutralStore.length > 5){
-      //   userNeutralStore.splice(0, 1);//Erase index 0
-      // }
+      userHappyStore.push(happy);
+
       if(userHappyStore.length > 5){
         userHappyStore.splice(0, 1);//Erase index 0
       }
-      // if(userSurprisedStore.length > 5){
-      //   userSurprisedStore.splice(0, 1);//Erase index 0
-      // }
-      // if(userFearfulStore.length > 5){
-      //   userFearfulStore.splice(0, 1);//Erase index 0
-      // }
-      if(userAngerStore.length > 5){
-        userAngerStore.splice(0, 1);//Erase index 0
-      }
-      // if(userDisgustedStore.length > 5){
-      //   userDisgustedStore.splice(0, 1);//Erase index 0
-      // }
-      if(userSadStore.length > 5){
-        userSadStore.splice(0, 1);//Erase index 0
-      }
 
       for(let i=0; i<userHappyStore.length; i++){
-        // if(userNeutralStore[i] != undefined){
-        //   userNeutralSum += userNeutralStore[i];
-        // }
         if(userHappyStore[i] != undefined){
           userHappySum += userHappyStore[i];
         }
-        // if(userSurprisedStore[i] != undefined){
-        //   userSurprisedSum += userSurprisedStore[i];
-        // }
-        // if(userFearfulStore[i] != undefined){
-        //   userFearfulSum += userFearfulStore[i];
-        // }
-        if(userAngerStore[i] != undefined){
-          userAngerSum += userAngerStore[i];
-        }
-        // if(userDisgustedStore[i] != undefined){
-        //   userDisgustedSum += userDisgustedStore[i];
-        // }
-        if(userSadStore[i] != undefined){
-          userSadSum += userSadStore[i];
-        }
-
       }
 
-      // userNeutralLevel = userNeutralSum/userNeutralStore.length;
       userHappyLevel = userHappySum/userHappyStore.length;
-      // userSurprisedLevel = userSurprisedSum/userSurprisedStore.length;
-      // userFearfulLevel = userFearfulSum/userFearfulStore.length;
-      userAngerLevel = userAngerSum/userAngerStore.length;
-      // userDisgustedLevel = userDisgustedSum/userDisgustedStore.length;
-      userSadLevel = userSadSum/userSadStore.length;
 
-      // userNeutralSum = 0;
       userHappySum = 0;
-      // userSurprisedSum = 0;
-      // userFearfulSum = 0;
-      userAngerSum = 0;
-      // userDisgustedSum = 0;
-      userSadSum = 0;
-
-      // console.log("userHappyLevel: " + userHappyLevel);
-      // console.log("userNeutralLevel: " + userNeutralLevel);
-      // console.log("userAngerLevel: " + userAngerLevel);
 
       generateStateTime++;
       if(generateStateTime > 10){
@@ -244,19 +152,13 @@ canvas1 = p => {
     serial.open(portName);              // open a serial port
   }
 
-  // p.mousePressed = () => {
-  //   let psychoKinesis = p.createVector(0, -50);
-  //   raya.applyForce(psychoKinesis);
-  // }
-
-
 //----- This is the place all interactions happen -----//
 //-----------------------------------------------------//
   p.draw = () => {
     p.clear();
 
-    rayaState.generateState();
-    rayaState.emotionalSequence("happy", 50);
+    userState.generateState();
+    // userState.emotionalSequence("happy", 50);
 
     //Lastly, we give Raya's x value to Servo
     let val = p.map(raya.position.x, 75, p.width-75, 20, 160);
@@ -265,14 +167,6 @@ canvas1 = p => {
     serial.write(outData); // write to serial for Arduino to pickup
   }
 
-    p.keyTyped = () => {
-      if (p.key === "l") {
-        console.log(rayaState.convolutedHappy.length);
-        console.log(rayaState.emosLog.length);
-        console.log("------------");
-        console.log("            ")
-      }
-    }
   //-----------------------------------------------------//
   //----- This is the place all interactions happen -----//
 
@@ -307,17 +201,14 @@ canvas1 = p => {
 
 
   class Agent{
-    constructor(x, y, radius){
+    constructor(x, y){
       this.position = p.createVector(x, y);
       this.velocity = p.createVector(0, 0);
       this.acceleration = p.createVector(0, 0);
       this.maxforce = 0.025;
-      this.radius = radius;
     }
 
     appear(){
-      p.fill(0,255,255);//Red in HSB mode
-      p.ellipse(this.position.x, this.position.y, this.radius*2, this.radius*2);
     }
 
     move(){
@@ -530,9 +421,8 @@ canvas1 = p => {
 
   class InternalModel{
 
-    constructor(happyD, surpriseD, fearD, angerD, disgustD, sadnessD){
+    constructor(){
       this.happy;
-      this.happyDistortion = happyD;
       this.convolutedHappy = [];
       this.convolutedHappySum = 0;
       this.happyAvg = 1.0;
@@ -564,8 +454,7 @@ canvas1 = p => {
 
     generateState(){
       if(generateStateTime != generateTimeStore){
-
-        this.happy = userHappyLevel * this.happyDistortion;
+        this.happy = userHappyLevel;
 
         if(isNaN(this.happy) == false){
           if(this.samplingTime < 1){
@@ -598,6 +487,7 @@ canvas1 = p => {
         }
 
         this.happyAvg = this.convolutedHappySum/this.convolutedHappy.length;
+        p.emotionAvg = this.happyAvg;
 
         this.currentEmos = this.happy + this.happyAvg;
 
@@ -607,6 +497,10 @@ canvas1 = p => {
 
         this.convolutedHappySum = 0;
 
+        //To give this value to hudCanvas
+        p.convolutedEmotionCopy = this.convolutedHappy;
+        p.emotionalSequencePointCopy = this.happySequencePoint;
+
       }
 
       generateTimeStore = generateStateTime;
@@ -614,19 +508,11 @@ canvas1 = p => {
 
 
     emotionalSequence(emotion, hueVal){
-
-      let convolutedEmotion;
-      let emotionalSequencePoint;
       p.strokeWeight(2);
 
-      if(emotion == "happy"){
-        convolutedEmotion = this.convolutedHappy;
-        emotionalSequencePoint = this.happySequencePoint;
-      }
-      console.log(convolutedEmotion);
-      console.log(emotionalSequencePoint);
+        let convolutedEmotion = this.convolutedHappy;
+        let emotionalSequencePoint = this.happySequencePoint;
 
-      // console.log(this.convolutedHappy);
         for(let i = 0; i < convolutedEmotion.length/10; i++){
           emotionalSequencePoint[i] = convolutedEmotion[i*10];
         }
@@ -649,49 +535,6 @@ canvas1 = p => {
     }
 
   }//class InternalModel end
-
-
-  class MatrixObject{
-    constructor(){
-      this.vendingMachinePos;
-      this.bookShelfPos;
-    }
-
-    grid(){
-      for(let i = 0; i <= p.width; i += 30){
-        for(let j = 0; j <= p.height; j+= 30){
-          p.stroke(255);
-          p.strokeWeight(0.05);
-          p.line(i, 0, i, p.height);
-          p.line(0, j, p.width, j);
-        }
-      }
-    }
-
-    vendingMachine(x, y, w, h){
-      this.vendingMachinePos = p.createVector(x, y);
-      p.fill(208, 52, 85);
-      p.noStroke();
-      p.rectMode(p.CENTER);
-      p.rect(this.vendingMachinePos.x, this.vendingMachinePos.y, w, h, 5);
-    }
-
-    bookShelf(x, y, w, h){
-      this.bookShelfPos = p.createVector(x, y);
-      p.fill(30, 53, 58);//cafe au lait
-      p.noStroke();
-      p.rectMode(p.CENTER);
-      p.rect(this.bookShelfPos.x, this.bookShelfPos.y, w, h);
-    }
-
-    wall(x, y, w, h){
-      p.fill(32, 37, 98);//cafe au lait
-      p.stroke(32, 46, 77);
-      p.strokeWeight(1);
-      p.rectMode(p.CORNER);
-      p.rect(x, y, w, h, 4);
-    }
-  }
 
 }
 
