@@ -11,6 +11,10 @@ let disgusted;
 let surprised;
 let fearful;
 
+let faceCenter = [];
+let checkDisplacementTime = 0;
+let checkDisplacementTimeStore = 0;
+
 let faceAPICanvas;
 
 Promise.all([
@@ -20,7 +24,7 @@ Promise.all([
   faceapi.nets.faceExpressionNet.loadFromUri("/models/")
 ])
 
-navigator.mediaDevices.getUserMedia({video:{width: 960, height: 540}})
+navigator.mediaDevices.getUserMedia({video:{width: 1280, height: 720}})
 .then(mediaStream => {
   var video = document.querySelector('video');
   video.srcObject = mediaStream;
@@ -56,8 +60,19 @@ video.addEventListener("play", () => {
       surprised = detections[0].expressions.surprised;
       fearful = detections[0].expressions.fearful;
 
+      faceCenter = [detections[0].landmarks.positions[30].x,
+                    detections[0].landmarks.positions[30].y];
 
-      // console.log(detections[0].expressions);
+      checkDisplacementTime++;
+      if(checkDisplacementTime > 10){
+        checkDisplacementTime = 0;
+      }
+
+      // console.log(detections[0]);
+      // console.log(faceCenter);
+      // console.log(detections[0].landmarks.positions[34].x);
+      // console.log(detections[0].landmarks.positions[34].y);
+      // console.log("-----------------------");
 
       //Redraw the canvas
       const resizedDetections = faceapi.resizeResults(detections, displaySize)

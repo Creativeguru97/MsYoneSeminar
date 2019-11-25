@@ -431,8 +431,8 @@ canvas1 = p => {
       this.currentEmos = 0;
       // this.currentEmos = [0, 0];
       this.emosLog = [];
-      for(let i = 0; i < 900; i++){
-        this.emosLog.push(this.currentEmos);
+      for(let i = 0; i < 300; i++){
+        this.emosLog.unshift(this.currentEmos);
       }
 
       this.samplingTime = 0;
@@ -466,7 +466,7 @@ canvas1 = p => {
           this.samplingTime++;
         }else{}
 
-        if(this.emosLog.length > 900){ //1000: which means 200 seconds
+        if(this.emosLog.length > 300){ //1000: which means 200 seconds
           this.emosLog.pop();
         }
 
@@ -474,7 +474,7 @@ canvas1 = p => {
         //Copy all of the emosLog
         for(let i = 0; i < this.emosLog.length; i++){
             // console.log(this.emosLog[i][j]);
-          let value = this.convolution(this.emosLog[i], 0.996, i);
+          let value = this.convolution(this.emosLog[i], 0.99, i);
             this.convolutedHappy[i] = value;
 
           if(this.convolutedHappy.length > this.emosLog.length){
@@ -525,6 +525,7 @@ canvas1 = p => {
             let saturation = p.map(45+(i*6), 45, 550, 100, 0);
             p.stroke(hueVal, saturation, 100);
             p.line(45+(6*i), this.graphBottom-sYvalue, 45+(6*(i+1)), this.graphBottom-eYvalue);
+            // p.point(45+(i*6), sYvalue); //Pointy version :)
           }
         }
 
