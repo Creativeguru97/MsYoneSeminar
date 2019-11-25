@@ -31,16 +31,16 @@ canvas0 = p => { //let canvas0 = function(p){...
   }
 
   p.togglePlaying = () => {
-  if(isListening == false){
-    microphone.start();
-    button.html("microphone OFF");
-    isListening = true;
-  }else if(isListening == true){
-    microphone.stop();
-    button.html("microphone ON");
-    isListening = false;
+    if(isListening == false){
+      microphone.start();
+      button.html("microphone OFF");
+      isListening = true;
+    }else if(isListening == true){
+      microphone.stop();
+      button.html("microphone ON");
+      isListening = false;
+    }
   }
-}
 
   p.draw = () => {
     // p.blendMode(p.ADD);
@@ -53,9 +53,6 @@ canvas0 = p => { //let canvas0 = function(p){...
   }
 
   p.emotionalStatesHUD = (x, y, hueVal) => {
-    // p.fill(255, 127);
-    // p.rect(x-10, y-30, 155, 185, 8);
-
     p.noStroke();
     p.fill(200, 53, 100);
     // p.fill(255);
@@ -119,8 +116,9 @@ canvas0 = p => { //let canvas0 = function(p){...
     }
   }
 
+
   p.posDisplacementHUD = () => {
-    
+
   }
 
 }
