@@ -12,13 +12,6 @@ let isListening = false;
 let emoSeqGraphTop = 575;
 let emoSeqGraphBottom = emoSeqGraphTop + 120;
 
-let pFaceCenter;
-let cFaceCenter;
-let displacementLog = [];
-let facePosSampleTime = 0;
-let displacementSum = 0;
-let displacementAvg = 0;
-
 
 
 //----- HUD canvas -----
@@ -56,7 +49,7 @@ canvas0 = p => { //let canvas0 = function(p){...
     p.emotionalStatesHUD(25, 530, 50);
     // p.emotionalSequence(50);
     p.micHUD(30, 60);
-    p.facePosDisplacementHUD();
+    p.posDisplacementHUD();
   }
 
   p.emotionalStatesHUD = (x, y, hueVal) => {
@@ -126,42 +119,9 @@ canvas0 = p => { //let canvas0 = function(p){...
     }
   }
 
-  p.facePosDisplacementHUD = () =>{
-    if(isNaN(faceCenter[0]) == false && isNaN(faceCenter[1]) == false){
-      p.ellipse(faceCenter[0], faceCenter[1], 30, 30);
-
-      //Check face positions displacement every 0.2 sec.
-      if(checkDisplacementTime != checkDisplacementTimeStore){
-
-        cFaceCenter = faceCenter;
-        if(facePosSampleTime == 0){
-          pFaceCenter = faceCenter;
-        }else{}
-
-        let displacement = Math.abs(cFaceCenter[0] - pFaceCenter[0]);
-
-        //Store all past 3 minutes displacement
-        displacementLog.unshift(displacement);
-        if(displacementLog.length > 300){
-          displacementLog.pop();
-        }
-        // console.log(displacementLog);
-
-        for (let i = 0; i < displacementLog.length; i++) {
-          displacementSum += displacementLog[i];
-        }
-        displacementAvg = displacementSum / displacementLog.length;
-        console.log(displacementAvg);
-        
-
-        displacementSum = 0;
-        checkDisplacementTimeStore = checkDisplacementTime;
-        pFaceCenter = cFaceCenter;
-        facePosSampleTime++;
-      }
-    }
+  p.posDisplacementHUD = () => {
+    
   }
-
 
 }
 

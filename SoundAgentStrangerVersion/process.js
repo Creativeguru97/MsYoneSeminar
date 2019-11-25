@@ -57,12 +57,22 @@ let serial;
 let outData = 0; // for data output
 let portName = '/dev/tty.usbmodem14401';  // fill in your serial port name here
 
+let pFaceCenter;
+let cFaceCenter;
+let displacementLog = [];
+let facePosSampleTime = 0;
+let displacementSum = 0;
+let displacementAvg = 0;
+
 
 //----- Grid canvas -----
 canvas1 = p => {
   p.convolutedEmotionCopy = [];
   p.emotionalSequencePointCopy = [];
   p.emotionAvg;
+
+  p.displacementAvgCopy;
+  p.currentDisplacement;
 
   p.preload = () => {
     for(let i=0; i < 20; i++){
@@ -93,8 +103,9 @@ canvas1 = p => {
 
   p.setup = () => {
     p.createDiv();
-    gridCanvas = p.createCanvas(1280, 405);
-    gridCanvas.id("gridCanvas");
+    // gridCanvas = p.createCanvas(1280, 405);
+    // gridCanvas.id("gridCanvas");
+    p.noCanvas();
     raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40));
     rayaState = new InternalModel();
     userState = new InternalModel();
@@ -158,6 +169,7 @@ canvas1 = p => {
     p.clear();
 
     userState.generateState();
+    userState.facePosDisplacement();
     // userState.emotionalSequence("happy", 50);
 
     //Lastly, we give Raya's x value to Servo
@@ -533,6 +545,45 @@ canvas1 = p => {
         p.strokeWeight(2);
         p.line(45, this.graphTop, 45, this.graphBottom+15);
         p.line(30, this.graphBottom, 645, this.graphBottom);
+    }
+
+    facePosDisplacement(){
+      if(isNaN(faceCenter[0]) == false && isNaN(faceCenter[1]) == false){
+        p.ellipse(faceCenter[0], faceCenter[1], 30, 30);
+
+        //Check face positions displacement every 0.2 sec.
+        if(checkDisplacementTime != checkDisplacementTimeStore){
+
+          cFaceCenter = faceCenter;
+          if(facePosSampleTime == 0){
+            pFaceCenter = faceCenter;
+          }else{}
+
+          let displacement = Math.abs(cFaceCenter[0] - pFaceCenter[0]);
+            p.currentDisplacement = displacement;
+
+          //Store all past 3 minutes displacement
+          displacementLog.unshift(displacement);
+          if(displacementLog.length > 300){
+            displacementLog.pop();
+          }
+          // console.log(displacementLog);
+
+          for (let i = 0; i < displacementLog.length; i++) {
+            displacementSum += displacementLog[i];
+          }
+          displacementAvg = displacementSum / displacementLog.length;
+          p.displacementAvgCopy = displacementAvg;
+          console.log("displacement average: "+displacementAvg);
+          // console.log(displacementLog);
+
+
+          displacementSum = 0;
+          checkDisplacementTimeStore = checkDisplacementTime;
+          pFaceCenter = cFaceCenter;
+          facePosSampleTime++;
+        }
+      }
     }
 
   }//class InternalModel end
