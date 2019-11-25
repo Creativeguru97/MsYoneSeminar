@@ -152,7 +152,7 @@ canvas0 = p => { //let canvas0 = function(p){...
         }
         displacementAvg = displacementSum / displacementLog.length;
         console.log(displacementAvg);
-
+        
 
         displacementSum = 0;
         checkDisplacementTimeStore = checkDisplacementTime;
