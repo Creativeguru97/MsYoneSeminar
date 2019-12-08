@@ -9,9 +9,9 @@ let gridCanvas;
 let toMouse;
 let toUser;
 let toVendingMachine;
-let toBookShelf;
+let toShelf;
 let distUser;
-let distBookShelf;
+let distShelf;
 let distVendingMachine;
 
 //---User's emos relevant---
@@ -67,10 +67,11 @@ let cMicrophoneGetLevel;
 
 
 //For event programing
-let timeLoop;
-let timeWait;
+let time = 0;
+let checkCurrentHappy;
+let checkPastHappy;
 let loopTime = 0;//60 seconds loop
-let waitingTime = 0;
+let sittingTime = 0;
 let okIgottaGo = 30;//The timing agent get into loop between bookshelf and vendingMachine
 
 let walkFrame = 0;
@@ -116,17 +117,25 @@ canvas1 = p => {
 
   p.setup = () => {
     p.createDiv();
-    gridCanvas = p.createCanvas(720, 405);
+    gridCanvas = p.createCanvas(720, 500);
     gridCanvas.id("gridCanvas");
     rayaRadius = 15;
     raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40), rayaRadius);
     rayaState = new InternalModel(0.85, 1.6, 1.0, 1.2, 0.9, 1.8);
     user = new User();
+
     grid = new MatrixObject();
-    bookShelf0 = new MatrixObject();
-    bookShelf1 = new MatrixObject();
-    bookShelf2= new MatrixObject();
-    vendingMachine = new MatrixObject();
+    shelf0 = new MatrixObject();
+    shelf1 = new MatrixObject();
+    shelf2= new MatrixObject();
+    shelf3= new MatrixObject();
+    shelf4= new MatrixObject();
+
+    desk0= new MatrixObject();
+    desk1= new MatrixObject();
+    desk2= new MatrixObject();
+    desk3= new MatrixObject();
+    desk4= new MatrixObject();
 
     leftWall = new MatrixObject();
     rightUpperWall = new MatrixObject();
@@ -136,16 +145,15 @@ canvas1 = p => {
 
     p.colorMode(p.HSB, 360, 100, 100, 100);//(Mode, Hue, Saturation, Brightness, Alpha)
 
-    timeLoop = setInterval(() => {
-      loopTime++;
-      if(loopTime > 120){
-        loopTime = 0;
-      }
+
+    setInterval(() => {
+      sittingTime++;
+      time++;
     }, 1000);
 
-    timeWait = setInterval(() => {
-      waitingTime++;
-    }, 1000);
+    setInterval(() => {
+      p.check();
+    }, 6000);
 
     userEmosStore = setInterval(() => {
       userNeutralStore.push(neutral);
@@ -259,15 +267,24 @@ canvas1 = p => {
 
     //First we need to set environment.
     grid.grid();
-    topWall.wall(0, 0, p.width-40, 20);
+    topWall.wall(0, 0, p.width-150, 20);
     bottomWall.wall(0, p.height-20, p.width-40, 20);
-    leftWall.wall(0, p.height/4, 40, p.height*3/4-20);
-    rightUpperWall.wall(p.width-60, 20, 20, p.height/2-120);
-    rightLowerWall.wall(p.width-60, p.height/2+80, 20, p.height/2-100);
-    vendingMachine.vendingMachine(p.width*3/4, 40, 100, 40);
-    bookShelf0.bookShelf(50, p.height*4/8, 20, 100);
-    bookShelf1.bookShelf(50, p.height*6/8, 20, 100);
-    bookShelf2.bookShelf(120, p.height-30, 100, 20);
+    leftWall.wall(0, 20, 20, p.height-40);
+    // rightUpperWall.wall(p.width-60, 20, 20, p.height/2-120);
+    // rightLowerWall.wall(p.width-60, p.height/2+80, 20, p.height/2-100);
+
+    shelf0.shelf(20, p.height-110, 90, 90);
+    shelf1.shelf(115, p.height-90, 120, 70);
+    shelf2.shelf(p.width-150, p.height-130, 70, 90);
+    shelf3.shelf(p.width-150, p.height-221, 70, 90);
+    shelf4.shelf(232, 128, 120, 40);
+
+    desk0.desk(20, 85, 210, 90);
+    desk1.desk(20, 176, 210, 90);
+    desk2.desk(232, 170, 50, 100);
+    desk3.desk(283, 170, 50, 100);
+    desk4.desk(240, p.height-125, 260, 105);
+    // desk4.desk(250, p.height-150, 300, 130);
 
     //Next we set user existance.
     user.appear();
@@ -297,29 +314,31 @@ canvas1 = p => {
     raya.move();
     raya.turn(60+rayaRadius, 60+rayaRadius, 20+rayaRadius, 20+rayaRadius);
     raya.stop();
-    raya.cough(20000, 19998, 'sustain');
+    raya.cough(20000, 19999, 'sustain');
 
     rayaState.internalState();
 
-    toUser = p.createVector(user.position.x, user.position.y);
-    toVendingMachine = p.createVector(vendingMachine.vendingMachinePos.x, vendingMachine.vendingMachinePos.y+25);
-    toBookShelf = p.createVector(bookShelf0.bookShelfPos.x+10, bookShelf0.bookShelfPos.y);
+    toUser = p.createVector(user.position.x+50, user.position.y);
+    // toVendingMachine = p.createVector(vendingMachine.vendingMachinePos.x, vendingMachine.vendingMachinePos.y+25);
+    toShelf = p.createVector(shelf0.bookShelfPos.x+10, shelf0.bookShelfPos.y);
 
-    distUser = p5.Vector.sub(raya.position, user.position);
-    distBookShelf = p5.Vector.sub(raya.position, toBookShelf);
-    distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
+    distUser = p5.Vector.sub(raya.position, toUser);
+    distShelf = p5.Vector.sub(raya.position, toShelf);
+    // distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
 
 
     //Raya feels good
     //move close or run away from user for their facial expression.
     if(rayaState.currentEmos[0] > 0.75){//which is happy
-      if(distUser.mag() > 50){
-        raya.attracted(toUser, 50, rayaState.currentEmos[0]);
+      if(distUser.mag() > 20){
+        raya.attracted(toUser, 10, rayaState.currentEmos[0]);
+      }else{
       }
       isAttractedByUser = true;
-      waitingTime = 0;
+      sittingTime = 0;
     }
 
+    console.log(distUser.mag());
 
     //Raya get scared
     if(rayaState.currentEmos[2] > 0.70){
@@ -327,8 +346,10 @@ canvas1 = p => {
         raya.leave(toUser, rayaState.currentEmos[2]);
       }
       isAttractedByUser = false;
-      waitingTime = okIgottaGo - 2 ;//Means agent get into the loop 2 seconds later
+      sittingTime = okIgottaGo - 2 ;//Means agent get into the loop 2 seconds later
     }
+
+    // console.log(sittingTime);
 
 
     //Raya get surprised!!!
@@ -367,27 +388,18 @@ canvas1 = p => {
       sittingFrame = 0;
     }
 
-    //Default behavior: Looping between book shelf and vending machine.
-    if(waitingTime > okIgottaGo){
+    // Default behavior: Reading a book at book shelf right behind
+    if(sittingTime > okIgottaGo){
       isAttractedByUser = false;
 
-      if (loopTime < 90){
-        if(distBookShelf.mag() > 45){
-          raya.attracted(toBookShelf, 40, 0.70);
-        }else{
-          raya.readBook(2400, 2397, 'sustain');
-        }
-      }else if(loopTime > 90){
-        if(distVendingMachine.mag() > 50){
-          raya.attracted(toVendingMachine, 40, 0.70);
-          buyDrinkFrame = 0;
-        }else{
-          buyDrinkFrame++;
-          raya.buySomeDrink(buyDrinkFrame, 60, 120, 140, 350, 'sustain');
-        }
+      if(distShelf.mag() > 60){
+        raya.attracted(toShelf, 40, 0.70);
+      }else{
+        raya.readBook(2400, 2397, 'sustain');
       }
     }
-    // p.print(p.frameRate());
+
+    // console.log(distShelf.mag());
 
 
     //Lastly, we give Raya's x value to Servo
@@ -397,14 +409,15 @@ canvas1 = p => {
     serial.write(outData); // write to serial for Arduino to pickup
   }
 
-    p.keyTyped = () => {
-      if (p.key === "l") {
-        console.log(rayaState.convolutedHappy.length);
-        console.log(rayaState.emosLog.length);
-        console.log("------------");
-        console.log("            ")
-      }
-    }
+  p.check = () => {
+    checkCurrentHappy = rayaState.currentEmos[0];
+    checkPastHappy = rayaState.happyDelay;
+
+    // console.log("CurrentHappy: " + p.nf(checkCurrentHappy, 1, 2));
+    // console.log("checkPastHappy: " + p.nf(checkPastHappy, 1, 6));
+
+  }
+
   //-----------------------------------------------------//
   //----- This is the place all interactions happen -----//
 
@@ -670,7 +683,7 @@ canvas1 = p => {
 
   class User{
     constructor(){
-      this.position = p.createVector(p.width/2, p.height*3/4);
+      this.position = p.createVector(120, 280);
       this.velocity = p.createVector();
       this.acceleration = p.createVector(0, 0);
       this.maxspeed = 0.5;
@@ -834,7 +847,7 @@ canvas1 = p => {
         for(let i = 0; i < this.emosLog.length; i++){
           for(let j = 0; j < 6; j++){
             // console.log(this.emosLog[i][j]);
-            let value = this.convolution(this.emosLog[i][j], 0.99, i);
+            let value = this.convolution(this.emosLog[i][j], 0.998, i);
 
             if(j == 0){//haooy
               this.convolutedHappy[i] = value;
@@ -896,12 +909,12 @@ canvas1 = p => {
         }
 
         // console.log("this.happy: " + this.happy);
-        console.log("this.happyDelay: " + this.happyDelay);
-        console.log("current happy: " + this.currentEmos[0]);
+        // console.log("this.happyDelay: " + this.happyDelay);
+        // console.log("current happy: " + this.currentEmos[0]);
         // console.log("current surprise: " + this.currentEmos[1]);
         // console.log("current fear: " + this.currentEmos[2]);
         // console.log("current sad: " + this.currentEmos[5]);
-        console.log("---------------------");
+        // console.log("---------------------");
 
         this.convolutedHappySum = 0;
         this.convolutedSurpriseSum = 0;
@@ -933,19 +946,21 @@ canvas1 = p => {
       }
     }
 
-    vendingMachine(x, y, w, h){
+    desk(x, y, w, h){
       this.vendingMachinePos = p.createVector(x, y);
-      p.fill(208, 52, 85);
-      p.noStroke();
-      p.rectMode(p.CENTER);
+      p.fill(36, 17, 96);
+      // p.noStroke();
+      p.stroke(37, 66, 73);
+      p.strokeWeight(1);
+      p.rectMode(p.CORNER);
       p.rect(this.vendingMachinePos.x, this.vendingMachinePos.y, w, h, 5);
     }
 
-    bookShelf(x, y, w, h){
+    shelf(x, y, w, h){
       this.bookShelfPos = p.createVector(x, y);
       p.fill(30, 53, 58);//cafe au lait
       p.noStroke();
-      p.rectMode(p.CENTER);
+      p.rectMode(p.CORNER);
       p.rect(this.bookShelfPos.x, this.bookShelfPos.y, w, h);
     }
 

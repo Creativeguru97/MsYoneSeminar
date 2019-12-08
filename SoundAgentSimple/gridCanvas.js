@@ -219,6 +219,7 @@ canvas1 = p => {
     raya.turn(60+rayaRadius, 60+rayaRadius, 20+rayaRadius, 20+rayaRadius);
     raya.stop();
     raya.cough(20000, 19998, 'sustain');
+    raya.readBook(2400, 2397, 'sustain');
 
     userState.internalState();
 
@@ -231,72 +232,6 @@ canvas1 = p => {
     distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
 
 
-    //Raya feels good
-    //move close or run away from user for their facial expression.
-    if(userState.currentEmos < 0.15){//which is happy
-      if(distUser.mag() > 50){
-        raya.attracted(toUser, 50, 0.5);
-      }
-      isAttractedByUser = true;
-      waitingTime = 0;
-    }
-
-    // //Raya get surprised!!!
-    // cMicrophoneGetLevel = microphone.getLevel();
-    // if((cMicrophoneGetLevel - pMicrophoneGetLevel) >= 0.10){
-    //   if(rayaState.currentEmos[1] > 0.10){//which is surprise
-    //     console.log("Surprise level: "+ (cMicrophoneGetLevel-pMicrophoneGetLevel));
-    //     console.log("Raya surprise level: "+ rayaState.currentEmos[1]);
-    //     console.log("Raya surprised!!!!!!!!!!");
-    //     console.log("-------------------------------------------------------");
-    //     //Output suprising voice
-    //     raya.surprise('restart');
-    //   }
-    // }
-    // pMicrophoneGetLevel = cMicrophoneGetLevel;
-
-
-    if(distUser.mag() <= 70){//If raya is closer than 70px
-      raya.breathe(180, 'sustain');
-
-      if(raya.velocity.x < 0.01 && raya.velocity.y < 0.01 && isAttractedByUser == true){//And if raya has been settled
-        sittingFrame++;
-
-        if(sittingFrame == 80){
-          raya.sitDown('sustain');
-        }
-        raya.putCupAndBookOnTable(sittingFrame, 160, 220, 'sustain');
-
-        if (sittingFrame > 200) {
-          raya.readBook(2400, 2397, 'sustain');
-        }
-
-      }
-    }else{
-      sittingFrame = 0;
-    }
-
-    //Default behavior: Looping between book shelf and vending machine.
-    if(waitingTime > okIgottaGo){
-      isAttractedByUser = false;
-
-      if (loopTime < 90){
-        if(distBookShelf.mag() > 45){
-          raya.attracted(toBookShelf, 40, 0.70);
-        }else{
-          raya.readBook(2400, 2397, 'sustain');
-        }
-      }else if(loopTime > 90){
-        if(distVendingMachine.mag() > 50){
-          raya.attracted(toVendingMachine, 40, 0.70);
-          buyDrinkFrame = 0;
-        }else{
-          buyDrinkFrame++;
-          raya.buySomeDrink(buyDrinkFrame, 60, 120, 140, 350, 'sustain');
-        }
-      }
-    }
-    // p.print(p.frameRate());
 
 
     //Lastly, we give Raya's x value to Servo
