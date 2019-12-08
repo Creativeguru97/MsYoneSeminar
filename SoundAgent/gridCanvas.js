@@ -338,7 +338,7 @@ canvas1 = p => {
       sittingTime = 0;
     }
 
-    console.log(distUser.mag());
+    // console.log(distUser.mag());
 
     //Raya get scared
     if(rayaState.currentEmos[2] > 0.70){
