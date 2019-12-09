@@ -130,6 +130,8 @@ canvas1 = p => {
     shelf2= new MatrixObject();
     shelf3= new MatrixObject();
     shelf4= new MatrixObject();
+    shelf5= new MatrixObject();
+    shelf6= new MatrixObject();
 
     desk0= new MatrixObject();
     desk1= new MatrixObject();
@@ -273,17 +275,19 @@ canvas1 = p => {
     // rightUpperWall.wall(p.width-60, 20, 20, p.height/2-120);
     // rightLowerWall.wall(p.width-60, p.height/2+80, 20, p.height/2-100);
 
-    shelf0.shelf(20, p.height-110, 90, 90);
-    shelf1.shelf(115, p.height-90, 120, 70);
-    shelf2.shelf(p.width-150, p.height-130, 70, 90);
-    shelf3.shelf(p.width-150, p.height-221, 70, 90);
-    shelf4.shelf(232, 128, 120, 40);
+    shelf0.shelf(20, p.height-110, 45, 80);
+    shelf1.shelf(66, p.height-110, 45, 80);
+    shelf2.shelf(115, p.height-95, 120, 70);
+    shelf3.shelf(p.width-160, p.height-110, 45, 70);
+    shelf4.shelf(p.width-160, p.height-195, 45, 70);
+    shelf5.shelf(p.width-160, p.height-221, 45, 70);
+    shelf6.shelf(232, 128, 85, 40);
 
     desk0.desk(20, 85, 210, 90);
     desk1.desk(20, 176, 210, 90);
     desk2.desk(232, 170, 50, 100);
     desk3.desk(283, 170, 50, 100);
-    desk4.desk(240, p.height-125, 260, 105);
+    desk4.desk(240, p.height-130, 260, 105);
     // desk4.desk(250, p.height-150, 300, 130);
 
     //Next we set user existance.
@@ -688,7 +692,6 @@ canvas1 = p => {
       this.acceleration = p.createVector(0, 0);
       this.maxspeed = 0.5;
       this.maxforce = 0.025;
-
     }
 
     appear(){
