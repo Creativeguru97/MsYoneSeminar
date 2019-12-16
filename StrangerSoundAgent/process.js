@@ -172,6 +172,8 @@ canvas1 = p => {
     userState.facePosDisplacement();
     // userState.emotionalSequence("happy", 50);
 
+
+
     // //Lastly, we give Raya's x value to Servo
     // let val = p.map(raya.position.x, 75, p.width-75, 20, 160);
     // // console.log(val);
@@ -220,81 +222,6 @@ canvas1 = p => {
       this.maxforce = 0.025;
     }
 
-    appear(){
-    }
-
-    move(){
-      this.velocity.add(this.acceleration);
-      this.position.add(this.velocity);
-      this.acceleration.mult(0);
-      this.velocity.limit(this.maxspeed);
-    }
-
-    //Core movements
-    applyForce(force){
-      this.acceleration.add(force);
-    }
-
-    turn(leftBorder, rightBorder, topBorder, bottomBorder){
-      //Outer walls
-      if(this.position.x > p.width-rightBorder){
-        this.position.x = p.width-rightBorder;
-        this.velocity.x = this.velocity.x*-1;
-        // this.acceleration.x = this.acceleration.x*-1;
-      }
-      if(this.position.x < leftBorder){
-        this.position.x = leftBorder;
-        this.velocity.x = this.velocity.x*-1;
-        // this.acceleration.x = this.acceleration.x*-1;
-      }
-
-      if(this.position.y > p.height-bottomBorder){
-        this.position.y = p.height-bottomBorder;
-        this.velocity.y = this.velocity.y*-1;
-        // this.acceleration.y = this.acceleration.y*-1;
-      }
-      if(this.position.y < topBorder){
-        this.position.y = topBorder;
-        this.velocity.y = this.velocity.y*-1;
-        // this.acceleration.y = this.acceleration.y*-1;
-      }
-    }
-
-    attracted(target, arriveDist, maxspeed){
-      let desired = p5.Vector.sub(target, this.position);
-      let d = desired.mag();
-    // Scale with arbitrary damping within 100 pixels
-      if (d < arriveDist+80) {
-        let arrivingSpeed = p.map(d, arriveDist, arriveDist+80, 0, maxspeed);
-        desired.setMag(arrivingSpeed);
-      } else {
-        desired.setMag(maxspeed);
-      }
-
-      // Steering = Desired minus Velocity
-      let steer = p5.Vector.sub(desired, this.velocity);
-      steer.limit(this.maxforce);  // Limit to maximum steering force
-      this.applyForce(steer);
-      this.walk(30, 'sustain');
-    }
-
-    stop(){
-      //friction simuration.
-      let friction = this.velocity.copy();
-      friction.mult(-0.02);
-      this.applyForce(friction);
-    }
-
-    leave(target, maxspeed){
-      let desired = p5.Vector.sub(target, this.position);
-      desired.mult(-1);
-      desired.setMag(maxspeed);
-
-      let steer = p5.Vector.sub(desired, this.velocity);
-      steer.limit(this.maxforce*1.5);  // Limit to maximum steering force
-      this.applyForce(steer);
-      this.walk(30, 'sustain');
-    }
 
     //Sound expressions
     soundDirection(soundFile, index, audibleDist, ampMax){
@@ -312,16 +239,8 @@ canvas1 = p => {
       }
     }
 
-    walk(interval, mode){
-      walkFrame++;
-      if(walkFrame == interval){
-        let index = p.int(p.random(0, walkSound.length));
-        walkSound[index].playMode(mode);
-        // this.soundDirection(walkSound, index, p.width/2, 0.05);
-        this.soundDirection(walkSound, index, p.width/2, 2.0);
-        walkSound[index].play();
-        walkFrame = 0;
-      }
+    typeKeyboard(){
+      
     }
 
     cough(possibilityRange, border, mode){
@@ -332,18 +251,6 @@ canvas1 = p => {
         // this.soundDirection(coughSound, index, p.width/2, 0.04);
         this.soundDirection(coughSound, index, p.width/2, 0.8);
         coughSound[index].play();
-      }
-    }
-
-
-    breathe(interval, mode){
-      breathFrame++;
-      console.log("Raya breathing");
-      if(breathFrame == interval){
-        breathSound.playMode(mode);
-        breathSound.setVolume(6.0);
-        breathSound.play();
-        breathFrame = 0;
       }
     }
 
@@ -382,30 +289,6 @@ canvas1 = p => {
         putABookSound.setVolume(1.0);
         putABookSound.play();
       }
-    }
-
-    buySomeDrink(countFrame, num1, num2, num3, num4, mode){
-        if(countFrame == num1){
-          buyDrink[1].playMode(mode);
-          // this.soundDirection(buyDrink, 1, p.width/2, 0.05);
-          this.soundDirection(buyDrink, 1, p.width/2, 2.0);
-          buyDrink[1].play();
-        }else if(countFrame == num2+180){
-          buyDrink[2].playMode(mode);
-          // this.soundDirection(buyDrink, 2, p.width/2, 0.08);
-          this.soundDirection(buyDrink, 2, p.width/2, 2.0);
-          buyDrink[2].play();
-        }else if(countFrame == num3+180){
-          buyDrink[3].playMode(mode);
-          // this.soundDirection(buyDrink, 3, p.width/2, 0.05);
-          this.soundDirection(buyDrink, 3, p.width/2, 2.0);
-          buyDrink[3].play();
-        }else if(countFrame == num4+180){
-          buyDrink[4].playMode(mode);
-          // this.soundDirection(buyDrink, 4, p.width/2, 0.08);
-          this.soundDirection(buyDrink, 4, p.width/2, 2.0);
-          buyDrink[4].play();
-        }
     }
 
     laugh(possibilityRange, border, mode){
@@ -559,6 +442,7 @@ canvas1 = p => {
             pFaceCenter = faceCenter;
           }else{}
 
+          //Calculate x and y displacement indivisually
           xDispalcement = Math.abs(cFaceCenter[0] - pFaceCenter[0])
           yDisplacement = Math.abs(cFaceCenter[1] - pFaceCenter[1])
 
@@ -587,7 +471,7 @@ canvas1 = p => {
           facePosSampleTime++;
         }
       }
-    }
+    }//function facePosDisplacement() end
 
   }//class InternalModel end
 
