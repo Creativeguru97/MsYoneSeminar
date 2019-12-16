@@ -5,22 +5,13 @@ let canvas1;
 let gridCanvas;
 
 
-//Objects
-let toMouse;
-let toUser;
-let toVendingMachine;
-let toBookShelf;
-let distUser;
-let distBookShelf;
-let distVendingMachine;
-
 //---User's emos relevant---
 let userEmosStore;
 let userHappyStore = [];
 let userHappySum = 0;
-let userHappyLevel;
-let userState;
+let userNeutralLevel;
 let rayaState;
+let userState;
 
 //---Raya relevant---
 let isNearByUser = false;
@@ -47,6 +38,7 @@ let pMicrophoneGetLevel;
 let cMicrophoneGetLevel;
 
 
+
 //For event programing
 let timeLoop;
 let timeWait;
@@ -65,9 +57,23 @@ let serial;
 let outData = 0; // for data output
 let portName = '/dev/tty.usbmodem14401';  // fill in your serial port name here
 
+let pFaceCenter;
+let cFaceCenter;
+let displacementLog = [];
+let facePosSampleTime = 0;
+let displacementSum = 0;
+let displacementAvg = 0;
+
 
 //----- Grid canvas -----
 canvas1 = p => {
+  p.convolutedEmotionCopy = [];
+  p.emotionalSequencePointCopy = [];
+  p.emotionAvg;
+
+  p.displacementAvgCopy;
+  p.currentDisplacement;
+
   p.preload = () => {
     for(let i=0; i < 20; i++){
       // walkSound[i] = p.loadSound("/soundEffects/walkSoundSmall/walk"+i+".mp3");
@@ -97,23 +103,12 @@ canvas1 = p => {
 
   p.setup = () => {
     p.createDiv();
-    gridCanvas = p.createCanvas(720, 405);
-    gridCanvas.id("gridCanvas");
-    rayaRadius = 15;
-    raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40), rayaRadius);
-    userState = new InternalModel(0.85);
-    user = new User();
-    grid = new MatrixObject();
-    bookShelf0 = new MatrixObject();
-    bookShelf1 = new MatrixObject();
-    bookShelf2= new MatrixObject();
-    vendingMachine = new MatrixObject();
-
-    leftWall = new MatrixObject();
-    rightUpperWall = new MatrixObject();
-    rightLowerWall = new MatrixObject();
-    topWall = new MatrixObject();
-    bottomWall = new MatrixObject();
+    // gridCanvas = p.createCanvas(1280, 405);
+    // gridCanvas.id("gridCanvas");
+    p.noCanvas();
+    raya = new Agent(p.random(80, p.width-80), p.random(70, p.height-40));
+    rayaState = new InternalModel();
+    userState = new InternalModel();
 
     p.colorMode(p.HSB, 360, 100, 100, 100);//(Mode, Hue, Saturation, Brightness, Alpha)
 
@@ -129,19 +124,21 @@ canvas1 = p => {
     }, 1000);
 
     userEmosStore = setInterval(() => {
+
       userHappyStore.push(happy);
 
       if(userHappyStore.length > 5){
         userHappyStore.splice(0, 1);//Erase index 0
       }
-      for(let i=0; i<userHappyStore.length; i++){
 
+      for(let i=0; i<userHappyStore.length; i++){
         if(userHappyStore[i] != undefined){
           userHappySum += userHappyStore[i];
         }
-
       }
+
       userHappyLevel = userHappySum/userHappyStore.length;
+
       userHappySum = 0;
 
       generateStateTime++;
@@ -166,129 +163,64 @@ canvas1 = p => {
     serial.open(portName);              // open a serial port
   }
 
-  // p.mousePressed = () => {
-  //   let psychoKinesis = p.createVector(0, -50);
-  //   raya.applyForce(psychoKinesis);
-  // }
-
-
 //----- This is the place all interactions happen -----//
 //-----------------------------------------------------//
   p.draw = () => {
-    p.background(31, 52, 97);//apricot
-    // p.clear();
+    p.clear();
 
-    //First we need to set environment.
-    grid.grid();
-    topWall.wall(0, 0, p.width-40, 20);
-    bottomWall.wall(0, p.height-20, p.width-40, 20);
-    leftWall.wall(0, p.height/4, 40, p.height*3/4-20);
-    rightUpperWall.wall(p.width-60, 20, 20, p.height/2-120);
-    rightLowerWall.wall(p.width-60, p.height/2+80, 20, p.height/2-100);
-    vendingMachine.vendingMachine(p.width*3/4, 40, 100, 40);
-    bookShelf0.bookShelf(50, p.height*4/8, 20, 100);
-    bookShelf1.bookShelf(50, p.height*6/8, 20, 100);
-    bookShelf2.bookShelf(120, p.height-30, 100, 20);
+    userState.generateState();
+    userState.facePosDisplacement();
+    // userState.emotionalSequence("happy", 50);
 
-    //Next we set user existance.
-    user.appear();
-    user.move();
-    user.stop();
-    user.turn(60+rayaRadius, 60+rayaRadius, 20+rayaRadius, 20+rayaRadius);
-    if (p.keyIsDown(p.LEFT_ARROW)) {
-      let move = p.createVector(-0.5, 0);
-      user.applyForce(move);
-    }
-    if (p.keyIsDown(p.RIGHT_ARROW)) {
-      let move = p.createVector(0.5, 0);
-      user.applyForce(move);
-    }
-    if (p.keyIsDown(p.UP_ARROW)) {
-      let move = p.createVector(0, -0.5);
-      user.applyForce(move);
-    }
-    if (p.keyIsDown(p.DOWN_ARROW)) {
-      let move = p.createVector(0, 0.5);
-      user.applyForce(move);
-    }
-
-
-    //then we design the agent behavior along with all above.
-    raya.appear();
-    raya.move();
-    raya.turn(60+rayaRadius, 60+rayaRadius, 20+rayaRadius, 20+rayaRadius);
-    raya.stop();
-    raya.cough(20000, 19998, 'sustain');
-    raya.readBook(2400, 2397, 'sustain');
-
-    userState.internalState();
-
-    toUser = p.createVector(user.position.x, user.position.y);
-    toVendingMachine = p.createVector(vendingMachine.vendingMachinePos.x, vendingMachine.vendingMachinePos.y+25);
-    toBookShelf = p.createVector(bookShelf0.bookShelfPos.x+10, bookShelf0.bookShelfPos.y);
-
-    distUser = p5.Vector.sub(raya.position, user.position);
-    distBookShelf = p5.Vector.sub(raya.position, toBookShelf);
-    distVendingMachine = p5.Vector.sub(raya.position, toVendingMachine);
-
-
-
-
-    //Lastly, we give Raya's x value to Servo
-    let val = p.map(raya.position.x, 75, p.width-75, 20, 160);
-    // console.log(val);
-    outData = val;  // setup the serial output
-    serial.write(outData); // write to serial for Arduino to pickup
+    // //Lastly, we give Raya's x value to Servo
+    // let val = p.map(raya.position.x, 75, p.width-75, 20, 160);
+    // // console.log(val);
+    // outData = val;  // setup the serial output
+    // serial.write(outData); // write to serial for Arduino to pickup
   }
 
-    p.keyTyped = () => {
-      if (p.key === "l") {
-        console.log(rayaState.convolutedHappy.length);
-        console.log(rayaState.emosLog.length);
-        console.log("------------");
-        console.log("            ")
-      }
-    }
   //-----------------------------------------------------//
   //----- This is the place all interactions happen -----//
 
 
-  p.printList = (portList) => {
-   // portList is an array of serial port names
-   for (var i = 0; i < portList.length; i++) {
-   // Display the list the console:
-    console.log(i + " " + portList[i]);
-   }
-  }
-  p.serverConnected = () => {
-    console.log('connected to server.');
-  }
-  p.portOpen = () => {
-    console.log('the serial port opened.')
-  }
-  p.serialEvent = () => {
-    inData = Number(serial.read());
-  }
-  p.serialError = (err) => {
-    console.log('Something went wrong with the serial port. ' + err);
-  }
-  p.portClose = () => {
-    console.log('The serial port closed.');
-  }
+  // p.printList = (portList) => {
+  //  // portList is an array of serial port names
+  //  for (var i = 0; i < portList.length; i++) {
+  //  // Display the list the console:
+  //   console.log(i + " " + portList[i]);
+  //  }
+  // }
+  //
+  // p.serverConnected = () => {
+  //   console.log('connected to server.');
+  // }
+  //
+  // p.portOpen = () => {
+  //   console.log('the serial port opened.')
+  // }
+  //
+  // p.serialEvent = () => {
+  //   inData = Number(serial.read());
+  // }
+  //
+  // p.serialError = (err) => {
+  //   console.log('Something went wrong with the serial port. ' + err);
+  // }
+  //
+  // p.portClose = () => {
+  //   console.log('The serial port closed.');
+  // }
 
 
   class Agent{
-    constructor(x, y, radius){
+    constructor(x, y){
       this.position = p.createVector(x, y);
       this.velocity = p.createVector(0, 0);
       this.acceleration = p.createVector(0, 0);
       this.maxforce = 0.025;
-      this.radius = radius;
     }
 
     appear(){
-      p.fill(0,255,255);//Red in HSB mode
-      p.ellipse(this.position.x, this.position.y, this.radius*2, this.radius*2);
     }
 
     move(){
@@ -495,104 +427,32 @@ canvas1 = p => {
       surpriseSound[index].play();
     }
 
-
-
-    standUp(){
-    }
-
-    spillTeaOnBook(){
-    }
-    annoy(){
-    }
-  }
-  //----- Raya class end -----
-
-  class User{
-    constructor(){
-      this.position = p.createVector(p.width/2, p.height*3/4);
-      this.velocity = p.createVector();
-      this.acceleration = p.createVector(0, 0);
-      this.maxspeed = 0.5;
-      this.maxforce = 0.025;
-
-    }
-
-    appear(){
-      p.fill(255, 0, 255);
-      p.ellipse(this.position.x, this.position.y, 40, 40);
-    }
-
-    move(){
-      this.velocity.add(this.acceleration);
-      this.position.add(this.velocity);
-      this.acceleration.mult(0);
-      this.velocity.limit(this.maxspeed);
-    }
-
-    applyForce(force){
-      this.acceleration.add(force);
-    }
-
-    turn(leftBorder, rightBorder, topBorder, bottomBorder){
-      //Outer walls
-      if(this.position.x > p.width-rightBorder){
-        this.position.x = p.width-rightBorder;
-        this.velocity.x = this.velocity.x*-1;
-        // this.acceleration.x = this.acceleration.x*-1;
-      }
-      if(this.position.x < leftBorder){
-        this.position.x = leftBorder;
-        this.velocity.x = this.velocity.x*-1;
-        // this.acceleration.x = this.acceleration.x*-1;
-      }
-
-      if(this.position.y > p.height-bottomBorder){
-        this.position.y = p.height-bottomBorder;
-        this.velocity.y = this.velocity.y*-1;
-        // this.acceleration.y = this.acceleration.y*-1;
-      }
-      if(this.position.y < topBorder){
-        this.position.y = topBorder;
-        this.velocity.y = this.velocity.y*-1;
-        // this.acceleration.y = this.acceleration.y*-1;
-      }
-    }
-
-    stop(){
-      //friction simuration.
-      let friction = this.velocity.copy();
-      friction.mult(-0.05);
-      this.applyForce(friction);
-    }
-
-
-
   }
   //----- Raya class end -----
 
 
   class InternalModel{
 
-    constructor(happyD){
+    constructor(){
       this.happy;
-      this.happyDistortion = happyD;
       this.convolutedHappy = [];
       this.convolutedHappySum = 0;
-      this.happyDelay = 1.0;
+      this.happyAvg = 1.0;
+
       this.newLog = [];
       this.currentEmos = 0;
-
+      // this.currentEmos = [0, 0];
       this.emosLog = [];
-      for(let i = 0; i < 900; i++){
-        this.emosLog.push(this.currentEmos);
+      for(let i = 0; i < 300; i++){
+        this.emosLog.unshift(this.currentEmos);
       }
 
       this.samplingTime = 0;
-    }
 
-    cognition(){
-      this.happy = userHappyLevel * this.happyDistortion;
-      this.surprise = microphone.getLevel();
+      this.happySequencePoint = [];
+
+      this.graphTop = 60;
+      this.graphBottom = this.graphTop + 200;
     }
 
     convolution(a, n, x){
@@ -604,36 +464,33 @@ canvas1 = p => {
     }
 
 
-    internalState(){
+    generateState(){
       if(generateStateTime != generateTimeStore){
+        this.happy = userHappyLevel;
 
-        this.cognition();
-
-        this.newLog = this.happy;
-
-        if(isNaN(this.newLog) == false){
+        if(isNaN(this.happy) == false){
           if(this.samplingTime < 1){
-            this.emosLog.push(this.newLog); //Create 2d array
+            this.emosLog.unshift(this.happy); //Create 2d array
           }else{
-            this.emosLog.push(this.currentEmos);
+            this.emosLog.unshift(this.currentEmos);
           }
 
           this.samplingTime++;
         }else{}
 
-        if(this.emosLog.length > 900){ //1000: which means 200 seconds
-          this.emosLog.splice(0,1);
+        if(this.emosLog.length > 300){ //1000: which means 200 seconds
+          this.emosLog.pop();
         }
 
 
         //Copy all of the emosLog
         for(let i = 0; i < this.emosLog.length; i++){
-          // console.log(this.emosLog[i][j]);
+            // console.log(this.emosLog[i][j]);
           let value = this.convolution(this.emosLog[i], 0.99, i);
-          this.convolutedHappy[i] = value;
+            this.convolutedHappy[i] = value;
 
           if(this.convolutedHappy.length > this.emosLog.length){
-            this.convolutedHappy.splice(0,1);
+            this.convolutedHappy.pop();
           }
         }
 
@@ -641,71 +498,98 @@ canvas1 = p => {
           this.convolutedHappySum += this.convolutedHappy[i];
         }
 
-        this.happyDelay = this.convolutedHappySum/this.convolutedHappy.length;
+        this.happyAvg = this.convolutedHappySum/this.convolutedHappy.length;
+        p.emotionAvg = this.happyAvg;
 
-        this.currentEmos = this.happy + this.happyDelay;
+        this.currentEmos = this.happy + this.happyAvg;
 
-          if(this.currentEmos > 1.0){
-            this.currentEmos = 1.0;
-          }else{}
-
-        // console.log("this.happy: " + this.happy);
-        // console.log("this.happyDelay: " + this.happyDelay);
-        // console.log("current happy: " + this.currentEmos[0]);
-        // console.log("current surprise: " + this.currentEmos[1]);
-        // console.log("current fear: " + this.currentEmos[2]);
-        // console.log("current sad: " + this.currentEmos[5]);
-        // console.log("---------------------");
+        if(this.currentEmos > 1.0){
+          this.currentEmos = 1.0;
+        }else{}
 
         this.convolutedHappySum = 0;
 
+        //To give this value to hudCanvas
+        p.convolutedEmotionCopy = this.convolutedHappy;
+        p.emotionalSequencePointCopy = this.happySequencePoint;
+
       }
+
       generateTimeStore = generateStateTime;
     }
-  }
 
 
-  class MatrixObject{
-    constructor(){
-      this.vendingMachinePos;
-      this.bookShelfPos;
+    emotionalSequence(emotion, hueVal){
+      p.strokeWeight(2);
+
+        let convolutedEmotion = this.convolutedHappy;
+        let emotionalSequencePoint = this.happySequencePoint;
+
+        for(let i = 0; i < convolutedEmotion.length/10; i++){
+          emotionalSequencePoint[i] = convolutedEmotion[i*10];
+        }
+
+
+        for(let i = 0; i < emotionalSequencePoint.length; i++){
+          if(i < emotionalSequencePoint.length-1){
+            let sYvalue = p.map(emotionalSequencePoint[i], 0, 1, 0, 170);
+            let eYvalue = p.map(emotionalSequencePoint[i+1], 0, 1, 0, 170);
+            let saturation = p.map(45+(i*6), 45, 550, 100, 0);
+            p.stroke(hueVal, saturation, 100);
+            p.line(45+(6*i), this.graphBottom-sYvalue, 45+(6*(i+1)), this.graphBottom-eYvalue);
+            // p.point(45+(i*6), sYvalue); //Pointy version :)
+          }
+        }
+
+        p.stroke(255);
+        p.strokeWeight(2);
+        p.line(45, this.graphTop, 45, this.graphBottom+15);
+        p.line(30, this.graphBottom, 645, this.graphBottom);
     }
 
-    grid(){
-      for(let i = 0; i <= p.width; i += 30){
-        for(let j = 0; j <= p.height; j+= 30){
-          p.stroke(255);
-          p.strokeWeight(0.05);
-          p.line(i, 0, i, p.height);
-          p.line(0, j, p.width, j);
+    facePosDisplacement(){
+      if(isNaN(faceCenter[0]) == false && isNaN(faceCenter[1]) == false){
+        p.ellipse(faceCenter[0], faceCenter[1], 30, 30);
+
+        //Check face positions displacement every 0.2 sec.
+        if(checkDisplacementTime != checkDisplacementTimeStore){
+
+          cFaceCenter = faceCenter;
+          if(facePosSampleTime == 0){
+            pFaceCenter = faceCenter;
+          }else{}
+
+          xDispalcement = Math.abs(cFaceCenter[0] - pFaceCenter[0])
+          yDisplacement = Math.abs(cFaceCenter[1] - pFaceCenter[1])
+
+          let displacement = xDispalcement + yDisplacement;
+            p.currentDisplacement = displacement;
+
+          //Store all past 3 minutes displacement
+          displacementLog.unshift(displacement);
+          if(displacementLog.length > 300){
+            displacementLog.pop();
+          }
+          // console.log(displacementLog);
+
+          for (let i = 0; i < displacementLog.length; i++) {
+            displacementSum += displacementLog[i];
+          }
+          displacementAvg = displacementSum / displacementLog.length;
+          p.displacementAvgCopy = displacementAvg;
+          console.log("displacement average: "+displacementAvg);
+          // console.log(displacementLog);
+
+
+          displacementSum = 0;
+          checkDisplacementTimeStore = checkDisplacementTime;
+          pFaceCenter = cFaceCenter;
+          facePosSampleTime++;
         }
       }
     }
 
-    vendingMachine(x, y, w, h){
-      this.vendingMachinePos = p.createVector(x, y);
-      p.fill(208, 52, 85);
-      p.noStroke();
-      p.rectMode(p.CENTER);
-      p.rect(this.vendingMachinePos.x, this.vendingMachinePos.y, w, h, 5);
-    }
-
-    bookShelf(x, y, w, h){
-      this.bookShelfPos = p.createVector(x, y);
-      p.fill(30, 53, 58);//cafe au lait
-      p.noStroke();
-      p.rectMode(p.CENTER);
-      p.rect(this.bookShelfPos.x, this.bookShelfPos.y, w, h);
-    }
-
-    wall(x, y, w, h){
-      p.fill(32, 37, 98);//cafe au lait
-      p.stroke(32, 46, 77);
-      p.strokeWeight(1);
-      p.rectMode(p.CORNER);
-      p.rect(x, y, w, h, 4);
-    }
-  }
+  }//class InternalModel end
 
 }
 
