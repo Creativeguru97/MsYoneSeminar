@@ -3,13 +3,13 @@ let detections;
 
 //Emotional states
 let expressions;
-let neutral;
+// let neutral;
 let happy;
-let angry;
-let sad;
-let disgusted;
-let surprised;
-let fearful;
+// let angry;
+// let sad;
+// let disgusted;
+// let surprised;
+// let fearful;
 
 let faceCenter = [];
 let checkDisplacementTime = 0;

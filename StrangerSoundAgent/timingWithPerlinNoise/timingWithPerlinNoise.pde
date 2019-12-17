@@ -17,7 +17,6 @@ void draw(){
   background(100);
   comparisonToPrevious();
   
-  currentFrame++;//For comparisonToPrevious()
 }
 
 void comparisonToPrevious(){
@@ -45,6 +44,7 @@ void comparisonToPrevious(){
     pNoiseOffset = cNoiseOffset;
     samplingTime++;
   }
+  currentFrame++;//For comparisonToPrevious()
 }
 
-void paragraphCharacter
+void actualWordsBasedVersion(){}

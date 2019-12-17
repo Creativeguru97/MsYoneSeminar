@@ -34,6 +34,14 @@ let putABookSound;
 let pMicrophoneGetLevel;
 let cMicrophoneGetLevel;
 
+//For function typeKeyboard() in Agent class
+let noiseOffset = 0.0;
+let cNoiseOffset;
+let pNoiseOffset;
+let samplingTime = 0;
+let count = 0;
+let currentFrame = 0;
+let frameStep = 11;
 
 
 //For event programing
