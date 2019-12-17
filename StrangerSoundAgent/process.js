@@ -14,9 +14,6 @@ let rayaState;
 let userState;
 
 //---Raya relevant---
-let isNearByUser = false;
-let isAttractedByUser = true;
-let changeBehaviorTime = 0;
 
 let generateStateTime = 0;
 let generateTimeStore = 0;
@@ -40,16 +37,6 @@ let cMicrophoneGetLevel;
 
 
 //For event programing
-let timeLoop;
-let timeWait;
-let loopTime = 0;//60 seconds loop
-let waitingTime = 0;
-let okIgottaGo = 30;//The timing agent get into loop between bookshelf and vendingMachine
-
-let walkFrame = 0;
-let breathFrame = 0;
-let sittingFrame = 0;
-let buyDrinkFrame = 0;
 
 
 //p5.serialport relevant
@@ -112,16 +99,6 @@ canvas1 = p => {
 
     p.colorMode(p.HSB, 360, 100, 100, 100);//(Mode, Hue, Saturation, Brightness, Alpha)
 
-    timeLoop = setInterval(() => {
-      loopTime++;
-      if(loopTime > 120){
-        loopTime = 0;
-      }
-    }, 1000);
-
-    timeWait = setInterval(() => {
-      waitingTime++;
-    }, 1000);
 
     userEmosStore = setInterval(() => {
 
@@ -240,7 +217,7 @@ canvas1 = p => {
     }
 
     typeKeyboard(){
-      
+
     }
 
     cough(possibilityRange, border, mode){
@@ -443,10 +420,10 @@ canvas1 = p => {
           }else{}
 
           //Calculate x and y displacement indivisually
-          xDispalcement = Math.abs(cFaceCenter[0] - pFaceCenter[0])
-          yDisplacement = Math.abs(cFaceCenter[1] - pFaceCenter[1])
+          let xDisplacement = Math.abs(cFaceCenter[0] - pFaceCenter[0])
+          let yDisplacement = Math.abs(cFaceCenter[1] - pFaceCenter[1])
 
-          let displacement = xDispalcement + yDisplacement;
+          let displacement = xDisplacement + yDisplacement;
             p.currentDisplacement = displacement;
 
           //Store all past 3 minutes displacement
