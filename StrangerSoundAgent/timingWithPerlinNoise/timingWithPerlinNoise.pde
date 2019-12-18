@@ -7,7 +7,7 @@ int count = 0;
 
 
 int currentFrame = 0;
-int frameStep = 11;
+int frameStep = 10;
 
 void setup(){
   size(640, 480);

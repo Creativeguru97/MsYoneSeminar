@@ -20,6 +20,12 @@ let generateTimeStore = 0;
 
 let delayEffect;
 
+
+let keySound = [];
+let enterKeySound;
+let spacebarSound;
+let deleteKeySound;
+
 let walkSound = [];
 let coughSound = [];
 let flipPageSound = [];
@@ -41,7 +47,6 @@ let pNoiseOffset;
 let samplingTime = 0;
 let count = 0;
 let currentFrame = 0;
-let frameStep = 11;
 
 
 //For event programing
@@ -70,30 +75,37 @@ canvas1 = p => {
   p.currentDisplacement;
 
   p.preload = () => {
-    for(let i=0; i < 20; i++){
-      // walkSound[i] = p.loadSound("/soundEffects/walkSoundSmall/walk"+i+".mp3");
-      walkSound[i] = p.loadSound("/soundEffects/walkSound/walk"+i+".mp3");
-    }
-    for(let i=0; i < 4; i++){
-      coughSound[i] = p.loadSound("/soundEffects/coughSound/cough"+i+".mp3");
-    }
-    for(let i=0; i < 5; i++){
-      flipPageSound[i] = p.loadSound("/soundEffects/flipPage/flip"+i+".mp3");
-    }
-    for(let i=0; i < 5; i++){
-      buyDrink[i] = p.loadSound("/soundEffects/vendingMachine/buyDrink"+i+".mp3");
-    }
-    for(let i=0; i < 4; i++){
-      laughingSound[i] = p.loadSound("/soundEffects/laughingSound/laugh"+i+".mp3");
-    }
-    for(let i=0; i < 4; i++){
-      surpriseSound[i] = p.loadSound("/soundEffects/surprise/surprise"+i+".wav");
-    }
 
-    breathSound = p.loadSound("/soundEffects/breath.mp3");
-    sitOnChairSound = p.loadSound("/soundEffects/sitOnChair.mp3");
-    putACupSound = p.loadSound("/soundEffects/putACupOfTea.mp3");
-    putABookSound = p.loadSound("/soundEffects/putABook.mp3");
+    //For function typeKeyboard() in Agent class
+    for(let i=0; i < 4; i++){
+      keySound[i] = p.loadSound("/soundEffects/typing/key"+i+".mp3");
+    }
+    enterKeySound = p.loadSound("/soundEffects/typing/enter.mp3");
+    spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
+    deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
+
+
+    // for(let i=0; i < 20; i++){
+    //   // walkSound[i] = p.loadSound("/soundEffects/walkSoundSmall/walk"+i+".mp3");
+    //   walkSound[i] = p.loadSound("/soundEffects/walkSound/walk"+i+".mp3");
+    // }
+    // for(let i=0; i < 4; i++){
+    //   coughSound[i] = p.loadSound("/soundEffects/coughSound/cough"+i+".mp3");
+    // }
+    // for(let i=0; i < 5; i++){
+    //   flipPageSound[i] = p.loadSound("/soundEffects/flipPage/flip"+i+".mp3");
+    // }
+    // for(let i=0; i < 4; i++){
+    //   laughingSound[i] = p.loadSound("/soundEffects/laughingSound/laugh"+i+".mp3");
+    // }
+    // for(let i=0; i < 4; i++){
+    //   surpriseSound[i] = p.loadSound("/soundEffects/surprise/surprise"+i+".wav");
+    // }
+    //
+    // breathSound = p.loadSound("/soundEffects/breath.mp3");
+    // sitOnChairSound = p.loadSound("/soundEffects/sitOnChair.mp3");
+    // putACupSound = p.loadSound("/soundEffects/putACupOfTea.mp3");
+    // putABookSound = p.loadSound("/soundEffects/putABook.mp3");
   }
 
   p.setup = () => {
@@ -156,47 +168,11 @@ canvas1 = p => {
     userState.generateState();
     userState.facePosDisplacement();
     // userState.emotionalSequence("happy", 50);
-
-
-
-    // //Lastly, we give Raya's x value to Servo
-    // let val = p.map(raya.position.x, 75, p.width-75, 20, 160);
-    // // console.log(val);
-    // outData = val;  // setup the serial output
-    // serial.write(outData); // write to serial for Arduino to pickup
+    raya.typeKeyboard(8, "sustain");//(frameStep, playMode)
   }
 
   //-----------------------------------------------------//
   //----- This is the place all interactions happen -----//
-
-
-  // p.printList = (portList) => {
-  //  // portList is an array of serial port names
-  //  for (var i = 0; i < portList.length; i++) {
-  //  // Display the list the console:
-  //   console.log(i + " " + portList[i]);
-  //  }
-  // }
-  //
-  // p.serverConnected = () => {
-  //   console.log('connected to server.');
-  // }
-  //
-  // p.portOpen = () => {
-  //   console.log('the serial port opened.')
-  // }
-  //
-  // p.serialEvent = () => {
-  //   inData = Number(serial.read());
-  // }
-  //
-  // p.serialError = (err) => {
-  //   console.log('Something went wrong with the serial port. ' + err);
-  // }
-  //
-  // p.portClose = () => {
-  //   console.log('The serial port closed.');
-  // }
 
 
   class Agent{
@@ -224,8 +200,49 @@ canvas1 = p => {
       }
     }
 
-    typeKeyboard(){
+    typeKeyboard(frameStep, mode){
+      if(currentFrame % frameStep == 0){
 
+        noiseOffset = noiseOffset + 0.1;
+        let n = p.noise(noiseOffset);
+
+        cNoiseOffset = n;
+        if(samplingTime == 0){
+          pNoiseOffset = n;
+        }else{}
+
+        if(cNoiseOffset > pNoiseOffset){
+          count++;
+          let prob = p.random(0, 100);
+          if(prob < 90){
+            let index = p.int(p.random(0, keySound.length));
+            keySound[index].playMode(mode);
+            keySound[index].setVolume(0.5);
+            keySound[index].play();
+            console.log("key is clacked!!!");
+          }else if (prob >= 90 && prob < 95) {
+            spacebarSound.setVolume(0.5);
+            spacebarSound.play();
+            console.log("space bar is clacked!!!");
+          }else if (prob >= 95 && prob < 98) {
+            deleteKeySound.setVolume(0.5);
+            deleteKeySound.play();
+            console.log("delete key is clacked!!!");
+          }else{
+            enterKeySound.setVolume(0.5);
+            enterKeySound.play();
+            console.log("enter key is clacked!!!");
+          }
+        }else{}
+
+        pNoiseOffset = cNoiseOffset;
+        samplingTime++;
+
+        if(count > 100){
+          count = 0;
+        }
+      }
+      currentFrame++;
     }
 
     cough(possibilityRange, border, mode){
@@ -446,7 +463,7 @@ canvas1 = p => {
           }
           displacementAvg = displacementSum / displacementLog.length;
           p.displacementAvgCopy = displacementAvg;
-          console.log("displacement average: "+displacementAvg);
+          // console.log("displacement average: "+displacementAvg);
           // console.log(displacementLog);
 
 
