@@ -59,10 +59,7 @@ let portName = '/dev/tty.usbmodem14401';  // fill in your serial port name here
 
 let pFaceCenter;
 let cFaceCenter;
-let displacementLog = [];
 let facePosSampleTime = 0;
-let displacementSum = 0;
-let displacementAvg = 0;
 
 
 //----- Grid canvas -----
@@ -160,6 +157,7 @@ canvas1 = p => {
     serial.open(portName);              // open a serial port
   }
 
+
 //----- This is the place all interactions happen -----//
 //-----------------------------------------------------//
   p.draw = () => {
@@ -168,7 +166,13 @@ canvas1 = p => {
     userState.generateState();
     userState.facePosDisplacement();
     // userState.emotionalSequence("happy", 50);
-    raya.typeKeyboard(8, "sustain");//(frameStep, playMode)
+
+
+    if(p.nf(userState.happyAvg*100, 2, 2) < 2.0 && userState.displacementAvg < 5.0){
+      raya.typeKeyboard(8, "sustain");//(frameStep, playMode)
+    }
+
+
   }
 
   //-----------------------------------------------------//
@@ -183,19 +187,12 @@ canvas1 = p => {
       this.maxforce = 0.025;
     }
 
-
-    //Sound expressions
-    soundDirection(soundFile, index, audibleDist, ampMax){
-      //This takes a lot of resouces I guess, may be I use int here.
-      let panning = p.map(this.position.x, 0, p.width,-1.0, 1.0);
-      let distUser = p5.Vector.sub(this.position, user.position);
-      // let volume = p.map(distUser.mag(), audibleDist, 40, 0, ampMax);
-      let volume = p.map(distUser.mag(), audibleDist, 40, 0.3, ampMax);
-      if(index == 'null'){
-        soundFile.pan(panning);
+    existanceStrength(soundFile, index, min, max){
+      let volume = p.map(p.nf(userState.happyAvg*100, 2, 2), 0, 2.0, max, min);
+      console.log(volume);
+      if(index == null){
         soundFile.setVolume(volume);
       }else{
-        soundFile[index].pan(panning);
         soundFile[index].setVolume(volume);
       }
     }
@@ -217,21 +214,21 @@ canvas1 = p => {
           if(prob < 90){
             let index = p.int(p.random(0, keySound.length));
             keySound[index].playMode(mode);
-            keySound[index].setVolume(0.5);
+            this.existanceStrength(keySound, index, 0, 1.0);
             keySound[index].play();
-            console.log("key is clacked!!!");
+            // console.log("key is clacked!!!");
           }else if (prob >= 90 && prob < 95) {
-            spacebarSound.setVolume(0.5);
+            this.existanceStrength(spacebarSound, null, 0, 1.0);
             spacebarSound.play();
-            console.log("space bar is clacked!!!");
+            // console.log("space bar is clacked!!!");
           }else if (prob >= 95 && prob < 98) {
-            deleteKeySound.setVolume(0.5);
+            this.existanceStrength(deleteKeySound, null, 0, 1.0);
             deleteKeySound.play();
-            console.log("delete key is clacked!!!");
+            // console.log("delete key is clacked!!!");
           }else{
-            enterKeySound.setVolume(0.5);
+            this.existanceStrength(enterKeySound, null, 0, 1.0);
             enterKeySound.play();
-            console.log("enter key is clacked!!!");
+            // console.log("enter key is clacked!!!");
           }
         }else{}
 
@@ -251,7 +248,7 @@ canvas1 = p => {
         let index = p.int(p.random(0, coughSound.length));
         coughSound[index].playMode(mode);
         // this.soundDirection(coughSound, index, p.width/2, 0.04);
-        this.soundDirection(coughSound, index, p.width/2, 0.8);
+        coughSound[index].setVolume(0.5);
         coughSound[index].play();
       }
     }
@@ -338,6 +335,10 @@ canvas1 = p => {
 
       this.graphTop = 60;
       this.graphBottom = this.graphTop + 200;
+
+      this.displacementAvg = 0;
+      this.displacementSum = 0;
+      this.displacementLog = [];
     }
 
     convolution(a, n, x){
@@ -363,14 +364,13 @@ canvas1 = p => {
           this.samplingTime++;
         }else{}
 
-        if(this.emosLog.length > 300){ //1000: which means 200 seconds
+        if(this.emosLog.length > 300){ //Store past 1 minute emotion
           this.emosLog.pop();
         }
 
 
         //Copy all of the emosLog
         for(let i = 0; i < this.emosLog.length; i++){
-            // console.log(this.emosLog[i][j]);
           let value = this.convolution(this.emosLog[i], 0.99, i);
             this.convolutedHappy[i] = value;
 
@@ -404,33 +404,33 @@ canvas1 = p => {
     }
 
 
-    emotionalSequence(emotion, hueVal){
-      p.strokeWeight(2);
-
-        let convolutedEmotion = this.convolutedHappy;
-        let emotionalSequencePoint = this.happySequencePoint;
-
-        for(let i = 0; i < convolutedEmotion.length/10; i++){
-          emotionalSequencePoint[i] = convolutedEmotion[i*10];
-        }
-
-
-        for(let i = 0; i < emotionalSequencePoint.length; i++){
-          if(i < emotionalSequencePoint.length-1){
-            let sYvalue = p.map(emotionalSequencePoint[i], 0, 1, 0, 170);
-            let eYvalue = p.map(emotionalSequencePoint[i+1], 0, 1, 0, 170);
-            let saturation = p.map(45+(i*6), 45, 550, 100, 0);
-            p.stroke(hueVal, saturation, 100);
-            p.line(45+(6*i), this.graphBottom-sYvalue, 45+(6*(i+1)), this.graphBottom-eYvalue);
-            // p.point(45+(i*6), sYvalue); //Pointy version :)
-          }
-        }
-
-        p.stroke(255);
-        p.strokeWeight(2);
-        p.line(45, this.graphTop, 45, this.graphBottom+15);
-        p.line(30, this.graphBottom, 645, this.graphBottom);
-    }
+    // emotionalSequence(emotion, hueVal){
+    //   p.strokeWeight(2);
+    //
+    //     let convolutedEmotion = this.convolutedHappy;
+    //     let emotionalSequencePoint = this.happySequencePoint;
+    //
+    //     for(let i = 0; i < convolutedEmotion.length/10; i++){
+    //       emotionalSequencePoint[i] = convolutedEmotion[i*10];
+    //     }
+    //
+    //
+    //     for(let i = 0; i < emotionalSequencePoint.length; i++){
+    //       if(i < emotionalSequencePoint.length-1){
+    //         let sYvalue = p.map(emotionalSequencePoint[i], 0, 1, 0, 170);
+    //         let eYvalue = p.map(emotionalSequencePoint[i+1], 0, 1, 0, 170);
+    //         let saturation = p.map(45+(i*6), 45, 550, 100, 0);
+    //         p.stroke(hueVal, saturation, 100);
+    //         p.line(45+(6*i), this.graphBottom-sYvalue, 45+(6*(i+1)), this.graphBottom-eYvalue);
+    //         // p.point(45+(i*6), sYvalue); //Pointy version :)
+    //       }
+    //     }
+    //
+    //     p.stroke(255);
+    //     p.strokeWeight(2);
+    //     p.line(45, this.graphTop, 45, this.graphBottom+15);
+    //     p.line(30, this.graphBottom, 645, this.graphBottom);
+    // }
 
     facePosDisplacement(){
       if(isNaN(faceCenter[0]) == false && isNaN(faceCenter[1]) == false){
@@ -451,23 +451,23 @@ canvas1 = p => {
           let displacement = xDisplacement + yDisplacement;
             p.currentDisplacement = displacement;
 
-          //Store all past 3 minutes displacement
-          displacementLog.unshift(displacement);
-          if(displacementLog.length > 300){
-            displacementLog.pop();
+          //Store all past 1 minutes displacement
+          this.displacementLog.unshift(displacement);
+          if(this.displacementLog.length > 300){
+            this.displacementLog.pop();
           }
           // console.log(displacementLog);
 
-          for (let i = 0; i < displacementLog.length; i++) {
-            displacementSum += displacementLog[i];
+          for (let i = 0; i < this.displacementLog.length; i++) {
+            this.displacementSum += this.displacementLog[i];
           }
-          displacementAvg = displacementSum / displacementLog.length;
-          p.displacementAvgCopy = displacementAvg;
+          this.displacementAvg = this.displacementSum / this.displacementLog.length;
+          p.displacementAvgCopy = this.displacementAvg;
           // console.log("displacement average: "+displacementAvg);
           // console.log(displacementLog);
 
 
-          displacementSum = 0;
+          this.displacementSum = 0;
           checkDisplacementTimeStore = checkDisplacementTime;
           pFaceCenter = cFaceCenter;
           facePosSampleTime++;

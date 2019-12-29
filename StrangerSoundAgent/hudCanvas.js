@@ -47,7 +47,6 @@ canvas0 = p => { //let canvas0 = function(p){...
 
     p.clear();
     p.emotionalStatesHUD(25, 530, 50);
-    // p.emotionalSequence(50);
     p.micHUD(30, 60);
     p.posDisplacementHUD(25, 450);
   }
@@ -59,15 +58,15 @@ canvas0 = p => { //let canvas0 = function(p){...
     p.textFont('Helvetica Neue');
     p.textSize(14);
     if(expressions != undefined){
-      p.text("User current joy level: "+p.nf(happy*100, 2, 2)+"%", x, y);
+      p.text("User current happy level: "+p.nf(happy*100, 2, 2)+"%", x, y);
       p.text("Average : "+p.nf(myp52.emotionAvg*100, 2, 2)+"%", x, y+16);
       // p.text("Average : "+myp52.emotionAvg, x, y+16);
     }else{
-      p.text("User current joy level: ", x, y);
+      p.text("User current happy level: ", x, y);
       p.text("Average : ", x, y+16);
     }
 
-
+    // Display stored and convolutioned by function visually
     for(let i = 0; i < myp52.convolutedEmotionCopy.length/10; i++){
       myp52.emotionalSequencePointCopy[i] = myp52.convolutedEmotionCopy[i*10];
     }
