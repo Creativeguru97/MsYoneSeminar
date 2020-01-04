@@ -26,6 +26,10 @@ let enterKeySound;
 let spacebarSound;
 let deleteKeySound;
 
+let iKeySound;
+let iEnterKeySound = [];
+let iDeleteKeySound = [];
+
 let walkSound = [];
 let coughSound = [];
 let flipPageSound = [];
@@ -80,6 +84,14 @@ canvas1 = p => {
     enterKeySound = p.loadSound("/soundEffects/typing/enter.mp3");
     spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
     deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
+
+    iKeySound = p.loadSound("/soundEffects/texting/iKey0.mp3");
+    for(let i=0; i < 3; i++){
+      iEnterKeySound[i] = p.loadSound("/soundEffects/texting/iEnter"+i+".mp3");
+    }
+    for(let i=0; i < 5; i++){
+      iDeleteKeySound[i] = p.loadSound("/soundEffects/texting/iDelete"+i+".mp3");
+    }
 
 
     // for(let i=0; i < 20; i++){
@@ -169,7 +181,8 @@ canvas1 = p => {
 
 
     if(p.nf(userState.happyAvg*100, 2, 2) < 2.0 && userState.displacementAvg < 5.0){
-      raya.typeKeyboard(8, "sustain");//(frameStep, playMode)
+      // raya.typeKeyboard(8, "sustain", 0.4);//(frameStep, playMode)
+      raya.texting(8, "sustain", 0.4);//(frameStep, playMode)
     }
 
 
@@ -189,7 +202,7 @@ canvas1 = p => {
 
     existanceStrength(soundFile, index, min, max){
       let volume = p.map(p.nf(userState.happyAvg*100, 2, 2), 0, 2.0, max, min);
-      console.log(volume);
+      // console.log(volume);
       if(index == null){
         soundFile.setVolume(volume);
       }else{
@@ -197,7 +210,7 @@ canvas1 = p => {
       }
     }
 
-    typeKeyboard(frameStep, mode){
+    typeKeyboard(frameStep, mode, volume){
       if(currentFrame % frameStep == 0){
 
         noiseOffset = noiseOffset + 0.1;
@@ -214,21 +227,64 @@ canvas1 = p => {
           if(prob < 90){
             let index = p.int(p.random(0, keySound.length));
             keySound[index].playMode(mode);
-            this.existanceStrength(keySound, index, 0, 1.0);
+            this.existanceStrength(keySound, index, 0, volume);
             keySound[index].play();
             // console.log("key is clacked!!!");
           }else if (prob >= 90 && prob < 95) {
-            this.existanceStrength(spacebarSound, null, 0, 1.0);
+            this.existanceStrength(spacebarSound, null, 0, volume);
             spacebarSound.play();
             // console.log("space bar is clacked!!!");
           }else if (prob >= 95 && prob < 98) {
-            this.existanceStrength(deleteKeySound, null, 0, 1.0);
+            this.existanceStrength(deleteKeySound, null, 0, volume);
             deleteKeySound.play();
             // console.log("delete key is clacked!!!");
           }else{
-            this.existanceStrength(enterKeySound, null, 0, 1.0);
+            this.existanceStrength(enterKeySound, null, 0, volume);
             enterKeySound.play();
             // console.log("enter key is clacked!!!");
+          }
+        }else{}
+
+        pNoiseOffset = cNoiseOffset;
+        samplingTime++;
+
+        if(count > 100){
+          count = 0;
+        }
+      }
+      currentFrame++;
+    }
+
+
+    texting(frameStep, mode, volume){
+      if(currentFrame % frameStep == 0){
+
+        noiseOffset = noiseOffset + 0.1;
+        let n = p.noise(noiseOffset);
+
+        cNoiseOffset = n;
+        if(samplingTime == 0){
+          pNoiseOffset = n;
+        }else{}
+
+        if(cNoiseOffset > pNoiseOffset){
+          count++;
+          let prob = p.random(0, 100);
+          if(prob < 90){
+            this.existanceStrength(iKeySound, null, 0, volume);
+            iKeySound.play();
+
+          }else if (prob >= 90 && prob < 97) {
+            let index = p.int(p.random(0, iEnterKeySound.length));
+            iEnterKeySound[0].playMode(mode);
+            this.existanceStrength(iEnterKeySound, 0, 0, volume);
+            iEnterKeySound[0].play();
+          }else if (prob >= 97 && prob < 100) {
+            let index = p.int(p.random(0, iDeleteKeySound.length));
+            iDeleteKeySound[0].playMode(mode);
+            this.existanceStrength(iDeleteKeySound, 0, 0, volume);
+            iDeleteKeySound[0].play();
+            console.log("delete key is tapped!!!");
           }
         }else{}
 
