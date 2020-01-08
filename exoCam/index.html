@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script defer src="face-api.min.js"></script>
+
+  <!-- <script defer language="javascript" type="text/javascript" src="sketch.js"></script> -->
+  <script defer language="javascript" type="text/javascript" src="exoCam.js"></script>
+  <link rel="stylesheet" type="text/css" href="OperationSpace.css">
+</head>
+
+<body>
+
+  <!-- Many thought HTML Media Capture was too limiting,
+  so a new spec emerged that supported any type of (future) device.
+   Not surprisingly, the design called for a new element,
+  the <device> element, which became the predecessor to getUserMedia(). -->
+  <device type="media"></device>
+  <video autoplay></video>
+  <script>
+    function update(stream) {
+     document.querySelector('video').src = stream.url;
+    }
+
+    const constraints = {
+      video: true
+    };
+
+    const video = document.querySelector('video');
+    // navigator.mediaDevices.getUserMedia(constraints).
+    // then((stream) => {video.srcObject = stream});
+  </script>
+
+
+
+</body>
+</html>
