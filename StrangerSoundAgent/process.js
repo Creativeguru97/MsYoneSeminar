@@ -10,36 +10,36 @@ let userEmosStore;
 let userHappyStore = [];
 let userHappySum = 0;
 let userNeutralLevel;
-let rayaState;
 let userState;
 
 //---Raya relevant---
-
+let rayaState;
+let probabilityOfActions;
 let generateStateTime = 0;
 let generateTimeStore = 0;
 
 let delayEffect;
 
-
+//For typeKeyboard()
 let keySound = [];
 let enterKeySound;
 let spacebarSound;
 let deleteKeySound;
 
+//For texting()
 let iKeySound;
 let iEnterKeySound = [];
 let iDeleteKeySound = [];
 
-let walkSound = [];
-let coughSound = [];
-let flipPageSound = [];
-let buyDrink = [];
-let laughingSound = [];
-let surpriseSound = [];
-let breathSound;
-let sitOnChairSound;
-let putACupSound;
-let putABookSound;
+// let walkSound = [];
+// let coughSound = [];
+// let flipPageSound = [];
+// let laughingSound = [];
+// let surpriseSound = [];
+// let breathSound;
+// let sitOnChairSound;
+// let putACupSound;
+// let putABookSound;
 
 let pMicrophoneGetLevel;
 let cMicrophoneGetLevel;
@@ -155,6 +155,12 @@ canvas1 = p => {
 
     }, 200);
 
+
+    setInterval(() => {
+      probabilityOfActions = p.random(0, 10);
+      console.log("New actions begin!!!");
+    }, 6000);
+
     //p5.serialport relevant
     serial = new p5.SerialPort();
 
@@ -179,13 +185,15 @@ canvas1 = p => {
     userState.facePosDisplacement();
     // userState.emotionalSequence("happy", 50);
 
-
-    if(p.nf(userState.happyAvg*100, 2, 2) < 2.0 && userState.displacementAvg < 5.0){
-      // raya.typeKeyboard(8, "sustain", 0.4);//(frameStep, playMode)
-      raya.texting(8, "sustain", 0.4);//(frameStep, playMode)
+    if(expressions != undefined){
+      if(p.nf(userState.happyAvg*100, 2, 2) < 2.0 && userState.displacementAvg < 5.0){
+        if(probabilityOfActions < 5){
+          raya.typeKeyboard(8, "sustain", 0.4);//(frameStep, playMode)
+        }else{
+          raya.texting(8, "sustain", 0.4);//(frameStep, playMode)
+        }
+      }
     }
-
-
   }
 
   //-----------------------------------------------------//
@@ -211,91 +219,91 @@ canvas1 = p => {
     }
 
     typeKeyboard(frameStep, mode, volume){
-      if(currentFrame % frameStep == 0){
+        if(currentFrame % frameStep == 0){
 
-        noiseOffset = noiseOffset + 0.1;
-        let n = p.noise(noiseOffset);
+          noiseOffset = noiseOffset + 0.1;
+          let n = p.noise(noiseOffset);
 
-        cNoiseOffset = n;
-        if(samplingTime == 0){
-          pNoiseOffset = n;
-        }else{}
+          cNoiseOffset = n;
+          if(samplingTime == 0){
+            pNoiseOffset = n;
+          }else{}
 
-        if(cNoiseOffset > pNoiseOffset){
-          count++;
-          let prob = p.random(0, 100);
-          if(prob < 90){
-            let index = p.int(p.random(0, keySound.length));
-            keySound[index].playMode(mode);
-            this.existanceStrength(keySound, index, 0, volume);
-            keySound[index].play();
-            // console.log("key is clacked!!!");
-          }else if (prob >= 90 && prob < 95) {
-            this.existanceStrength(spacebarSound, null, 0, volume);
-            spacebarSound.play();
-            // console.log("space bar is clacked!!!");
-          }else if (prob >= 95 && prob < 98) {
-            this.existanceStrength(deleteKeySound, null, 0, volume);
-            deleteKeySound.play();
-            // console.log("delete key is clacked!!!");
-          }else{
-            this.existanceStrength(enterKeySound, null, 0, volume);
-            enterKeySound.play();
-            // console.log("enter key is clacked!!!");
+          if(cNoiseOffset > pNoiseOffset){
+            count++;
+            let prob = p.random(0, 100);
+            if(prob < 90){
+              let index = p.int(p.random(0, keySound.length));
+              keySound[index].playMode(mode);
+              this.existanceStrength(keySound, index, 0, volume);
+              keySound[index].play();
+              // console.log("key is clacked!!!");
+            }else if (prob >= 90 && prob < 95) {
+              this.existanceStrength(spacebarSound, null, 0, volume);
+              spacebarSound.play();
+              // console.log("space bar is clacked!!!");
+            }else if (prob >= 95 && prob < 98) {
+              this.existanceStrength(deleteKeySound, null, 0, volume);
+              deleteKeySound.play();
+              // console.log("delete key is clacked!!!");
+            }else{
+              this.existanceStrength(enterKeySound, null, 0, volume);
+              enterKeySound.play();
+              // console.log("enter key is clacked!!!");
+            }
+          }else{}
+
+          pNoiseOffset = cNoiseOffset;
+          samplingTime++;
+
+          if(count > 100){
+            count = 0;
           }
-        }else{}
-
-        pNoiseOffset = cNoiseOffset;
-        samplingTime++;
-
-        if(count > 100){
-          count = 0;
         }
-      }
-      currentFrame++;
+        currentFrame++;
     }
 
 
     texting(frameStep, mode, volume){
-      if(currentFrame % frameStep == 0){
+        if(currentFrame % frameStep == 0){
 
-        noiseOffset = noiseOffset + 0.1;
-        let n = p.noise(noiseOffset);
+          noiseOffset = noiseOffset + 0.1;
+          let n = p.noise(noiseOffset);
 
-        cNoiseOffset = n;
-        if(samplingTime == 0){
-          pNoiseOffset = n;
-        }else{}
+          cNoiseOffset = n;
+          if(samplingTime == 0){
+            pNoiseOffset = n;
+          }else{}
 
-        if(cNoiseOffset > pNoiseOffset){
-          count++;
-          let prob = p.random(0, 100);
-          if(prob < 90){
-            this.existanceStrength(iKeySound, null, 0, volume);
-            iKeySound.play();
+          if(cNoiseOffset > pNoiseOffset){
+            count++;
+            let prob = p.random(0, 100);
+            if(prob < 90){
+              this.existanceStrength(iKeySound, null, 0, volume);
+              iKeySound.play();
 
-          }else if (prob >= 90 && prob < 97) {
-            let index = p.int(p.random(0, iEnterKeySound.length));
-            iEnterKeySound[0].playMode(mode);
-            this.existanceStrength(iEnterKeySound, 0, 0, volume);
-            iEnterKeySound[0].play();
-          }else if (prob >= 97 && prob < 100) {
-            let index = p.int(p.random(0, iDeleteKeySound.length));
-            iDeleteKeySound[0].playMode(mode);
-            this.existanceStrength(iDeleteKeySound, 0, 0, volume);
-            iDeleteKeySound[0].play();
-            console.log("delete key is tapped!!!");
+            }else if (prob >= 90 && prob < 97) {
+              let index = p.int(p.random(0, iEnterKeySound.length));
+              iEnterKeySound[0].playMode(mode);
+              this.existanceStrength(iEnterKeySound, 0, 0, volume);
+              iEnterKeySound[0].play();
+            }else if (prob >= 97 && prob < 100) {
+              let index = p.int(p.random(0, iDeleteKeySound.length));
+              iDeleteKeySound[0].playMode(mode);
+              this.existanceStrength(iDeleteKeySound, 0, 0, volume);
+              iDeleteKeySound[0].play();
+              console.log("delete key is tapped!!!");
+            }
+          }else{}
+
+          pNoiseOffset = cNoiseOffset;
+          samplingTime++;
+
+          if(count > 100){
+            count = 0;
           }
-        }else{}
-
-        pNoiseOffset = cNoiseOffset;
-        samplingTime++;
-
-        if(count > 100){
-          count = 0;
         }
-      }
-      currentFrame++;
+        currentFrame++;
     }
 
     cough(possibilityRange, border, mode){
