@@ -31,6 +31,10 @@ let iKeySound;
 let iEnterKeySound = [];
 let iDeleteKeySound = [];
 
+let DoingNothing = false;
+let TypingKeyboard = false;
+let Texting = false;
+
 // let walkSound = [];
 // let coughSound = [];
 // let flipPageSound = [];
@@ -159,6 +163,8 @@ canvas1 = p => {
     setInterval(() => {
       probabilityOfActions = p.random(0, 10);
       console.log("New actions begin!!!");
+
+      //Next task: Conditional statement to select boolean state.
     }, 12000);
 
     //p5.serialport relevant
@@ -188,6 +194,7 @@ canvas1 = p => {
     if(expressions != undefined){
       if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 10.0){
         if(probabilityOfActions < 7){
+
         }else if(probabilityOfActions >= 7 && probabilityOfActions < 9){
           raya.typeKeyboard(8, "sustain", 0, 0.5);//(frameStep, playMode, min, max)
         }else{
@@ -195,6 +202,8 @@ canvas1 = p => {
         }
       }
     }
+
+
   }
 
   //-----------------------------------------------------//
