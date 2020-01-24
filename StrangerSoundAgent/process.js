@@ -31,7 +31,7 @@ let iKeySound;
 let iEnterKeySound = [];
 let iDeleteKeySound = [];
 
-let DoingNothing = false;
+let DoingNothing = true;
 let TypingKeyboard = false;
 let Texting = false;
 
@@ -162,10 +162,60 @@ canvas1 = p => {
 
     setInterval(() => {
       probabilityOfActions = p.random(0, 10);
-      console.log("New actions begin!!!");
-
       //Next task: Conditional statement to select boolean state.
-    }, 12000);
+      if(DoingNothing == true){
+
+        if(probabilityOfActions < 6){
+
+          DoingNothing = true;
+          TypingKeyboard = false;
+          Texting = false;
+          console.log("Now Doing nothing");
+        }else if(probabilityOfActions >= 6 && probabilityOfActions < 9){
+          DoingNothing = false;
+          TypingKeyboard = true;
+          Texting = false;
+          console.log("Now typing keyboard");
+        }else{
+          DoingNothing = false;
+          TypingKeyboard =false;
+          Texting = true;
+          console.log("Now texting with iPhone");
+        }
+
+      }else if(TypingKeyboard == true){
+
+        if(probabilityOfActions < 7){
+          DoingNothing = false;
+          TypingKeyboard = true;
+          Texting = false;
+        }else{
+          DoingNothing = true;
+          TypingKeyboard = false;
+          Texting = false;
+        }
+
+      }else if(Texting == true){
+
+        if(probabilityOfActions < 7){
+          DoingNothing = false;
+          TypingKeyboard = false;
+          Texting = true;
+        }else{
+          DoingNothing = true;
+          TypingKeyboard = false;
+          Texting = false;
+        }
+
+      }
+
+      console.log("----- New actions has begun!!! -----");
+      console.log("DoingNothing: "+ DoingNothing);
+      console.log("TypingKeyboard: "+ TypingKeyboard);
+      console.log("Texting: "+ Texting);
+      console.log(" ");
+
+    }, 6000);
 
     //p5.serialport relevant
     serial = new p5.SerialPort();
@@ -193,11 +243,11 @@ canvas1 = p => {
 
     if(expressions != undefined){
       if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 10.0){
-        if(probabilityOfActions < 7){
+        if(DoingNothing == true){
 
-        }else if(probabilityOfActions >= 7 && probabilityOfActions < 9){
+        }else if(TypingKeyboard == true){
           raya.typeKeyboard(8, "sustain", 0, 0.5);//(frameStep, playMode, min, max)
-        }else{
+        }else if(Texting == true){
           raya.texting(8, "sustain", 0, 0.5);//(frameStep, playMode, min, max)
         }
       }
