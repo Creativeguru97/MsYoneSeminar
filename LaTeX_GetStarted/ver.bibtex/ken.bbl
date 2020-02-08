@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{tex1}
+D.E Knuth.
+\newblock \TeX{}ブック.
+\newblock アスキー出版局, 1989.
+
+\bibitem{tex2}
+奥村.
+\newblock \LaTeX{}美文書作成入門.
+\newblock 技術評論社, 1991.
+
+\bibitem{tex3}
+奥村.
+\newblock \LaTeX2$\varepsilon$美文書作成入門.
+\newblock 技術評論社, 改訂第4版, 2006.
+
+\end{thebibliography}

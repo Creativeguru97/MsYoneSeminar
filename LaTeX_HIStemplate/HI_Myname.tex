@@ -1,0 +1,73 @@
+%
+% このファイルはヒューマンインタフェース研究報告集用クラスファイル
+% hisken.cls(ver.1.0) を利用した「原稿執筆の手引き」です．
+% Revised in Jun. 7, 2007 by Yutaka Ishii
+%
+
+\documentclass[a4paper,dvipdfmx]{hisken}
+%\usepackage[dviout]{graphicx}
+%\usepackage[dvipdfm]{graphicx}
+\usepackage{latexsym}
+\usepackage{graphics}
+\usepackage{epsfig} \let\epsfile=\epsfig
+\usepackage{url}
+
+%和文タイトル
+\jtitle{}
+
+%著者日本名
+\jauthor{
+　\thanks{関西大学　総合情報学部}　　　
+}
+%英文タイトル
+\etitle{}
+
+%著者英文名
+\eauthor{
+ \thanks{Kansai University, Faculty of Informatics},
+}
+% 名前は，はじめの一文字だけ大文字にしてください．
+
+\begin{document}
+\[%maketitle は abstract と keyword の後に入れてください．
+
+\begin{abstract}
+
+\end{abstract}
+
+\begin{keyword}	
+%%５つまで（日本語）
+・・, ・・, ・・, ・・, ・・
+\end{keyword}
+
+\maketitle
+	
+\section{はじめに}
+
+
+\section{関連研究}
+
+
+\section{提案システム}
+
+
+\section{実験}
+
+
+\section{考察}
+
+
+\section{おわりに}
+
+
+%\ack%謝辞
+\section*{謝辞}
+本研究にご助力いただいた米澤ゼミの皆様に感謝いたします．また，実験に協力していただいた皆様に感謝いたします．
+
+
+%参考文献
+
+\bibliographystyle{junsrt}
+\bibliography{sotsuron}
+\]
+\end{document}
