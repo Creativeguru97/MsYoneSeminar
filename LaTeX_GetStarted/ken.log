@@ -100,4 +100,66 @@ LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <17.28> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 47.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <17.28> on input line 47.
-LaTeX Font 
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 47.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 47.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 47.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 47.
+
+Underfull \hbox (badness 4467) in paragraph at lines 52--54
+\JY1/mc/m/n/10 原稿執筆の際の参考にしてください ． また ， 本
+ []
+
+
+Overfull \hbox (8.1976pt too wide) in paragraph at lines 52--54
+\JY1/mc/m/n/10 （\OT1/cmr/m/n/10 https://www.his.gr.jp/office/ethical[]guidelin
+es.html\JY1/mc/m/n/10 ）
+ []
+
+[1
+
+
+]
+Overfull \hbox (3.30984pt too wide) in paragraph at lines 118--119
+[]$[]$[]
+ []
+
+
+LaTeX Warning: Reference `fig:example1' on page 2 undefined on input line 127.
+
+
+LaTeX Warning: Reference `table:example2' on page 2 undefined on input line 127
+.
+
+
+./ken.tex:131: LaTeX Error: Cannot determine size of graphic in fig1.eps (no Bo
+undingBox).
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.131     \includegraphics[width=70mm]{fig1.eps}
+                                                
+? 
+./ken.tex:131: Emergency stop.
+ ...                                              
+                                                  
+l.131     \includegraphics[width=70mm]{fig1.eps}
+                                                
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+ 
+Here is how much of TeX's memory you used:
+ 796 strings out of 493223
+ 8768 string characters out of 6144416
+ 83471 words of memory out of 5000000
+ 4839 multiletter control sequences out of 15000+600000
+ 19191 words of font info for 74 fonts, out of 8000000 for 9000
+ 929 hyphenation exceptions out of 8191
+ 26i,10n,19p,409b,413s stack positions out of 5000i,500n,10000p,200000b,80000s
+Output written on ken.dvi (1 page, 7252 bytes).
