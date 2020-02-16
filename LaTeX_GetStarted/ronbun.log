@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  9 FEB 2020 00:24
+This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  14 FEB 2020 19:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -128,176 +128,27 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 44.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 44.
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <7> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 49.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <7> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 49.
-
-
-LaTeX Warning: Citation `manabe' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `kanbara' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `display' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `rekimoto' on page 1 undefined on input line 49.
-
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 49.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 49.
-
-LaTeX Warning: Citation `hoshi' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `fran' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `ikea' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `ifip' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `ogawa' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `akahori' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `okumura' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `kokuban' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `suzuki' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `2005' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `environment' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `koizumi' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `hasegawa' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `ict' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `takezawa' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `okano' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `toida' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `terao' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `okano' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `rekishi' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `hujimoto' on page 1 undefined on input line 57.
 
 [1
 
 
-]
-
-LaTeX Warning: Citation `hujimoto' on page 2 undefined on input line 63.
-
-
-LaTeX Warning: Citation `brien' on page 2 undefined on input line 63.
-
-
-LaTeX Warning: Citation `magic' on page 2 undefined on input line 65.
-
-
-LaTeX Warning: Citation `maekawa' on page 2 undefined on input line 65.
-
-
-LaTeX Warning: Citation `oaks' on page 2 undefined on input line 66.
-
-
-LaTeX Warning: Citation `tsuji' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `oomu' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `wbt' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `takahasi' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `komatsu' on page 2 undefined on input line 75.
-
-
-LaTeX Warning: Citation `setozaki' on page 2 undefined on input line 75.
-
-[2]
-
-LaTeX Warning: Reference `fig:image3' on page 3 undefined on input line 81.
-
-
-LaTeX Warning: Reference `fig:flow2' on page 3 undefined on input line 81.
-
-
-LaTeX Warning: Reference `fig:software' on page 3 undefined on input line 88.
-
-
-LaTeX Warning: Reference `fig:chizu' on page 3 undefined on input line 90.
-
-
-LaTeX Warning: Reference `fig:pose_movie' on page 3 undefined on input line 92.
-
-
-
-LaTeX Warning: Reference `fig:busho' on page 3 undefined on input line 95.
-
-
-LaTeX Warning: Citation `html' on page 3 undefined on input line 101.
-
-
-LaTeX Warning: Citation `toolkit' on page 3 undefined on input line 106.
-
-
-LaTeX Warning: Citation `satou' on page 3 undefined on input line 106.
-
-
-LaTeX Warning: Citation `vuforia' on page 3 undefined on input line 106.
-
-[3]
-
-LaTeX Warning: Citation `laten' on page 4 undefined on input line 118.
+] [2]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 141.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 141.
 
 No file ronbun.bbl.
-[4] (./ronbun.aux)
+[3
 
-LaTeX Warning: There were undefined references.
-
- ) 
+] (./ronbun.aux) ) 
 Here is how much of TeX's memory you used:
- 942 strings out of 493223
- 10667 string characters out of 6144416
- 87865 words of memory out of 5000000
- 4964 multiletter control sequences out of 15000+600000
- 21873 words of font info for 88 fonts, out of 8000000 for 9000
+ 933 strings out of 493223
+ 10543 string characters out of 6144416
+ 85865 words of memory out of 5000000
+ 4956 multiletter control sequences out of 15000+600000
+ 21563 words of font info for 87 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 30i,10n,28p,1277b,363s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,10n,23p,919b,363s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on ronbun.dvi (4 pages, 36944 bytes).
+Output written on ronbun.dvi (3 pages, 18960 bytes).

@@ -1,71 +1,71 @@
-This is e-pTeX, Version 3.14159265-p3.8.0-180121-2.6 (utf8.sjis) (TeX Live 2017/W32TeX) (preloaded format=platex 2018.2.3)  4 SEP 2019 15:42
+This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  12 FEB 2020 23:59
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
-**./ronbun.tex
+**ronbun.tex
 (./ronbun.tex
-pLaTeX2e <2017/10/28>+4 (based on LaTeX2e <2017-04-15>)
-Babel <3.17> and hyphenation patterns for 84 language(s) loaded.
+pLaTeX2e <2019-04-06> (based on LaTeX2e <2018-12-01>)
 (./hisken.cls
 hisken.cls; Version 1.0 [Jun. 13, 2007]
 \h@=\dimen118
 \JQ=\dimen119
 \Q=\dimen120
 \@bs=\dimen121
-\Secbox=\box42
+\Secbox=\box43
 \@qqvsep=\skip41
-\c@section=\count82
-\c@subsection=\count83
-\c@subsubsection=\count84
-\c@paragraph=\count85
-\c@subparagraph=\count86
-\@capnumbox=\box43
-\@tempboxb=\box44
+\c@section=\count83
+\c@subsection=\count84
+\c@subsubsection=\count85
+\c@paragraph=\count86
+\c@subparagraph=\count87
+\@capnumbox=\box44
+\@tempboxb=\box45
 \capwidth=\dimen122
 \@abovecaptionskip=\dimen123
 \@belowcaptionskip=\dimen124
 \ecapwidth=\dimen125
-\@parc@ption=\box45
-\c@figure=\count87
-\c@table=\count88
-\abstractbox=\box46
-\keywordbox=\box47
-\year@cnt=\count89
-\c@subpage=\count90
+\@parc@ption=\box46
+\c@figure=\count88
+\c@table=\count89
+\abstractbox=\box47
+\keywordbox=\box48
+\year@cnt=\count90
+\c@subpage=\count91
 \mathindent=\dimen126
-\@minsofar=\count91
-\@min=\count92
-\@cite@temp=\count93
-\c@PROFILE=\count94
+\@minsofar=\count92
+\@min=\count93
+\@cite@temp=\count94
+\c@PROFILE=\count95
 \@heightofprofile=\dimen127
-\@profile=\box48
-) (c:/App/w32tex/share/texmf-dist/tex/latex/base/latexsym.sty
+\@profile=\box49
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/base/latexsym.sty
 Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
 \symlasy=\mathgroup4
 LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
 (Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
 )
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
 
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics/trig.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: dvipdfmx.def on input line 99.
 
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics-def/dvipdfmx.def
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-def/dvipdfmx.def
 File: dvipdfmx.def 2017/06/24 v5.0g Graphics/color driver for dvipdfmx
 ))
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics/epsfig.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/epsfig.sty
 Package: epsfig 2017/06/25 v1.7b (e)psfig emulation (SPQR)
 
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
 
-(c:/App/w32tex/share/texmf-dist/tex/latex/graphics/keyval.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks15
 )
@@ -75,7 +75,7 @@ Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \epsfxsize=\dimen130
 \epsfysize=\dimen131
 )
-(c:/App/w32tex/share/texmf-dist/tex/latex/url/url.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
@@ -119,7 +119,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <12> on input line 44.
 LaTeX Font Info:    Try loading font information for U+lasy on input line 44.
- (c:/App/w32tex/share/texmf-dist/tex/latex/base/ulasy.fd
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -256,58 +256,34 @@ LaTeX Warning: Reference `fig:image3' on page 3 undefined on input line 81.
 
 LaTeX Warning: Reference `fig:flow2' on page 3 undefined on input line 81.
 
-File: image3.ps Graphic file (type eps)
-<image3.ps>
 
-Overfull \hbox (28.83607pt too wide) in paragraph at lines 84--86
- [][] 
- []
-
-File: flow2.ps Graphic file (type eps)
-<flow2.ps>
-
-Overfull \hbox (23.81732pt too wide) in paragraph at lines 92--94
- [][] 
- []
-
-
-LaTeX Warning: Reference `fig:software' on page 3 undefined on input line 103.
-
-File: software.ps Graphic file (type eps)
-<software.ps>
-
-Overfull \hbox (62.05579pt too wide) in paragraph at lines 106--108
- [][] 
- []
-
-
-LaTeX Warning: Reference `fig:chizu' on page 3 undefined on input line 111.
-
-
-! LaTeX Error: Cannot determine size of graphic in chizu.eps (no BoundingBox).
+./ronbun.tex:85: LaTeX Error: File `image3' not found.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.115 {chizu}
+l.85 {image3}
              
 ? 
-! Emergency stop.
+./ronbun.tex:85: Emergency stop.
  ...                                              
                                                   
-l.115 {chizu}
+l.85 {image3}
              
+I could not locate the file with any of these extensions:
+.pdf,.PDF,.ai,.AI,.png,.PNG,.jpg,.JPG,.jpeg,.JPEG,.jp2,.JP2,.jpf,.JPF,.bmp,.BMP
+,.ps,.PS,.eps,.EPS,.mps,.MPS,.pz,.eps.Z,.ps.Z,.ps.gz,.eps.gz
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
  
 Here is how much of TeX's memory you used:
- 1009 strings out of 493619
- 11286 string characters out of 6150070
- 81638 words of memory out of 5000000
- 4621 multiletter control sequences out of 15000+600000
+ 964 strings out of 493223
+ 10840 string characters out of 6144416
+ 87865 words of memory out of 5000000
+ 4960 multiletter control sequences out of 15000+600000
  21873 words of font info for 88 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 30i,11n,27p,1279b,388s stack positions out of 5000i,500n,10000p,500000b,80000s
-Output written on ronbun.dvi (2 pages, 19572 bytes).
+ 30i,10n,28p,1277b,363s stack positions out of 5000i,500n,10000p,200000b,80000s
+Output written on ronbun.dvi (2 pages, 19568 bytes).
