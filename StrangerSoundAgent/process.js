@@ -242,7 +242,7 @@ canvas1 = p => {
     // userState.emotionalSequence("happy", 50);
 
     if(expressions != undefined){
-      if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 10.0){
+      if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 100.0){
         if(DoingNothing == true){
 
         }else if(TypingKeyboard == true){
