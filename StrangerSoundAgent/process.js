@@ -14,7 +14,6 @@ let userState;
 
 //---Raya relevant---
 let rayaState;
-let probabilityOfActions;
 let generateStateTime = 0;
 let generateTimeStore = 0;
 
@@ -34,6 +33,13 @@ let iDeleteKeySound = [];
 let DoingNothing = true;
 let TypingKeyboard = false;
 let Texting = false;
+let GotNotified = false;
+
+let probabilityOfActions;
+let pRange0;
+let pRange1;
+let pRange2;
+
 
 // let walkSound = [];
 // let coughSound = [];
@@ -88,6 +94,7 @@ canvas1 = p => {
     enterKeySound = p.loadSound("/soundEffects/typing/enter.mp3");
     spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
     deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
+    notificationSound = p.loadSound("/soundEffects/notification.mp3");
 
     iKeySound = p.loadSound("/soundEffects/texting/iKey0.mp3");
     for(let i=0; i < 3; i++){
@@ -162,16 +169,28 @@ canvas1 = p => {
 
     setInterval(() => {
       probabilityOfActions = p.random(0, 10);
-      //Next task: Conditional statement to select boolean state.
+
+      /*Adjust the probability.
+      We likely textback right after got notification, alright?*/
+      if(GotNotified == true){
+        pRange0 = 3;
+        pRange1 = 5;
+        pRange2 = 5;
+
+      }else{
+        pRange0 = 6;
+        pRange1 = 9;
+        pRange2 = 7;
+      }
+
       if(DoingNothing == true){
 
-        if(probabilityOfActions < 6){
-
+        if(probabilityOfActions < pRange0){
           DoingNothing = true;
           TypingKeyboard = false;
           Texting = false;
           console.log("Now Doing nothing");
-        }else if(probabilityOfActions >= 6 && probabilityOfActions < 9){
+        }else if(probabilityOfActions >= pRange0 && probabilityOfActions < pRange1){
           DoingNothing = false;
           TypingKeyboard = true;
           Texting = false;
@@ -181,11 +200,14 @@ canvas1 = p => {
           TypingKeyboard =false;
           Texting = true;
           console.log("Now texting with iPhone");
+
+          GotNotified = false;
+          //After this agent textback, bring status back to false.
         }
 
       }else if(TypingKeyboard == true){
 
-        if(probabilityOfActions < 7){
+        if(probabilityOfActions < pRange2){
           DoingNothing = false;
           TypingKeyboard = true;
           Texting = false;
@@ -242,7 +264,7 @@ canvas1 = p => {
     // userState.emotionalSequence("happy", 50);
 
     if(expressions != undefined){
-      if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 100.0){
+      if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 10.0){
         if(DoingNothing == true){
 
         }else if(TypingKeyboard == true){
@@ -251,9 +273,11 @@ canvas1 = p => {
           raya.texting(8, "sustain", 0, 0.5);//(frameStep, playMode, min, max)
         }
       }
+
+      raya.gotNotification(5000, 4999, "sustain", 0, 0.5);
+      console.log(GotNotified);
+
     }
-
-
   }
 
   //-----------------------------------------------------//
@@ -271,7 +295,7 @@ canvas1 = p => {
     existanceStrength(soundFile, index, min, max){
       let volume = p.map(
         p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2), 0, 10.0, max, min);
-        console.log(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2));
+        // console.log(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2));
       // console.log(volume);
       if(index == null){
         soundFile.setVolume(volume);
@@ -323,6 +347,18 @@ canvas1 = p => {
           }
         }
         currentFrame++;
+    }
+
+    gotNotification(possibilityRange, border, mode, min, max){
+        let num = p.random(0, possibilityRange);
+        if(num > border){
+          this.existanceStrength(notificationSound, null, min, max);
+          notificationSound.play();
+          console.log("");
+          console.log("----- Got notification!!! -----");
+          console.log("");
+          GotNotified = true;
+        }
     }
 
 
