@@ -264,7 +264,7 @@ canvas1 = p => {
     // userState.emotionalSequence("happy", 50);
 
     if(expressions != undefined){
-      if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 10.0){
+      if(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2) < 20.0){
         if(DoingNothing == true){
 
         }else if(TypingKeyboard == true){
@@ -274,7 +274,7 @@ canvas1 = p => {
         }
       }
 
-      raya.gotNotification(5000, 4999, "sustain", 0, 0.5);
+      raya.gotNotification(6000, 5999, "sustain", 0, 0.5);
       console.log(GotNotified);
 
     }
@@ -294,7 +294,7 @@ canvas1 = p => {
 
     existanceStrength(soundFile, index, min, max){
       let volume = p.map(
-        p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2), 0, 10.0, max, min);
+        p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2), 0, 20.0, max, min);
         // console.log(p.nf(userState.happyAvg*100+userState.displacementAvg, 2, 2));
       // console.log(volume);
       if(index == null){

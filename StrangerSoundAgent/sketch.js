@@ -68,7 +68,7 @@ video.addEventListener("play", () => {
         checkDisplacementTime = 0;
       }
 
-      // console.log(detections[0]);
+      console.log(detections[0]);
       // console.log(faceCenter);
       // console.log(detections[0].landmarks.positions[34].x);
       // console.log(detections[0].landmarks.positions[34].y);
