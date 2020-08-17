@@ -305,7 +305,7 @@ canvas1 = p => {
     }
 
     typeKeyboard(frameStep, mode, min, max){
-        if(currentFrame % frameStep == 0){
+        if(currentFrame % frameStep == 0){//To reduce the frequency of the sound
 
           noiseOffset = noiseOffset + 0.1;
           let n = p.noise(noiseOffset);
@@ -316,7 +316,7 @@ canvas1 = p => {
           }else{}
 
           if(cNoiseOffset > pNoiseOffset){
-            count++;
+            // count++;
             let prob = p.random(0, 100);
             if(prob < 90){
               let index = p.int(p.random(0, keySound.length));
@@ -342,9 +342,9 @@ canvas1 = p => {
           pNoiseOffset = cNoiseOffset;
           samplingTime++;
 
-          if(count > 100){
-            count = 0;
-          }
+          // if(count > 100){
+          //   count = 0;
+          // }
         }
         currentFrame++;
     }

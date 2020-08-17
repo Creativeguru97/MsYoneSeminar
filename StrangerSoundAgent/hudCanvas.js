@@ -13,7 +13,6 @@ let emoSeqGraphTop = 575;
 let emoSeqGraphBottom = emoSeqGraphTop + 120;
 
 
-
 //----- HUD canvas -----
 canvas0 = p => { //let canvas0 = function(p){...
   p.setup = () => {
