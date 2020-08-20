@@ -5,7 +5,7 @@ let background0;
 let background1;
 let flares = [];
 
-//Agent and the activity
+//Agent and the animations relevant
 let agent;
 let agentApperance = [];
 let typing_L0 = [];
@@ -14,28 +14,45 @@ let typing_R0 = [];
 let thinking = [];
 let typingProbability;
 
+//Typing sounds
+let keySound = [];
+let enterKeySound;
+let spacebarSound;
+let deleteKeySound;
+
 canvas = p => {
 
   p.preload = () => {
-    background0 = p.loadImage("data/background/background0.png");
-    background1 = p.loadImage("data/background/background1.png");
+
+    //Load component images
+    background0 = p.loadImage("animations/background/background0.png");
+    background1 = p.loadImage("animations/background/background1.png");
     for(let i=0; i<3; i++){
-      flares[i] = p.loadImage("data/optical_effect/flare" + i + ".png");
+      flares[i] = p.loadImage("animations/optical_effect/flare" + i + ".png");
     }
 
+    //Load agent animations
     for(let i=0; i<5; i++){
-      typing_L0[i] = p.loadImage("data/agent_typing/L0/" + p.nf(i, 2) + ".png");
+      typing_L0[i] = p.loadImage("animations/agent_typing/L0/" + p.nf(i, 2) + ".png");
     }
     for(let i=0; i<15; i++){
-      typing_L1[i] = p.loadImage("data/agent_typing/L1/" + p.nf(i, 2) + ".png");
+      typing_L1[i] = p.loadImage("animations/agent_typing/L1/" + p.nf(i, 2) + ".png");
     }
     for(let i=0; i<5; i++){
-      typing_R0[i] = p.loadImage("data/agent_typing/R0/" + p.nf(i, 2) + ".png");
+      typing_R0[i] = p.loadImage("animations/agent_typing/R0/" + p.nf(i, 2) + ".png");
     }
 
     for(let i=0; i<21; i++){
-      thinking[i] = p.loadImage("data/agent_thinking/" + p.nf(i, 3) + ".png");
+      thinking[i] = p.loadImage("animations/agent_thinking/" + p.nf(i, 3) + ".png");
     }
+
+    //Load typing sounds for typing()
+    for(let i=0; i < 4; i++){
+      keySound[i] = p.loadSound("/soundEffects/typing/key"+i+".mp3");
+    }
+    enterKeySound = p.loadSound("/soundEffects/typing/enter.mp3");
+    spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
+    deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
   }
 
 
@@ -61,7 +78,7 @@ canvas = p => {
 
     //This is where the agent comes in.
 
-    agent.typing(8);
+    agent.typing(8, "sustain", 0, 0.5);
 
 
     //Add some optical flare effects!
