@@ -59,6 +59,17 @@ class Agent{
       this.isScrolling = true;
 
       //Sound effects
+      let whichSound = myp5.int(myp5.random(0, 2));
+      if(whichSound == 0){
+        scrollingSound[0].setVolume(0.2);
+        scrollingSound[0].play();
+      }else if(whichSound == 1){
+        scrollingSound[1].setVolume(0.2);
+        scrollingSound[1].play();
+      }else if(whichSound == 2){
+        scrollingSound[2].setVolume(0.2);
+        scrollingSound[2].play();
+      }
     }
 
     //Animate one of them just once at each time
@@ -69,7 +80,7 @@ class Agent{
       if(this.index > thinking.length - 2){
         this.index = thinking.length - 1;
         this.isScrolling = false;
-        console.log(this.isScrolling);
+        // console.log(this.isScrolling);
       }else{
         this.index++;
       }
@@ -118,27 +129,27 @@ class Agent{
           this.typing_R0 = false;
         }
 
-        let prob = myp5.random(0, 100);
-        if(prob < 90){
+        let whichSound = myp5.random(0, 100);
+        if(whichSound < 90){
           let index = myp5.int(myp5.random(0, keySound.length));
           keySound[index].playMode(mode);
           // this.existanceStrength(keySound, index, min, max);
-          keySound[index].setVolume(0.5);
+          keySound[index].setVolume(0.1);
           keySound[index].play();
           // console.log("key is clacked!!!");
-        }else if (prob >= 90 && prob < 95) {
+        }else if (whichSound >= 90 && whichSound < 95) {
           // this.existanceStrength(spacebarSound, null, min, max);
-          spacebarSound.setVolume(0.5);
+          spacebarSound.setVolume(0.1);
           spacebarSound.play();
           // console.log("space bar is clacked!!!");
-        }else if (prob >= 95 && prob < 98) {
+        }else if (whichSound >= 95 && whichSound < 98) {
           // this.existanceStrength(deleteKeySound, null, min, max);
-          deleteKeySound.setVolume(0.5);
+          deleteKeySound.setVolume(0.1);
           deleteKeySound.play();
           // console.log("delete key is clacked!!!");
         }else{
           // this.existanceStrength(enterKeySound, null, min, max);
-          enterKeySound.setVolume(0.5);
+          enterKeySound.setVolume(0.1);
           enterKeySound.play();
           // console.log("enter key is clacked!!!");
         }

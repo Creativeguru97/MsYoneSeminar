@@ -19,6 +19,9 @@ let keySound = [];
 let enterKeySound;
 let spacebarSound;
 let deleteKeySound;
+let scrollingSound = [];
+
+let iPhone;
 
 canvas = p => {
 
@@ -53,6 +56,10 @@ canvas = p => {
     enterKeySound = p.loadSound("/soundEffects/typing/enter.mp3");
     spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
     deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
+
+    for(let i=0; i < 2; i++){
+      scrollingSound[i] = p.loadSound("/soundEffects/scrolling/scrolling"+i+".mp3");
+    }
   }
 
 
@@ -62,6 +69,7 @@ canvas = p => {
     p.imageMode(p.CENTER);
 
     agent = new Agent();
+    iPhone  = new Phone();
     // setInterval(() => {
     //   typingProbability = p.int(p.random(0, 10));
     //   console.log(typingProbability);
@@ -78,8 +86,8 @@ canvas = p => {
 
     //This is where the agent comes in.
 
-    agent.thinking();
-    // agent.typing(8, "sustain", 0, 0.5);
+    // agent.thinking();
+    agent.typing(8, "sustain", 0, 0.5);
 
 
     //Add some optical flare effects!
