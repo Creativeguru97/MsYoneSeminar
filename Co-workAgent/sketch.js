@@ -42,7 +42,7 @@ canvas = p => {
       typing_R0[i] = p.loadImage("animations/agent_typing/R0/" + p.nf(i, 2) + ".png");
     }
 
-    for(let i=0; i<21; i++){
+    for(let i=0; i<41; i++){
       thinking[i] = p.loadImage("animations/agent_thinking/" + p.nf(i, 3) + ".png");
     }
 
@@ -78,7 +78,8 @@ canvas = p => {
 
     //This is where the agent comes in.
 
-    agent.typing(8, "sustain", 0, 0.5);
+    agent.thinking();
+    // agent.typing(8, "sustain", 0, 0.5);
 
 
     //Add some optical flare effects!

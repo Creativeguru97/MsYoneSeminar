@@ -16,6 +16,26 @@ class Agent{
     this.typing_L1 = false;
     this.typing_R0 = false;
     this.isTypingSomething = false;
+
+    this.isScrolling = false;
+
+    this.intervalCount = 0;
+    this.randomNum = 10;
+  }
+
+  interval(freq, min, max){
+    if(this.intervalCount == 0){
+      this.randomNum = myp5.random(min, max);
+    }else{}
+
+    if(this.intervalCount > freq){
+      this.intervalCount = 0;
+    }else{
+      this.intervalCount++;
+    }
+
+    // console.log(this.randomNum);
+    return myp5.int(this.randomNum);
   }
 
   existanceStrength(soundFile, index, min, max){
@@ -30,24 +50,45 @@ class Agent{
     }
   }
 
+
   thinking(){
-    this.index += this.frameIncliment;
-    if(this.index > thinking.length - 2){
-      this.frameIncliment = -1;
-    }else if (this.index < 1) {
-      this.frameIncliment = 1;
+    let scrollFreqency = this.interval(40, 40, 200);
+
+    if(myp5.frameCount % scrollFreqency == 0 && this.isScrolling == false){//Every typeFreqency frames this happens
+      this.index = 0; //Reset the index
+      this.isScrolling = true;
+
+      //Sound effects
     }
 
-    console.log(this.index);
-    // return this.index;
-    myp5.image(thinking[this.index], 480, 270, 960, 540);
+    //Animate one of them just once at each time
+    if(this.isScrolling == true){
+      myp5.image(thinking[this.index], 480, 270, 960, 540);
+
+      this.index += this.frameIncliment;
+      if(this.index > thinking.length - 2){
+        this.index = thinking.length - 1;
+        this.isScrolling = false;
+        console.log(this.isScrolling);
+      }else{
+        this.index++;
+      }
+      console.log(this.index);
+
+    }else{
+      myp5.image(thinking[0], 480, 270, 960, 540);
+    }
   }
+
 
   typing(frameStep, mode, min, max){
     //This is the default state which no types are happning
     // myp5.image(typing_L0[0], 480, 270, 960, 540);
 
-    if(myp5.frameCount % 8 == 0){//Every 30 frames this happens
+    //For even randomize the duration of the cycle
+    let typeFreqency = this.interval(30, 4, 15);
+
+    if(myp5.frameCount % typeFreqency == 0){//Every typeFreqency frames this happens
 
       this.noiseOffset = this.noiseOffset + 0.1;
       let n = myp5.noise(this.noiseOffset);
@@ -57,8 +98,9 @@ class Agent{
         this.pNoiseOffset = n;
       }else{}
 
+      //if only current noise value is greater than previous one
+      //The typing souund happen
       if(this.cNoiseOffset > this.pNoiseOffset){
-      //In this "if" statement, gonna be random
         this.index = 0; //Reset the index
         let whichType = myp5.random(0, 10);
 
@@ -103,7 +145,7 @@ class Agent{
       }
     }
 
-    //Animate oen of them just once
+    //Animate one of them just once at each time
     if(this.typing_L0 == true){
       myp5.image(typing_L0[this.index], 480, 270, 960, 540);
       // console.log(this.index);
@@ -133,7 +175,6 @@ class Agent{
     this.pNoiseOffset = this.cNoiseOffset;
     this.samplingTime++;
   }
-
 
 
 
