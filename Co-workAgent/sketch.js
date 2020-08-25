@@ -13,6 +13,12 @@ let typing_L1 = [];
 let typing_R0 = [];
 let thinking = [];
 let typingProbability;
+let notification = [];
+
+//Make the notification 2D array!!!
+for(let i=0; i<4; i++){
+  notification[i] = [];
+}
 
 //Typing sounds
 let keySound = [];
@@ -20,6 +26,7 @@ let enterKeySound;
 let spacebarSound;
 let deleteKeySound;
 let scrollingSound = [];
+let notificationSound;
 
 let iPhone;
 
@@ -49,6 +56,14 @@ canvas = p => {
       thinking[i] = p.loadImage("animations/agent_thinking/" + p.nf(i, 3) + ".png");
     }
 
+    for(let i=0; i<4; i++){
+      for(let j=0; j<181; j++){
+        notification[i][j] = p.loadImage("animations/notifications/"+i+"/"+ p.nf(j, 4) + ".png");
+      }
+    }
+
+    // console.log(notification);
+
     //Load typing sounds for typing()
     for(let i=0; i < 4; i++){
       keySound[i] = p.loadSound("/soundEffects/typing/key"+i+".mp3");
@@ -57,9 +72,13 @@ canvas = p => {
     spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
     deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
 
+    //Scrolling sound for thinking()
     for(let i=0; i < 2; i++){
       scrollingSound[i] = p.loadSound("/soundEffects/scrolling/scrolling"+i+".mp3");
     }
+
+    //notification sound for notification()
+    notificationSound = p.loadSound("/soundEffects/notification.mp3");
   }
 
 
@@ -74,7 +93,6 @@ canvas = p => {
     //   typingProbability = p.int(p.random(0, 10));
     //   console.log(typingProbability);
     // }, 6000);
-
   }
 
   p.draw = () => {
@@ -86,8 +104,11 @@ canvas = p => {
 
     //This is where the agent comes in.
 
-    // agent.thinking();
-    agent.typing(8, "sustain", 0, 0.5);
+    agent.thinking();
+    // agent.typing(8, "sustain", 0, 0.5);
+
+    iPhone.notification(6000, 5999, "sustain", 0, 0.5);
+    // myp5.image(notification[0][60], 480, 270, 960, 540);
 
 
     //Add some optical flare effects!
@@ -97,8 +118,6 @@ canvas = p => {
     p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
 
   }
-
-
 }//Canvas end
 
 

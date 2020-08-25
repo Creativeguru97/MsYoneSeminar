@@ -187,6 +187,4 @@ class Agent{
     this.samplingTime++;
   }
 
-
-
 }

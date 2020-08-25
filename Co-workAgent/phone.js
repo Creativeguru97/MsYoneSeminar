@@ -1,9 +1,54 @@
 class Phone{
   constructor(){
+    //This gonna be indicies of images in the 2D array "notification" to display
+    this.i = 0;
+    this.j = 0;
 
+    this.isGotNotification = false;
+
+    //everytime they get notification, number of unread messages increase.
+    //Let's store those amount and reflect to notification screen.
+    this.UnreadMessagesNum = 0;
   }
 
-  notification(){
-    
+  notification(possibilityRange, border, mode, min, max){
+    let num = myp5.random(0, possibilityRange);
+    if(num > border){
+      //Animation relevant
+      this.i = this.UnreadMessagesNum;
+      this.j = 0;
+      this.isGotNotification = true;
+
+      //Sound relevant
+      // this.existanceStrength(notificationSound, null, min, max);
+      notificationSound.setVolume(0.2);
+      notificationSound.play();
+      console.log("");
+      console.log("----- Got notification!!! -----");
+      console.log("");
+      // GotNotified = true;
+    }
+
+    if(this.isGotNotification == true){
+      // myp5.image(notification[this.index], 480, 270, 960, 540);
+      myp5.image(notification[this.i][this.j], 480, 270, 960, 540);
+      // console.log(this.index);
+      if(this.j > notification[this.i].length - 2){
+        this.j = notification[this.i].length - 1;
+        this.isGotNotification = false;
+
+        //
+        //Even unread mesaages are more than 4, the notification screen
+        //doesn't look different.
+        if(this.UnreadMessagesNum < 3){
+          this.UnreadMessagesNum++;
+        }else{}
+
+      }else{
+        this.j++;
+      }
+    }
   }
+
+
 }
