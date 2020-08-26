@@ -12,6 +12,7 @@ let typing_L0 = [];
 let typing_L1 = [];
 let typing_R0 = [];
 let thinking = [];
+let texting = [];
 let typingProbability;
 let notification = [];
 
@@ -25,13 +26,29 @@ let keySound = [];
 let enterKeySound;
 let spacebarSound;
 let deleteKeySound;
+
 let scrollingSound = [];
 let notificationSound;
+
+//iPhone tapping sounds
+let iKeySound;
+let iEnterKeySound = [];
+let iDeleteKeySound = [];
 
 let iPhone;//Class
 let defaultIPhone;
 let textingIPhone;
 let pulledIPhone = [];
+
+let isThinking = false;
+let isTyping = false;
+let isTexting = false;
+
+let intervalCount = 0;
+let randomNum = 10;
+
+let pRange0;
+let pRange1;
 
 canvas = p => {
 
@@ -68,6 +85,10 @@ canvas = p => {
       thinking[i] = p.loadImage("animations/agent_thinking/" + p.nf(i, 3) + ".png");
     }
 
+    for(let i=0; i<5; i++){
+      texting[i] = p.loadImage("animations/agent_texting/" + p.nf(i, 2) + ".png");
+    }
+
     for(let i=0; i<4; i++){
       for(let j=0; j<181; j++){
         notification[i][j] = p.loadImage("animations/notifications/"+i+"/"+ p.nf(j, 4) + ".png");
@@ -84,9 +105,20 @@ canvas = p => {
     spacebarSound = p.loadSound("/soundEffects/typing/spacebar.mp3");
     deleteKeySound = p.loadSound("/soundEffects/typing/delete.mp3");
 
-    //Scrolling sound for thinking()
+    //Load scrolling sound for thinking()
     for(let i=0; i < 2; i++){
       scrollingSound[i] = p.loadSound("/soundEffects/scrolling/scrolling"+i+".mp3");
+    }
+
+    //Load tapping sound for texting()
+    iKeySound = p.loadSound("/soundEffects/texting/iKey0.mp3");
+
+    for(let i=0; i < 3; i++){
+      iEnterKeySound[i] = p.loadSound("/soundEffects/texting/iEnter"+i+".mp3");
+    }
+
+    for(let i=0; i < 5; i++){
+      iDeleteKeySound[i] = p.loadSound("/soundEffects/texting/iDelete"+i+".mp3");
     }
 
     //notification sound for notification()
@@ -101,10 +133,21 @@ canvas = p => {
 
     agent = new Agent();
     iPhone  = new Phone();
-    // setInterval(() => {
-    //   typingProbability = p.int(p.random(0, 10));
-    //   console.log(typingProbability);
-    // }, 6000);
+
+    let firstAction = p.int(p.random(0, 3));
+    if(firstAction == 0){
+      isThinking = true;
+    }else if(firstAction == 1){
+      isTyping = true;
+    }else{
+      isTexting = true;
+    }
+
+    console.log("----------");
+    console.log(isThinking);
+    console.log(isTyping);
+    console.log(isTexting);
+    console.log("----------");
   }
 
   p.draw = () => {
@@ -114,13 +157,77 @@ canvas = p => {
     p.image(background1, 480, 270, 960, 540);
     p.image(background0, 480, 270, 960, 540);
 
-    //This is where the agent comes in.
+    //In this project 30fps.
+    let duration = p.actionDuration(150, 300);
 
-    agent.thinking();
-    // agent.typing(8, "sustain", 0, 0.5);
+    if (p.frameCount % duration == 0) {
+      agent.index = 0;
+
+      let whichAction = myp5.int(myp5.random(0, 100));
+
+      //This value represent a need for checking social media.
+      //The more unread messsage, more become want to check it.
+      let instantGratification = iPhone.UnreadMessagesNum * 2.5;
+
+      if(isThinking == true){
+        pRange0 = 70 - instantGratification;
+        pRange1 = 100 - instantGratification;
+      }else if(isTyping == true){
+        pRange0 = 30 - instantGratification;
+        pRange1 = 100 - instantGratification;
+      }else if(isTexting == true){
+        pRange0 = 40;
+        pRange1 = 80;
+
+        iPhone.UnreadMessagesNum = 0;
+        //Agent has already checked social media.
+        //So temporary no need for scratching the smartphone.
+      }
+
+      console.log("instantGratification: "+instantGratification);
+      console.log("pRange0: "+pRange0);
+      console.log("pRange1: "+pRange1);
+
+      if(whichAction < pRange0){
+        isThinking = true;
+        isTyping = false;
+        isTexting = false;
+        console.log("Agent is thinking");
+        console.log(isThinking);
+        console.log(isTyping);
+        console.log(isTexting);
+        console.log("----------");
+      }else if(whichAction >= pRange0 && whichAction < pRange1){
+        isThinking = false;
+        isTyping = true;
+        isTexting = false;
+        console.log("Agent is typing");
+        console.log(isThinking);
+        console.log(isTyping);
+        console.log(isTexting);
+        console.log("----------");
+      }else{
+        isThinking = false;
+        isTyping = false;
+        isTexting = true;
+        console.log("Agent is texting");
+        console.log(isThinking);
+        console.log(isTyping);
+        console.log(isTexting);
+        console.log("----------");
+      }
+    }
+
+    if(isThinking == true){
+      agent.thinking();
+    }else if(isTyping == true){
+      agent.typing(8, "sustain", 0, 0.5);
+    }else if(isTexting == true){
+      agent.texting();
+    }
 
     iPhone.display();
-    iPhone.notification(6000, 5999, "sustain", 0, 0.5);
+    iPhone.notification(600, 599, "sustain", 0, 0.5);
     // myp5.image(notification[0][60], 480, 270, 960, 540);
 
 
@@ -130,6 +237,24 @@ canvas = p => {
     p.image(flares[1], 497, 285, 1600 * 0.2, 1333 * 0.2);
     p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
 
+  }
+
+  p.actionDuration = (min, max) => {
+    // console.log("new action interval emerged");
+    if(intervalCount == 0){
+      randomNum = myp5.random(min, max);
+      console.log("----------");
+      console.log("new action begins");
+    }else{}
+
+    if(intervalCount > randomNum){
+      intervalCount = 0;
+    }else{
+      intervalCount++;
+    }
+
+    // console.log(this.randomNum);
+    return myp5.int(randomNum);
   }
 }//Canvas end
 

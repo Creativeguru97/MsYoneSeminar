@@ -1,7 +1,6 @@
 class Agent{
   constructor(){
     this.index = 0;
-    this.frameIncliment = 0;
     this.typingProbability = 0;
 
     this.noiseOffset = 0.0;
@@ -15,20 +14,22 @@ class Agent{
     this.typing_L0 = false;
     this.typing_L1 = false;
     this.typing_R0 = false;
-    this.isTypingSomething = false;
 
+    this.isTypingSomething = false;
     this.isScrolling = false;
+    this.isTappingSomething = false;
 
     this.intervalCount = 0;
     this.randomNum = 10;
   }
 
-  interval(freq, min, max){
+  interval(min, max){
     if(this.intervalCount == 0){
       this.randomNum = myp5.random(min, max);
+      // console.log("new interval emerged")
     }else{}
 
-    if(this.intervalCount > freq){
+    if(this.intervalCount > this.randomNum){
       this.intervalCount = 0;
     }else{
       this.intervalCount++;
@@ -52,7 +53,7 @@ class Agent{
 
 
   thinking(){
-    let scrollFreqency = this.interval(40, 40, 200);
+    let scrollFreqency = this.interval(40, 200);
 
     if(myp5.frameCount % scrollFreqency == 0 && this.isScrolling == false){//Every typeFreqency frames this happens
       this.index = 0; //Reset the index
@@ -76,7 +77,6 @@ class Agent{
     if(this.isScrolling == true){
       myp5.image(thinking[this.index], 480, 270, 960, 540);
 
-      this.index += this.frameIncliment;
       if(this.index > thinking.length - 2){
         this.index = thinking.length - 1;
         this.isScrolling = false;
@@ -97,7 +97,7 @@ class Agent{
     // myp5.image(typing_L0[0], 480, 270, 960, 540);
 
     //For even randomize the duration of the cycle
-    let typeFreqency = this.interval(30, 4, 15);
+    let typeFreqency = this.interval(4, 20);
 
     if(myp5.frameCount % typeFreqency == 0){//Every typeFreqency frames this happens
 
@@ -189,7 +189,40 @@ class Agent{
 
 
   texting(){
-    
+    let tappingFrequency = this.interval(4, 30);
+    if(myp5.frameCount % tappingFrequency == 0 && this.isTappingSomething == false){
+      this.index = 0;
+      this.isTappingSomething = true;
+
+      let whichSound = myp5.random(0, 100);
+      if(whichSound < 90){
+        iKeySound.setVolume(0.2);
+        iKeySound.play();
+      }else if(whichSound >= 90 && whichSound < 97){
+        let index = myp5.int(myp5.random(0, iEnterKeySound.length));
+        iEnterKeySound[0].setVolume(0.2);
+        iEnterKeySound[0].play();
+      }else if(whichSound == 2){
+        let index = myp5.int(myp5.random(0, iDeleteKeySound.length));
+        iDeleteKeySound[0].setVolume(0.2);
+        iDeleteKeySound[0].play();
+      }
+    }
+
+    if(this.isTappingSomething == true){
+      myp5.image(texting[this.index], 480, 270, 960, 540);
+
+      if(this.index > texting.length - 2){
+        this.index = texting.length - 1;
+        this.isTappingSomething = false;
+      }else{
+        this.index++;
+      }
+
+    }else{
+      myp5.image(texting[0], 480, 270, 960, 540);
+    }
   }
+
 
 }

@@ -21,7 +21,11 @@ class Phone{
     let num = myp5.random(0, possibilityRange);
     if(num > border){
       //Animation relevant
-      this.i = this.UnreadMessagesNum;
+      if(this.UnreadMessagesNum < 4){
+        this.i = this.UnreadMessagesNum;
+      }else{
+        this.i = 3;
+      }
       this.j = 0;
       this.isGotNotification = true;
 
@@ -43,12 +47,9 @@ class Phone{
         this.j = notification[this.i].length - 1;
         this.isGotNotification = false;
 
-        //
         //Even unread mesaages are more than 4, the notification screen
         //doesn't look different.
-        if(this.UnreadMessagesNum < 3){
-          this.UnreadMessagesNum++;
-        }else{}
+        this.UnreadMessagesNum++;
 
       }else{
         this.j++;
