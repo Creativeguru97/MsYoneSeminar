@@ -11,6 +11,12 @@ class Phone{
     this.UnreadMessagesNum = 0;
   }
 
+
+  display(){
+    myp5.image(defaultIPhone, 480, 270, 960, 540);
+  }
+
+
   notification(possibilityRange, border, mode, min, max){
     let num = myp5.random(0, possibilityRange);
     if(num > border){

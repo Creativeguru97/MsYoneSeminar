@@ -28,7 +28,10 @@ let deleteKeySound;
 let scrollingSound = [];
 let notificationSound;
 
-let iPhone;
+let iPhone;//Class
+let defaultIPhone;
+let textingIPhone;
+let pulledIPhone = [];
 
 canvas = p => {
 
@@ -37,6 +40,15 @@ canvas = p => {
     //Load component images
     background0 = p.loadImage("animations/background/background0.png");
     background1 = p.loadImage("animations/background/background1.png");
+
+    //iPhone images
+    defaultIPhone = p.loadImage("animations/iPhone/default.png");
+    textingIPhone = p.loadImage("animations/iPhone/texting.png");
+
+    for(let i=0; i<90; i++){
+      pullediPhone = p.loadImage("animations/iPhone/pulledUp/"+ p.nf(i, 3) +".png");
+    }
+
     for(let i=0; i<3; i++){
       flares[i] = p.loadImage("animations/optical_effect/flare" + i + ".png");
     }
@@ -107,6 +119,7 @@ canvas = p => {
     agent.thinking();
     // agent.typing(8, "sustain", 0, 0.5);
 
+    iPhone.display();
     iPhone.notification(6000, 5999, "sustain", 0, 0.5);
     // myp5.image(notification[0][60], 480, 270, 960, 540);
 

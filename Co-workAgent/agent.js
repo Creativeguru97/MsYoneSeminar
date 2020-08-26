@@ -187,4 +187,9 @@ class Agent{
     this.samplingTime++;
   }
 
+
+  texting(){
+    
+  }
+
 }
