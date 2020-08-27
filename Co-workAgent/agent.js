@@ -11,6 +11,8 @@ class Agent{
 
     this.currentFrame = 0;
 
+    this.textingFrame = 0;
+
     this.typing_L0 = false;
     this.typing_L1 = false;
     this.typing_R0 = false;
@@ -84,7 +86,7 @@ class Agent{
       }else{
         this.index++;
       }
-      console.log(this.index);
+      // console.log(this.index);
 
     }else{
       myp5.image(thinking[0], 480, 270, 960, 540);
@@ -189,40 +191,66 @@ class Agent{
 
 
   texting(){
-    let tappingFrequency = this.interval(4, 30);
-    if(myp5.frameCount % tappingFrequency == 0 && this.isTappingSomething == false){
-      this.index = 0;
-      this.isTappingSomething = true;
+    if(this.textingFrame < 90){
+      this.pull_iPhone(this.textingFrame);
+    }else{
+      let tappingFrequency = this.interval(4, 30);
+      if(myp5.frameCount % tappingFrequency == 0 && this.isTappingSomething == false){
+        this.index = 0;
+        this.isTappingSomething = true;
 
-      let whichSound = myp5.random(0, 100);
-      if(whichSound < 90){
-        iKeySound.setVolume(0.2);
-        iKeySound.play();
-      }else if(whichSound >= 90 && whichSound < 97){
-        let index = myp5.int(myp5.random(0, iEnterKeySound.length));
-        iEnterKeySound[0].setVolume(0.2);
-        iEnterKeySound[0].play();
-      }else if(whichSound == 2){
-        let index = myp5.int(myp5.random(0, iDeleteKeySound.length));
-        iDeleteKeySound[0].setVolume(0.2);
-        iDeleteKeySound[0].play();
+        let whichSound = myp5.random(0, 100);
+        if(whichSound < 90){
+          iKeySound.setVolume(0.2);
+          iKeySound.play();
+        }else if(whichSound >= 90 && whichSound < 97){
+          let index = myp5.int(myp5.random(0, iEnterKeySound.length));
+          iEnterKeySound[0].setVolume(0.2);
+          iEnterKeySound[0].play();
+        }else if(whichSound == 2){
+          let index = myp5.int(myp5.random(0, iDeleteKeySound.length));
+          iDeleteKeySound[0].setVolume(0.2);
+          iDeleteKeySound[0].play();
+        }
+      }
+
+      if(this.isTappingSomething == true){
+        myp5.image(texting[this.index], 480, 270, 960, 540);
+
+        if(this.index > texting.length - 2){
+          this.index = texting.length - 1;
+          this.isTappingSomething = false;
+        }else{
+          this.index++;
+        }
+
+      }else{
+        myp5.image(texting[0], 480, 270, 960, 540);
       }
     }
+    this.textingFrame++;
+  }
 
-    if(this.isTappingSomething == true){
-      myp5.image(texting[this.index], 480, 270, 960, 540);
+  pull_iPhone(index){
+    myp5.image(pullIPhone[index], 480, 270, 960, 540);
 
-      if(this.index > texting.length - 2){
-        this.index = texting.length - 1;
-        this.isTappingSomething = false;
-      }else{
-        this.index++;
-      }
-
+    if(index > pullIPhone.length - 2){
+      index = pullIPhone.length - 1;
+      // console.log(this.isScrolling);
     }else{
-      myp5.image(texting[0], 480, 270, 960, 540);
+      index++;
     }
   }
 
+  put_iPhone(index){
+    myp5.image(pullIPhone[index], 480, 270, 960, 540);
+
+    if(index < 1){
+      index = 0;
+      // console.log(this.isScrolling);
+    }else{
+      index--;
+    }
+  }
 
 }

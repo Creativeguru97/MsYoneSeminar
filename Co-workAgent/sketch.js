@@ -13,6 +13,7 @@ let typing_L1 = [];
 let typing_R0 = [];
 let thinking = [];
 let texting = [];
+let pullIPhone = [];
 let typingProbability;
 let notification = [];
 
@@ -38,7 +39,7 @@ let iDeleteKeySound = [];
 let iPhone;//Class
 let defaultIPhone;
 let textingIPhone;
-let pulledIPhone = [];
+let pullediPhone = [];
 
 let isThinking = false;
 let isTyping = false;
@@ -63,7 +64,7 @@ canvas = p => {
     textingIPhone = p.loadImage("animations/iPhone/texting.png");
 
     for(let i=0; i<90; i++){
-      pullediPhone = p.loadImage("animations/iPhone/pulledUp/"+ p.nf(i, 3) +".png");
+      pullediPhone[i] = p.loadImage("animations/iPhone/pulledUp/"+ p.nf(i, 3) +".png");
     }
 
     for(let i=0; i<3; i++){
@@ -87,6 +88,10 @@ canvas = p => {
 
     for(let i=0; i<5; i++){
       texting[i] = p.loadImage("animations/agent_texting/" + p.nf(i, 2) + ".png");
+    }
+
+    for(let i=0; i<90; i++){
+      pullIPhone[i] = p.loadImage("animations/typing_texting/" + p.nf(i, 3) + ".png");
     }
 
     for(let i=0; i<4; i++){
@@ -170,18 +175,22 @@ canvas = p => {
       let instantGratification = iPhone.UnreadMessagesNum * 2.5;
 
       if(isThinking == true){
-        pRange0 = 70 - instantGratification;
-        pRange1 = 100 - instantGratification;
+        if(instantGratification < 60){
+          pRange0 = 70 - instantGratification;
+          pRange1 = 100 - instantGratification * 1.5;
+        }
       }else if(isTyping == true){
-        pRange0 = 30 - instantGratification;
-        pRange1 = 100 - instantGratification;
+        if(instantGratification < 60){
+          pRange0 = 30 - instantGratification * 0.5;
+          pRange1 = 100 - instantGratification * 1.5;
+        }
       }else if(isTexting == true){
         pRange0 = 40;
         pRange1 = 80;
 
-        iPhone.UnreadMessagesNum = 0;
         //Agent has already checked social media.
         //So temporary no need for scratching the smartphone.
+        iPhone.UnreadMessagesNum = 0;
       }
 
       console.log("instantGratification: "+instantGratification);
@@ -215,8 +224,15 @@ canvas = p => {
         console.log(isTyping);
         console.log(isTexting);
         console.log("----------");
+
+        //I imprimented an other action -> texting animation.
+        //So I need to reset the index to display images every time.
+        agent.textingFrame = 0;
       }
     }
+
+    iPhone.display();
+    iPhone.notification(600, 599, "sustain", 0, 0.5);
 
     if(isThinking == true){
       agent.thinking();
@@ -225,10 +241,7 @@ canvas = p => {
     }else if(isTexting == true){
       agent.texting();
     }
-
-    iPhone.display();
-    iPhone.notification(600, 599, "sustain", 0, 0.5);
-    // myp5.image(notification[0][60], 480, 270, 960, 540);
+    // agent.put_iPhone();
 
 
     //Add some optical flare effects!

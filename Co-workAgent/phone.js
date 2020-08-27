@@ -13,7 +13,15 @@ class Phone{
 
 
   display(){
-    myp5.image(defaultIPhone, 480, 270, 960, 540);
+    if(isTexting == true){
+      if(agent.textingFrame < 90){
+        myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
+      }else{
+        myp5.image(textingIPhone, 480, 270, 960, 540);
+      }
+    }else{
+      myp5.image(defaultIPhone, 480, 270, 960, 540);
+    }
   }
 
 
@@ -39,7 +47,7 @@ class Phone{
       // GotNotified = true;
     }
 
-    if(this.isGotNotification == true){
+    if(this.isGotNotification == true && isTexting == false){
       // myp5.image(notification[this.index], 480, 270, 960, 540);
       myp5.image(notification[this.i][this.j], 480, 270, 960, 540);
       // console.log(this.index);
