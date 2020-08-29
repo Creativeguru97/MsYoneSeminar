@@ -14,6 +14,7 @@ let typing_R0 = [];
 let thinking = [];
 let texting = [];
 let pullIPhone = [];
+let thinking_typing = [];
 let typingProbability;
 let notification = [];
 
@@ -44,6 +45,10 @@ let pullediPhone = [];
 let isThinking = false;
 let isTyping = false;
 let isTexting = false;
+
+//To impliment transittion animation between action to action
+//I need to store current action for later.
+let previousAction = "";
 
 let intervalCount = 0;
 let randomNum = 10;
@@ -94,6 +99,10 @@ canvas = p => {
       pullIPhone[i] = p.loadImage("animations/typing_texting/" + p.nf(i, 3) + ".png");
     }
 
+    for(let i=0; i<21; i++){
+      thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
+    }
+
     for(let i=0; i<4; i++){
       for(let j=0; j<181; j++){
         notification[i][j] = p.loadImage("animations/notifications/"+i+"/"+ p.nf(j, 4) + ".png");
@@ -142,10 +151,13 @@ canvas = p => {
     let firstAction = p.int(p.random(0, 3));
     if(firstAction == 0){
       isThinking = true;
+      previousAction = "thinking";
     }else if(firstAction == 1){
       isTyping = true;
+      previousAction = "typing";
     }else{
       isTexting = true;
+      previousAction = "texting";
     }
 
     console.log("----------");
@@ -163,9 +175,11 @@ canvas = p => {
     p.image(background0, 480, 270, 960, 540);
 
     //In this project 30fps.
-    let duration = p.actionDuration(150, 300);
+    let duration = p.actionDuration(300, 450);
 
     if (p.frameCount % duration == 0) {
+
+      console.log("previousAction: " + previousAction);
       agent.index = 0;
 
       let whichAction = myp5.int(myp5.random(0, 100));
@@ -201,6 +215,7 @@ canvas = p => {
         isThinking = true;
         isTyping = false;
         isTexting = false;
+        previousAction = "thinking";
         console.log("Agent is thinking");
         console.log(isThinking);
         console.log(isTyping);
@@ -215,6 +230,8 @@ canvas = p => {
         console.log(isTyping);
         console.log(isTexting);
         console.log("----------");
+
+        agent.typingFrame = 0;
       }else{
         isThinking = false;
         isTyping = false;
@@ -232,7 +249,7 @@ canvas = p => {
     }
 
     iPhone.display();
-    iPhone.notification(600, 599, "sustain", 0, 0.5);
+    iPhone.notification(1000, 999, "sustain", 0, 0.5);
 
     if(isThinking == true){
       agent.thinking();

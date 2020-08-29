@@ -9,8 +9,8 @@ class Agent{
 
     this.samplingTime = 0;
 
-    this.currentFrame = 0;
-
+    this.thinkingFrame = 0;
+    this.typingFrame = 0;
     this.textingFrame = 0;
 
     this.typing_L0 = false;
@@ -93,100 +93,116 @@ class Agent{
     }
   }
 
+  transittion(){
+
+  }
+
 
   typing(frameStep, mode, min, max){
-    //This is the default state which no types are happning
-    // myp5.image(typing_L0[0], 480, 270, 960, 540);
+    if(this.typingFrame < 21 && previousAction == "thinking"){
+      myp5.image(thinking_typing[this.typingFrame], 480, 270, 960, 540);
+      if(this.typingFrame > thinking_typing.length - 2){
+        this.typingFrame = thinking_typing.length - 1;
+        previousAction = "typing";
+        // console.log(this.isScrolling);
+      }else{
+        this.typingFrame++;
+      }
+    }else{
+      //This is the default state which no types are happning
+      // myp5.image(typing_L0[0], 480, 270, 960, 540);
 
-    //For even randomize the duration of the cycle
-    let typeFreqency = this.interval(4, 20);
+      //For even randomize the duration of the cycle
+      let typeFreqency = this.interval(4, 20);
 
-    if(myp5.frameCount % typeFreqency == 0){//Every typeFreqency frames this happens
+      if(myp5.frameCount % typeFreqency == 0){//Every typeFreqency frames this happens
 
-      this.noiseOffset = this.noiseOffset + 0.1;
-      let n = myp5.noise(this.noiseOffset);
+        this.noiseOffset = this.noiseOffset + 0.1;
+        let n = myp5.noise(this.noiseOffset);
 
-      this.cNoiseOffset = n;
-      if(this.samplingTIme == 0){
-        this.pNoiseOffset = n;
-      }else{}
+        this.cNoiseOffset = n;
+        if(this.samplingTIme == 0){
+          this.pNoiseOffset = n;
+        }else{}
 
-      //if only current noise value is greater than previous one
-      //The typing souund happen
-      if(this.cNoiseOffset > this.pNoiseOffset){
-        this.index = 0; //Reset the index
-        let whichType = myp5.random(0, 10);
+        //if only current noise value is greater than previous one
+        //The typing souund happen
+        if(this.cNoiseOffset > this.pNoiseOffset){
+          this.index = 0; //Reset the index
+          let whichType = myp5.random(0, 10);
 
-        if(whichType < 5){
-          this.typing_L0 = true;
-          this.typing_L1 = false;
-          this.typing_R0 = false;
-        }else if(whichType >= 5 && whichType < 9){
-          this.typing_L0 = false;
-          this.typing_L1 = false;
-          this.typing_R0 = true;
-        }else if(whichType >= 9){
-          this.typing_L0 = false;
-          this.typing_L1 = true;
-          this.typing_R0 = false;
+          if(whichType < 5){
+            this.typing_L0 = true;
+            this.typing_L1 = false;
+            this.typing_R0 = false;
+          }else if(whichType >= 5 && whichType < 9){
+            this.typing_L0 = false;
+            this.typing_L1 = false;
+            this.typing_R0 = true;
+          }else if(whichType >= 9){
+            this.typing_L0 = false;
+            this.typing_L1 = true;
+            this.typing_R0 = false;
+          }
+
+          let whichSound = myp5.random(0, 100);
+          if(whichSound < 90){
+            let index = myp5.int(myp5.random(0, keySound.length));
+            keySound[index].playMode(mode);
+            // this.existanceStrength(keySound, index, min, max);
+            keySound[index].setVolume(0.1);
+            keySound[index].play();
+            // console.log("key is clacked!!!");
+          }else if (whichSound >= 90 && whichSound < 95) {
+            // this.existanceStrength(spacebarSound, null, min, max);
+            spacebarSound.setVolume(0.1);
+            spacebarSound.play();
+            // console.log("space bar is clacked!!!");
+          }else if (whichSound >= 95 && whichSound < 98) {
+            // this.existanceStrength(deleteKeySound, null, min, max);
+            deleteKeySound.setVolume(0.1);
+            deleteKeySound.play();
+            // console.log("delete key is clacked!!!");
+          }else{
+            // this.existanceStrength(enterKeySound, null, min, max);
+            enterKeySound.setVolume(0.1);
+            enterKeySound.play();
+            // console.log("enter key is clacked!!!");
+          }
         }
+      }
 
-        let whichSound = myp5.random(0, 100);
-        if(whichSound < 90){
-          let index = myp5.int(myp5.random(0, keySound.length));
-          keySound[index].playMode(mode);
-          // this.existanceStrength(keySound, index, min, max);
-          keySound[index].setVolume(0.1);
-          keySound[index].play();
-          // console.log("key is clacked!!!");
-        }else if (whichSound >= 90 && whichSound < 95) {
-          // this.existanceStrength(spacebarSound, null, min, max);
-          spacebarSound.setVolume(0.1);
-          spacebarSound.play();
-          // console.log("space bar is clacked!!!");
-        }else if (whichSound >= 95 && whichSound < 98) {
-          // this.existanceStrength(deleteKeySound, null, min, max);
-          deleteKeySound.setVolume(0.1);
-          deleteKeySound.play();
-          // console.log("delete key is clacked!!!");
+      //Animate one of them just once at each time
+      if(this.typing_L0 == true){
+        myp5.image(typing_L0[this.index], 480, 270, 960, 540);
+        // console.log(this.index);
+        if(this.index > typing_L0.length - 2){
+          this.index = typing_L0.length - 1;
         }else{
-          // this.existanceStrength(enterKeySound, null, min, max);
-          enterKeySound.setVolume(0.1);
-          enterKeySound.play();
-          // console.log("enter key is clacked!!!");
+          this.index++;
+        }
+      }else if(this.typing_L1 == true){
+        myp5.image(typing_L1[this.index], 480, 270, 960, 540);
+        // console.log(this.index);
+        if(this.index > typing_L1.length - 2){
+          this.index = typing_L1.length - 1;
+        }else{
+          this.index++;
+        }
+      }else if(this.typing_R0 == true){
+        myp5.image(typing_R0[this.index], 480, 270, 960, 540);
+        // console.log(this.index);
+        if(this.index > typing_R0.length - 2){
+          this.index = typing_R0.length - 1;
+        }else{
+          this.index++;
         }
       }
-    }
 
-    //Animate one of them just once at each time
-    if(this.typing_L0 == true){
-      myp5.image(typing_L0[this.index], 480, 270, 960, 540);
-      // console.log(this.index);
-      if(this.index > typing_L0.length - 2){
-        this.index = typing_L0.length - 1;
-      }else{
-        this.index++;
-      }
-    }else if(this.typing_L1 == true){
-      myp5.image(typing_L1[this.index], 480, 270, 960, 540);
-      // console.log(this.index);
-      if(this.index > typing_L1.length - 2){
-        this.index = typing_L1.length - 1;
-      }else{
-        this.index++;
-      }
-    }else if(this.typing_R0 == true){
-      myp5.image(typing_R0[this.index], 480, 270, 960, 540);
-      // console.log(this.index);
-      if(this.index > typing_R0.length - 2){
-        this.index = typing_R0.length - 1;
-      }else{
-        this.index++;
-      }
+      this.pNoiseOffset = this.cNoiseOffset;
+      this.samplingTime++;
     }
-
-    this.pNoiseOffset = this.cNoiseOffset;
-    this.samplingTime++;
+    this.typingFrame++;
   }
 
 
