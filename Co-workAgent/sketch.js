@@ -184,7 +184,7 @@ canvas = p => {
 
     if (p.frameCount % duration == 0) {
 
-      agent.index = 0;
+      agent.index = 0;//Re initialize
       console.log("previousAction: " + previousAction);
 
       let whichAction = myp5.int(myp5.random(0, 100));
