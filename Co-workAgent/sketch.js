@@ -180,7 +180,6 @@ canvas = p => {
     if (p.frameCount % duration == 0) {
 
       console.log("previousAction: " + previousAction);
-      agent.index = 0;
 
       let whichAction = myp5.int(myp5.random(0, 100));
 
@@ -215,20 +214,15 @@ canvas = p => {
         isThinking = true;
         isTyping = false;
         isTexting = false;
-        previousAction = "thinking";
         console.log("Agent is thinking");
-        console.log(isThinking);
-        console.log(isTyping);
-        console.log(isTexting);
         console.log("----------");
+
+        agent.thinkingFrame = 0;
       }else if(whichAction >= pRange0 && whichAction < pRange1){
         isThinking = false;
         isTyping = true;
         isTexting = false;
         console.log("Agent is typing");
-        console.log(isThinking);
-        console.log(isTyping);
-        console.log(isTexting);
         console.log("----------");
 
         agent.typingFrame = 0;
@@ -237,9 +231,6 @@ canvas = p => {
         isTyping = false;
         isTexting = true;
         console.log("Agent is texting");
-        console.log(isThinking);
-        console.log(isTyping);
-        console.log(isTexting);
         console.log("----------");
 
         //I imprimented an other action -> texting animation.
@@ -249,7 +240,7 @@ canvas = p => {
     }
 
     iPhone.display();
-    iPhone.notification(1000, 999, "sustain", 0, 0.5);
+    iPhone.notification(600, 599, "sustain", 0, 0.5);
 
     if(isThinking == true){
       agent.thinking();

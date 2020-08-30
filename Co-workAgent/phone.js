@@ -14,7 +14,7 @@ class Phone{
 
   display(){
     if(isTexting == true){
-      if(agent.textingFrame < 90){
+      if(previousAction == "typing" && agent.textingFrame < 90){
         myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
       }else{
         myp5.image(textingIPhone, 480, 270, 960, 540);

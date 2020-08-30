@@ -54,59 +54,79 @@ class Agent{
   }
 
 
-  thinking(){
-    let scrollFreqency = this.interval(40, 200);
+  animation(animationArray, boolean){
+    myp5.image(animationArray[this.index], 480, 270, 960, 540);
 
-    if(myp5.frameCount % scrollFreqency == 0 && this.isScrolling == false){//Every typeFreqency frames this happens
-      this.index = 0; //Reset the index
-      this.isScrolling = true;
+    if(this.index > animationArray.length - 2){
+      this.index = animationArray.length - 1;
 
-      //Sound effects
-      let whichSound = myp5.int(myp5.random(0, 2));
-      if(whichSound == 0){
-        scrollingSound[0].setVolume(0.2);
-        scrollingSound[0].play();
-      }else if(whichSound == 1){
-        scrollingSound[1].setVolume(0.2);
-        scrollingSound[1].play();
-      }else if(whichSound == 2){
-        scrollingSound[2].setVolume(0.2);
-        scrollingSound[2].play();
-      }
-    }
-
-    //Animate one of them just once at each time
-    if(this.isScrolling == true){
-      myp5.image(thinking[this.index], 480, 270, 960, 540);
-
-      if(this.index > thinking.length - 2){
-        this.index = thinking.length - 1;
+      if(boolean == "null"){
+      }else if(boolean === this.isTappingSomething){
+        this.isTappingSomething = false;
+      }else if(boolean === this.isScrolling){
         this.isScrolling = false;
-        // console.log(this.isScrolling);
-      }else{
-        this.index++;
       }
-      // console.log(this.index);
 
     }else{
-      myp5.image(thinking[0], 480, 270, 960, 540);
+      this.index++;
     }
   }
 
-  transittion(){
 
+  thinking(){
+    if(previousAction == "typing" && this.thinkingFrame < 21){
+      console.log(this.thinkingFrame);
+      console.log(previousAction);
+
+      myp5.image(thinking_typing[(thinking_typing.length - 1) - this.thinkingFrame], 480, 270, 960, 540);
+      if(this.thinkingFrame > thinking_typing.length - 2){
+        this.thinkingFrame = thinking_typing.length - 1;
+        previousAction = "thinking";
+      }
+    }else{
+      let scrollFreqency = this.interval(40, 200);
+
+      if(myp5.frameCount % scrollFreqency == 0 && this.isScrolling == false){//Every typeFreqency frames this happens
+        this.index = 0; //Reset the index
+        this.isScrolling = true;
+
+        //Sound effects
+        let whichSound = myp5.int(myp5.random(0, 2));
+        if(whichSound == 0){
+          scrollingSound[0].setVolume(0.2);
+          scrollingSound[0].play();
+        }else if(whichSound == 1){
+          scrollingSound[1].setVolume(0.2);
+          scrollingSound[1].play();
+        }else if(whichSound == 2){
+          scrollingSound[2].setVolume(0.2);
+          scrollingSound[2].play();
+        }
+      }
+
+      //Animate one of them just once at each time
+      if(this.isScrolling == true){
+        this.animation(thinking, this.isScrolling);
+      }else{
+        myp5.image(thinking[0], 480, 270, 960, 540);
+      }
+    }
+    this.thinkingFrame++;
   }
 
-
   typing(frameStep, mode, min, max){
-    if(this.typingFrame < 21 && previousAction == "thinking"){
+    if(previousAction == "thinking" && this.typingFrame < 21){
       myp5.image(thinking_typing[this.typingFrame], 480, 270, 960, 540);
       if(this.typingFrame > thinking_typing.length - 2){
         this.typingFrame = thinking_typing.length - 1;
         previousAction = "typing";
         // console.log(this.isScrolling);
-      }else{
-        this.typingFrame++;
+      }
+    }else if(previousAction == "texting" && this.typingFrame < 90){
+      myp5.image(pullIPhone[(pullIPhone.length - 1) - this.typingFrame], 480, 270, 960, 540);
+      if(this.typingFrame > pullIPhone.length - 2){
+        this.typingFrame = pullIPhone.length - 1;
+        previousAction = "typing";
       }
     }else{
       //This is the default state which no types are happning
@@ -127,7 +147,7 @@ class Agent{
 
         //if only current noise value is greater than previous one
         //The typing souund happen
-        if(this.cNoiseOffset > this.pNoiseOffset){
+        // if(this.cNoiseOffset > this.pNoiseOffset){
           this.index = 0; //Reset the index
           let whichType = myp5.random(0, 10);
 
@@ -169,34 +189,16 @@ class Agent{
             enterKeySound.play();
             // console.log("enter key is clacked!!!");
           }
-        }
+        // }
       }
 
       //Animate one of them just once at each time
       if(this.typing_L0 == true){
-        myp5.image(typing_L0[this.index], 480, 270, 960, 540);
-        // console.log(this.index);
-        if(this.index > typing_L0.length - 2){
-          this.index = typing_L0.length - 1;
-        }else{
-          this.index++;
-        }
+        this.animation(typing_L0, "null");
       }else if(this.typing_L1 == true){
-        myp5.image(typing_L1[this.index], 480, 270, 960, 540);
-        // console.log(this.index);
-        if(this.index > typing_L1.length - 2){
-          this.index = typing_L1.length - 1;
-        }else{
-          this.index++;
-        }
+        this.animation(typing_L1, "null");
       }else if(this.typing_R0 == true){
-        myp5.image(typing_R0[this.index], 480, 270, 960, 540);
-        // console.log(this.index);
-        if(this.index > typing_R0.length - 2){
-          this.index = typing_R0.length - 1;
-        }else{
-          this.index++;
-        }
+        this.animation(typing_R0, "null");
       }
 
       this.pNoiseOffset = this.cNoiseOffset;
@@ -207,8 +209,12 @@ class Agent{
 
 
   texting(){
-    if(this.textingFrame < 90){
-      this.pull_iPhone(this.textingFrame);
+    if(previousAction == "typing" && this.textingFrame < 90){
+      myp5.image(pullIPhone[this.textingFrame], 480, 270, 960, 540);
+      if(this.textingFrame > pullIPhone.length - 2){
+        this.textingFrame = pullIPhone.length - 1;
+        previousAction = "texting";
+      }
     }else{
       let tappingFrequency = this.interval(4, 30);
       if(myp5.frameCount % tappingFrequency == 0 && this.isTappingSomething == false){
@@ -231,42 +237,12 @@ class Agent{
       }
 
       if(this.isTappingSomething == true){
-        myp5.image(texting[this.index], 480, 270, 960, 540);
-
-        if(this.index > texting.length - 2){
-          this.index = texting.length - 1;
-          this.isTappingSomething = false;
-        }else{
-          this.index++;
-        }
-
+        this.animation(texting, this.isTappingSomething);
       }else{
         myp5.image(texting[0], 480, 270, 960, 540);
       }
     }
     this.textingFrame++;
-  }
-
-  pull_iPhone(index){
-    myp5.image(pullIPhone[index], 480, 270, 960, 540);
-
-    if(index > pullIPhone.length - 2){
-      index = pullIPhone.length - 1;
-      // console.log(this.isScrolling);
-    }else{
-      index++;
-    }
-  }
-
-  put_iPhone(index){
-    myp5.image(pullIPhone[index], 480, 270, 960, 540);
-
-    if(index < 1){
-      index = 0;
-      // console.log(this.isScrolling);
-    }else{
-      index--;
-    }
   }
 
 }
