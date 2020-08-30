@@ -55,6 +55,7 @@ class Agent{
 
 
   animation(animationArray, boolean){
+    console.log(this.index);
     myp5.image(animationArray[this.index], 480, 270, 960, 540);
 
     if(this.index > animationArray.length - 2){
@@ -75,12 +76,15 @@ class Agent{
 
   thinking(){
     if(previousAction == "typing" && this.thinkingFrame < 21){
-      console.log(this.thinkingFrame);
-      console.log(previousAction);
-
       myp5.image(thinking_typing[(thinking_typing.length - 1) - this.thinkingFrame], 480, 270, 960, 540);
       if(this.thinkingFrame > thinking_typing.length - 2){
         this.thinkingFrame = thinking_typing.length - 1;
+        previousAction = "thinking";
+      }
+    }else if(previousAction == "texting" && this.thinkingFrame < 90){
+      myp5.image(thinking_texting[(thinking_texting.length - 1) - this.thinkingFrame], 480, 270, 960, 540);
+      if(this.thinkingFrame > thinking_texting.length - 2){
+        this.thinkingFrame = thinking_texting.length - 1;
         previousAction = "thinking";
       }
     }else{
@@ -213,6 +217,12 @@ class Agent{
       myp5.image(pullIPhone[this.textingFrame], 480, 270, 960, 540);
       if(this.textingFrame > pullIPhone.length - 2){
         this.textingFrame = pullIPhone.length - 1;
+        previousAction = "texting";
+      }
+    }else if(previousAction == "thinking" && this.textingFrame < 90){
+      myp5.image(thinking_texting[this.textingFrame], 480, 270, 960, 540);
+      if(this.textingFrame > thinking_texting.length - 2){
+        this.textingFrame = thinking_texting.length - 1;
         previousAction = "texting";
       }
     }else{

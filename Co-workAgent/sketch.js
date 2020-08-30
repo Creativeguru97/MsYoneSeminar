@@ -14,6 +14,7 @@ let typing_R0 = [];
 let thinking = [];
 let texting = [];
 let pullIPhone = [];
+let thinking_texting = [];
 let thinking_typing = [];
 let typingProbability;
 let notification = [];
@@ -99,6 +100,10 @@ canvas = p => {
       pullIPhone[i] = p.loadImage("animations/typing_texting/" + p.nf(i, 3) + ".png");
     }
 
+    for(let i=0; i<90; i++){
+      thinking_texting[i] = p.loadImage("animations/thinking_texting/" + p.nf(i, 3) + ".png");
+    }
+
     for(let i=0; i<21; i++){
       thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
     }
@@ -179,6 +184,7 @@ canvas = p => {
 
     if (p.frameCount % duration == 0) {
 
+      agent.index = 0;
       console.log("previousAction: " + previousAction);
 
       let whichAction = myp5.int(myp5.random(0, 100));
