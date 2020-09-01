@@ -55,7 +55,7 @@ class Agent{
 
 
   animation(animationArray, boolean){
-    console.log(this.index);
+    // console.log(this.index);
     myp5.image(animationArray[this.index], 480, 270, 960, 540);
 
     if(this.index > animationArray.length - 2){

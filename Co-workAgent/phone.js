@@ -16,8 +16,22 @@ class Phone{
     if(isTexting == true){
       if(previousAction == "typing" && agent.textingFrame < 90){
         myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
+      }else if(previousAction == "thinking" && agent.textingFrame < 90){
+        myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
       }else{
         myp5.image(textingIPhone, 480, 270, 960, 540);
+      }
+    }else if(isThinking == true){
+      if(previousAction == "texting" && agent.thinkingFrame < 90){
+        myp5.image(pullediPhone[(pullediPhone.length - 1) - agent.thinkingFrame], 480, 270, 960, 540);
+      }else{
+        myp5.image(defaultIPhone, 480, 270, 960, 540);
+      }
+    }else if(isTyping == true){
+      if(previousAction == "texting" && agent.typingFrame < 90){
+        myp5.image(pullediPhone[(pullediPhone.length - 1) - agent.typingFrame], 480, 270, 960, 540);
+      }else{
+        myp5.image(defaultIPhone, 480, 270, 960, 540);
       }
     }else{
       myp5.image(defaultIPhone, 480, 270, 960, 540);
@@ -47,21 +61,42 @@ class Phone{
       // GotNotified = true;
     }
 
-    if(this.isGotNotification == true && isTexting == false){
-      // myp5.image(notification[this.index], 480, 270, 960, 540);
-      myp5.image(notification[this.i][this.j], 480, 270, 960, 540);
-      // console.log(this.index);
-      if(this.j > notification[this.i].length - 2){
-        this.j = notification[this.i].length - 1;
-        this.isGotNotification = false;
+    if(this.isGotNotification == true){
 
-        //Even unread mesaages are more than 4, the notification screen
-        //doesn't look different.
-        this.UnreadMessagesNum++;
+      if(isTexting == false){//When the agent is not texting
+        if (previousAction == "texting") {
+          if(this.typingFrame >= 90 || this.thinkingFrame >= 90){
 
-      }else{
-        this.j++;
+            myp5.image(notification[this.i][this.j], 480, 270, 960, 540);
+            if(this.j > notification[this.i].length - 2){
+              this.j = notification[this.i].length - 1;
+              this.isGotNotification = false;
+
+              //Even unread mesaages are more than 4, the notification screen
+              //doesn't look different.
+              this.UnreadMessagesNum++;
+            }else{
+              this.j++;
+            }
+
+          }else{}
+        }else if (previousAction == "typing" || previousAction == "thinking") {
+
+          myp5.image(notification[this.i][this.j], 480, 270, 960, 540);
+          if(this.j > notification[this.i].length - 2){
+            this.j = notification[this.i].length - 1;
+            this.isGotNotification = false;
+
+            //Even unread mesaages are more than 4, the notification screen
+            //doesn't look different.
+            this.UnreadMessagesNum++;
+          }else{
+            this.j++;
+          }
+
+        }
       }
+
     }
   }
 

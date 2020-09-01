@@ -5,8 +5,12 @@ let background0;
 let background1;
 let flares = [];
 
-//Agent and the animations relevant
+
 let agent;
+let iPhone;//Class
+let world;//Class
+
+//Animations
 let agentApperance = [];
 let typing_L0 = [];
 let typing_L1 = [];
@@ -18,13 +22,12 @@ let thinking_texting = [];
 let thinking_typing = [];
 let typingProbability;
 let notification = [];
-
 //Make the notification 2D array!!!
 for(let i=0; i<4; i++){
   notification[i] = [];
 }
 
-//Typing sounds
+//Sounds
 let keySound = [];
 let enterKeySound;
 let spacebarSound;
@@ -38,7 +41,8 @@ let iKeySound;
 let iEnterKeySound = [];
 let iDeleteKeySound = [];
 
-let iPhone;//Class
+let ambientSound;
+
 let defaultIPhone;
 let textingIPhone;
 let pullediPhone = [];
@@ -52,7 +56,7 @@ let isTexting = false;
 let previousAction = "";
 
 let intervalCount = 0;
-let randomNum = 10;
+let randomNum = Math.random(450, 1800);
 
 let pRange0;
 let pRange1;
@@ -142,6 +146,8 @@ canvas = p => {
 
     //notification sound for notification()
     notificationSound = p.loadSound("/soundEffects/notification.mp3");
+
+    ambientSound = p.loadSound("/soundEffects/citySounds/ambience.mp3");
   }
 
 
@@ -152,24 +158,28 @@ canvas = p => {
 
     agent = new Agent();
     iPhone  = new Phone();
+    world = new World();
 
     let firstAction = p.int(p.random(0, 3));
     if(firstAction == 0){
       isThinking = true;
       previousAction = "thinking";
+      console.log("Agent is thinking");
+      console.log("----------");
     }else if(firstAction == 1){
       isTyping = true;
       previousAction = "typing";
+      console.log("Agent is typing");
+      console.log("----------");
     }else{
       isTexting = true;
       previousAction = "texting";
+      console.log("Agent is texing");
+      console.log("----------");
     }
 
-    console.log("----------");
-    console.log(isThinking);
-    console.log(isTyping);
-    console.log(isTexting);
-    console.log("----------");
+    //Add all of ambient sounds
+    world.ambience();
   }
 
   p.draw = () => {
@@ -180,7 +190,7 @@ canvas = p => {
     p.image(background0, 480, 270, 960, 540);
 
     //In this project 30fps.
-    let duration = p.actionDuration(300, 450);
+    let duration = p.actionDuration(450, 1800);
 
     if (p.frameCount % duration == 0) {
 
@@ -213,8 +223,11 @@ canvas = p => {
       }
 
       console.log("instantGratification: "+instantGratification);
-      console.log("pRange0: "+pRange0);
-      console.log("pRange1: "+pRange1);
+      console.log("Next action probability: ");
+      console.log("thinking: " + pRange0 + "%");
+      console.log("typing: " + p.str(pRange1 - pRange0) + "%");
+      console.log("texting: " + p.str(100 - pRange1) + "%");
+      console.log("↓");
 
       if(whichAction < pRange0){
         isThinking = true;
@@ -246,7 +259,7 @@ canvas = p => {
     }
 
     iPhone.display();
-    iPhone.notification(600, 599, "sustain", 0, 0.5);
+    iPhone.notification(9000, 8999, "sustain", 0, 0.5);
 
     if(isThinking == true){
       agent.thinking();
@@ -270,8 +283,6 @@ canvas = p => {
     // console.log("new action interval emerged");
     if(intervalCount == 0){
       randomNum = myp5.random(min, max);
-      console.log("----------");
-      console.log("new action begins");
     }else{}
 
     if(intervalCount > randomNum){
