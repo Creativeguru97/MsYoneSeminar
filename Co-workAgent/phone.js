@@ -53,7 +53,7 @@ class Phone{
 
       //Sound relevant
       // this.existanceStrength(notificationSound, null, min, max);
-      notificationSound.setVolume(0.2);
+      notificationSound.setVolume(0.1);
       notificationSound.play();
       console.log("");
       console.log("----- Got notification!!! -----");

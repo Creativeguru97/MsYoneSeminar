@@ -1,5 +1,3 @@
-
-
 let canvas;
 let background0;
 let background1;
@@ -27,6 +25,12 @@ for(let i=0; i<4; i++){
   notification[i] = [];
 }
 
+
+let defaultIPhone;
+let textingIPhone;
+let pullediPhone = [];
+
+
 //Sounds
 let keySound = [];
 let enterKeySound;
@@ -42,11 +46,11 @@ let iEnterKeySound = [];
 let iDeleteKeySound = [];
 
 let ambientSound;
+let putPhoneSound;
+let chairCreakingSound;
 
-let defaultIPhone;
-let textingIPhone;
-let pullediPhone = [];
 
+//Agent states
 let isThinking = false;
 let isTyping = false;
 let isTexting = false;
@@ -143,6 +147,10 @@ canvas = p => {
     for(let i=0; i < 5; i++){
       iDeleteKeySound[i] = p.loadSound("/soundEffects/texting/iDelete"+i+".mp3");
     }
+
+    putPhoneSound = p.loadSound("/soundEffects/putPhone.mp3");
+
+    chairCreakingSound = p.loadSound("/soundEffects/chairCreaking.mp3");
 
     //notification sound for notification()
     notificationSound = p.loadSound("/soundEffects/notification.mp3");

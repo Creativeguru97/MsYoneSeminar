@@ -13,11 +13,13 @@ class World{
   }
 
   chairCreaking(){
-
+    chairCreakingSound.setVolume(0.2);
+    chairCreakingSound.play();
   }
 
   putPhoneOnTableSound(){
-
+    putPhoneSound.setVolume(0.1);
+    putPhoneSound.play();
   }
 
   carHorn(){

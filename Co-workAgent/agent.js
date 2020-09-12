@@ -87,6 +87,10 @@ class Agent{
         this.thinkingFrame = thinking_texting.length - 1;
         previousAction = "thinking";
       }
+
+      if(this.thinkingFrame == 60){
+        world.putPhoneOnTableSound();
+      }
     }else{
       let scrollFreqency = this.interval(40, 200);
 
@@ -132,9 +136,11 @@ class Agent{
         this.typingFrame = pullIPhone.length - 1;
         previousAction = "typing";
       }
+
+      if(this.typingFrame == 60){
+        world.putPhoneOnTableSound();
+      }
     }else{
-      //This is the default state which no types are happning
-      // myp5.image(typing_L0[0], 480, 270, 960, 540);
 
       //For even randomize the duration of the cycle
       let typeFreqency = this.interval(4, 20);
@@ -203,6 +209,9 @@ class Agent{
         this.animation(typing_L1, "null");
       }else if(this.typing_R0 == true){
         this.animation(typing_R0, "null");
+      }else{
+        //This is the default state which no types are happning
+        myp5.image(typing_L0[0], 480, 270, 960, 540);
       }
 
       this.pNoiseOffset = this.cNoiseOffset;
@@ -219,11 +228,19 @@ class Agent{
         this.textingFrame = pullIPhone.length - 1;
         previousAction = "texting";
       }
+
+      if(this.textingFrame == 60){
+        world.chairCreaking();
+      }
     }else if(previousAction == "thinking" && this.textingFrame < 90){
       myp5.image(thinking_texting[this.textingFrame], 480, 270, 960, 540);
       if(this.textingFrame > thinking_texting.length - 2){
         this.textingFrame = thinking_texting.length - 1;
         previousAction = "texting";
+      }
+
+      if(this.textingFrame == 70){
+        world.chairCreaking();
       }
     }else{
       let tappingFrequency = this.interval(4, 30);
