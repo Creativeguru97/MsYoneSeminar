@@ -49,7 +49,6 @@ let ambientSound;
 let putPhoneSound;
 let chairCreakingSound;
 
-
 //Agent states
 let isThinking = false;
 let isTyping = false;
@@ -200,6 +199,46 @@ canvas = p => {
     //In this project 30fps.
     let duration = p.actionDuration(450, 1800);
 
+    p.nonEmpathy(duration);
+
+    iPhone.display();
+    iPhone.notification(9000, 8999, "sustain", 0, 0.5);
+
+    if(isThinking == true){
+      agent.thinking();
+    }else if(isTyping == true){
+      agent.typing(8, "sustain", 0, 0.5);
+    }else if(isTexting == true){
+      agent.texting();
+    }
+    // agent.put_iPhone();
+
+
+    //Add some optical flare effects!
+    p.blendMode(p.SCREEN);
+    p.image(flares[0], 1118, 102, 1600 * 1.5, 889 * 1.5);
+    p.image(flares[1], 497, 285, 1600 * 0.2, 1333 * 0.2);
+    p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
+
+  }
+
+  p.actionDuration = (min, max) => {
+    // console.log("new action interval emerged");
+    if(intervalCount == 0){
+      randomNum = myp5.random(min, max);
+    }else{}
+
+    if(intervalCount > randomNum){
+      intervalCount = 0;
+    }else{
+      intervalCount++;
+    }
+
+    // console.log(this.randomNum);
+    return myp5.int(randomNum);
+  }
+
+  p.nonEmpathy = (duration) => {
     if (p.frameCount % duration == 0) {
 
       agent.index = 0;//Re initialize
@@ -265,42 +304,14 @@ canvas = p => {
         agent.textingFrame = 0;
       }
     }
-
-    iPhone.display();
-    iPhone.notification(9000, 8999, "sustain", 0, 0.5);
-
-    if(isThinking == true){
-      agent.thinking();
-    }else if(isTyping == true){
-      agent.typing(8, "sustain", 0, 0.5);
-    }else if(isTexting == true){
-      agent.texting();
-    }
-    // agent.put_iPhone();
-
-
-    //Add some optical flare effects!
-    p.blendMode(p.SCREEN);
-    p.image(flares[0], 1118, 102, 1600 * 1.5, 889 * 1.5);
-    p.image(flares[1], 497, 285, 1600 * 0.2, 1333 * 0.2);
-    p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
-
   }
 
-  p.actionDuration = (min, max) => {
-    // console.log("new action interval emerged");
-    if(intervalCount == 0){
-      randomNum = myp5.random(min, max);
-    }else{}
+  p.motorMimicry = () => {
+    
+  }
 
-    if(intervalCount > randomNum){
-      intervalCount = 0;
-    }else{
-      intervalCount++;
-    }
+  p.otherOriented = () => {
 
-    // console.log(this.randomNum);
-    return myp5.int(randomNum);
   }
 }//Canvas end
 
