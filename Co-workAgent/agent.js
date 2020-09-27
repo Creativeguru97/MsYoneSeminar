@@ -81,7 +81,7 @@ class Agent{
         this.thinkingFrame = thinking_typing.length - 1;
         previousAction = "thinking";
       }
-    }else if(previousAction == "texting" && this.thinkingFrame < 90){
+    }else if(previousAction == "texting" && this.thinkingFrame < 91){
       myp5.image(thinking_texting[(thinking_texting.length - 1) - this.thinkingFrame], 480, 270, 960, 540);
       if(this.thinkingFrame > thinking_texting.length - 2){
         this.thinkingFrame = thinking_texting.length - 1;
@@ -130,7 +130,7 @@ class Agent{
         previousAction = "typing";
         // console.log(this.isScrolling);
       }
-    }else if(previousAction == "texting" && this.typingFrame < 90){
+    }else if(previousAction == "texting" && this.typingFrame < 91){
       myp5.image(pullIPhone[(pullIPhone.length - 1) - this.typingFrame], 480, 270, 960, 540);
       if(this.typingFrame > pullIPhone.length - 2){
         this.typingFrame = pullIPhone.length - 1;
@@ -222,7 +222,7 @@ class Agent{
 
 
   texting(){
-    if(previousAction == "typing" && this.textingFrame < 90){
+    if(previousAction == "typing" && this.textingFrame < 91){
       myp5.image(pullIPhone[this.textingFrame], 480, 270, 960, 540);
       if(this.textingFrame > pullIPhone.length - 2){
         this.textingFrame = pullIPhone.length - 1;
@@ -232,7 +232,7 @@ class Agent{
       if(this.textingFrame == 60){
         world.chairCreaking();
       }
-    }else if(previousAction == "thinking" && this.textingFrame < 90){
+    }else if(previousAction == "thinking" && this.textingFrame < 91){
       myp5.image(thinking_texting[this.textingFrame], 480, 270, 960, 540);
       if(this.textingFrame > thinking_texting.length - 2){
         this.textingFrame = thinking_texting.length - 1;
