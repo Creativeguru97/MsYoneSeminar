@@ -1,4 +1,5 @@
 let canvas;
+let agentCanvas;
 let background0;
 let background1;
 let flares = [];
@@ -18,6 +19,12 @@ let texting = [];
 let pullIPhone = [];
 let thinking_texting = [];
 let thinking_typing = [];
+let laughing = [];
+//Make the laughing 2D array!!!
+for(let i=0; i<3; i++){
+  laughing[i] = [];
+}
+let depressing = [];
 let typingProbability;
 let notification = [];
 //Make the notification 2D array!!!
@@ -115,6 +122,22 @@ canvas = p => {
       thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
     }
 
+    for(let i=0; i<3; i++){
+      for(let j=0; j<7; j++){
+        if(i == 0){
+          laughing[i][j] = p.loadImage("animations/agent_laughing/duringThinking/"+ p.nf(j, 2) + ".png");
+        }else if(i == 1){
+          laughing[i][j] = p.loadImage("animations/agent_laughing/duringTyping/"+ p.nf(j, 2) + ".png");
+        }else if(i == 2){
+          laughing[i][j] = p.loadImage("animations/agent_laughing/duringTexting/"+ p.nf(j, 2) + ".png");
+        }
+      }
+    }
+
+    for(let i=0; i<61; i++){
+      depressing[i] = p.loadImage("animations/agent_depressing/" + p.nf(i, 3) + ".png");
+    }
+
     for(let i=0; i<4; i++){
       for(let j=0; j<181; j++){
         notification[i][j] = p.loadImage("animations/notifications/"+i+"/"+ p.nf(j, 4) + ".png");
@@ -159,7 +182,9 @@ canvas = p => {
 
 
   p.setup = () => {
-    p.createCanvas(960, 540);
+    agentCanvas = p.createCanvas(960, 540);
+    agentCanvas.id("agentCanvas");
+
     p.frameRate(30);
     p.imageMode(p.CENTER);
 
@@ -199,6 +224,8 @@ canvas = p => {
     //In this project 30fps.
     let duration = p.actionDuration(450, 1800);
 
+    //This is the agent behaviors.
+    //I'll make those ba able to switch in need.
     p.nonEmpathy(duration);
 
     iPhone.display();
@@ -307,14 +334,78 @@ canvas = p => {
   }
 
   p.motorMimicry = () => {
-    
+
   }
 
   p.otherOriented = () => {
+    if (p.frameCount % duration == 0) {
 
+      agent.index = 0;//Re initialize
+      console.log("previousAction: " + previousAction);
+
+      let whichAction = myp5.int(myp5.random(0, 100));
+
+      //This value represent a need for checking social media.
+      //The more unread messsage, more become want to check it.
+      let instantGratification = iPhone.UnreadMessagesNum * 2.5;
+
+      if(isThinking == true){
+        if(instantGratification < 60){
+          pRange0 = 70 - instantGratification;
+          pRange1 = 100 - instantGratification * 1.5;
+        }
+      }else if(isTyping == true){
+        if(instantGratification < 60){
+          pRange0 = 30 - instantGratification * 0.5;
+          pRange1 = 100 - instantGratification * 1.5;
+        }
+      }else if(isTexting == true){
+        pRange0 = 40;
+        pRange1 = 80;
+
+        //Agent has already checked social media.
+        //So temporary no need for scratching the smartphone.
+        iPhone.UnreadMessagesNum = 0;
+      }
+
+      console.log("instantGratification: "+instantGratification);
+      console.log("Next action probability: ");
+      console.log("thinking: " + pRange0 + "%");
+      console.log("typing: " + p.str(pRange1 - pRange0) + "%");
+      console.log("texting: " + p.str(100 - pRange1) + "%");
+      console.log("↓");
+
+      if(whichAction < pRange0){
+        isThinking = true;
+        isTyping = false;
+        isTexting = false;
+        console.log("Agent is thinking");
+        console.log("----------");
+
+        agent.thinkingFrame = 0;
+      }else if(whichAction >= pRange0 && whichAction < pRange1){
+        isThinking = false;
+        isTyping = true;
+        isTexting = false;
+        console.log("Agent is typing");
+        console.log("----------");
+
+        agent.typingFrame = 0;
+      }else{
+        isThinking = false;
+        isTyping = false;
+        isTexting = true;
+        console.log("Agent is texting");
+        console.log("----------");
+
+        //I imprimented an other action -> texting animation.
+        //So I need to reset the index to display images every time.
+        agent.textingFrame = 0;
+      }
+    }
   }
 }//Canvas end
 
 
 
-let myp5 = new p5(canvas, 'canvas');
+let myp5 = new p5(canvas);

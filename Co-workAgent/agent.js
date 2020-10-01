@@ -272,4 +272,13 @@ class Agent{
     this.textingFrame++;
   }
 
+
+  depressing(){
+    this.animation(depressing, "null");
+  }
+
+  laughing(currentAction){
+
+  }
+
 }
