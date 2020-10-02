@@ -60,6 +60,8 @@ let chairCreakingSound;
 let isThinking = false;
 let isTyping = false;
 let isTexting = false;
+let isDepressing = false;
+let isLaughing = false;
 
 //To impliment transittion animation between action to action
 //I need to store current action for later.
@@ -70,6 +72,8 @@ let randomNum = Math.random(450, 1800);
 
 let pRange0;
 let pRange1;
+let pRange2;
+let pRange3;
 
 canvas = p => {
 
@@ -226,7 +230,8 @@ canvas = p => {
 
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
-    p.nonEmpathy(duration);
+    // p.nonEmpathy(duration);
+    p.otherOriented(duration);
 
     iPhone.display();
     iPhone.notification(9000, 8999, "sustain", 0, 0.5);
@@ -252,7 +257,7 @@ canvas = p => {
   p.actionDuration = (min, max) => {
     // console.log("new action interval emerged");
     if(intervalCount == 0){
-      randomNum = myp5.random(min, max);
+      randomNum = p.random(min, max);
     }else{}
 
     if(intervalCount > randomNum){
@@ -271,22 +276,22 @@ canvas = p => {
       agent.index = 0;//Re initialize
       console.log("previousAction: " + previousAction);
 
-      let whichAction = myp5.int(myp5.random(0, 100));
+      let whichAction = p.int(p.random(0, 100));
 
       //This value represent a need for checking social media.
       //The more unread messsage, more become want to check it.
       let instantGratification = iPhone.UnreadMessagesNum * 2.5;
+      if(instantGratification > 60){
+        instantGratification = 60;
+      }else{}
 
+      //Which is normal condition
       if(isThinking == true){
-        if(instantGratification < 60){
-          pRange0 = 70 - instantGratification;
-          pRange1 = 100 - instantGratification * 1.5;
-        }
+        pRange0 = 70 - instantGratification;
+        pRange1 = 100 - instantGratification * 1.5;
       }else if(isTyping == true){
-        if(instantGratification < 60){
-          pRange0 = 30 - instantGratification * 0.5;
-          pRange1 = 100 - instantGratification * 1.5;
-        }
+        pRange0 = 30 - instantGratification * 0.5;
+        pRange1 = 100 - instantGratification * 1.5;
       }else if(isTexting == true){
         pRange0 = 40;
         pRange1 = 80;
@@ -337,31 +342,43 @@ canvas = p => {
 
   }
 
-  p.otherOriented = () => {
+  p.otherOriented = (duration) => {
     if (p.frameCount % duration == 0) {
 
       agent.index = 0;//Re initialize
       console.log("previousAction: " + previousAction);
 
-      let whichAction = myp5.int(myp5.random(0, 100));
+      let whichAction = p.int(p.random(0, 100));
 
       //This value represent a need for checking social media.
       //The more unread messsage, more become want to check it.
       let instantGratification = iPhone.UnreadMessagesNum * 2.5;
+      if(instantGratification > 60){
+        instantGratification = 60;
+      }else{}
+
+      let depressive = p.int(sad * 100);//0 to 100
 
       if(isThinking == true){
-        if(instantGratification < 60){
-          pRange0 = 70 - instantGratification;
-          pRange1 = 100 - instantGratification * 1.5;
-        }
+        let mappedDepressive = p.int(p.map(depressive, 0, 100, 0, 70 - instantGratification));
+        pRange0 = 70 - instantGratification - mappedDepressive;
+
+        mappedDepressive = p.map(depressive, 0, 100, 0, 100 - instantGratification*1.5);
+        pRange1 = 100 - instantGratification * 1.5 - mappedDepressive;
+
+        mappedDepressive = p.map(depressive, 0, 100, 0, 100);
+        pRange2 = 100 - mappedDepressive;
+        pRange3 = 100 - pRange2;
       }else if(isTyping == true){
-        if(instantGratification < 60){
-          pRange0 = 30 - instantGratification * 0.5;
-          pRange1 = 100 - instantGratification * 1.5;
-        }
+        pRange0 = 30 - instantGratification * 0.5 - depressive;
+        pRange1 = 100 - instantGratification * 1.5 - depressive - 1.5;
+        pRange2 = 100 - pRange1;
+        pRange3 = 100 - pRange2;
       }else if(isTexting == true){
-        pRange0 = 40;
-        pRange1 = 80;
+        pRange0 = 40 - depressive;
+        pRange1 = 80 - depressive;
+        pRange2 = 100 - pRange1;
+        pRange3 = 100 - pRange2;
 
         //Agent has already checked social media.
         //So temporary no need for scratching the smartphone.
@@ -373,6 +390,7 @@ canvas = p => {
       console.log("thinking: " + pRange0 + "%");
       console.log("typing: " + p.str(pRange1 - pRange0) + "%");
       console.log("texting: " + p.str(100 - pRange1) + "%");
+      console.log("depressing" + p.str(pRange2));
       console.log("↓");
 
       if(whichAction < pRange0){

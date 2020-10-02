@@ -274,7 +274,12 @@ class Agent{
 
 
   depressing(){
-    this.animation(depressing, "null");
+    myp5.image(depressing[this.index], 480, 270, 960, 540);
+    if(this.index > depressing.length - 2){
+      this.index = depressing.length - 1;
+    }
+
+
   }
 
   laughing(currentAction){
