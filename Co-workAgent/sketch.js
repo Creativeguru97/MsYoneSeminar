@@ -370,8 +370,8 @@ canvas = p => {
         pRange2 = 100 - mappedDepressive;
         pRange3 = 100 - pRange2;
       }else if(isTyping == true){
-        pRange0 = 30 - instantGratification * 0.5 - depressive;
-        pRange1 = 100 - instantGratification * 1.5 - depressive - 1.5;
+        pRange0 = 30 - instantGratification * 0.5;
+        pRange1 = 100 - instantGratification * 1.5;
         pRange2 = 100 - pRange1;
         pRange3 = 100 - pRange2;
       }else if(isTexting == true){
