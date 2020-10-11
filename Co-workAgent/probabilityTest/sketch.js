@@ -1,6 +1,6 @@
 let depressive;
 let funny;
-let instantGratification = 10;
+let instantGratification = 20;
 let pRange0;
 let pRange1;
 let pRange2;
@@ -8,7 +8,7 @@ let pRange3;
 
 let probabilities = [];
 
-let mode = 2;
+let mode = 1;
 
 
 function setup() {
@@ -22,11 +22,12 @@ function draw() {
   depressive = int(map(mouseX, 0, 400, 0, 100));
   funny = int(map(mouseY, 0, 400, 0, 100));
 
+  fill(100, 0, 100);
   textFont('Helvetica Neue');
   textAlign(LEFT, TOP);
   textSize(14);
-  text("depressive"+ depressive, 7, 7);
-  text("funny"+ funny, 7, 25);
+  text("user negative"+ depressive, 7, 7);
+  text("user positive"+ funny, 7, 25);
 
   if(depressive > 100){
     depressive = 100;
@@ -49,7 +50,6 @@ function draw() {
     pRange2 = pRange1 + instantGratification * 1.5 - mappedDepressive - mappedFunny;
 
     mappedFunny = int(map(funny, 0, 100, 0, 100 - pRange2));
-    text("mappedFunny"+ mappedFunny, 7, 43);
     pRange3 = 100 - mappedFunny;
   }else if (mode == 2) {
     let mappedDepressive = int(map(depressive, 0, 100, 0, 30 - instantGratification * 0.5));
@@ -64,6 +64,7 @@ function draw() {
     mappedFunny = int(map(funny, 0, 100, 0, instantGratification));
     pRange2 = pRange1 + instantGratification * 1.5 - mappedDepressive - mappedFunny;
 
+    mappedDepressive = int(map(funny, 0, 100, 0, 100 - pRange2));
     mappedFunny = int(map(funny, 0, 100, 0, 100 - pRange2));
     pRange3 = 100 - mappedFunny;
   }else if (mode == 3) {
@@ -88,6 +89,7 @@ function draw() {
   probabilities[2] = pRange2 - pRange1;
   probabilities[3] = pRange3 - pRange2;
   probabilities[4] = 100 - pRange3;
+
 
   if(frameCount % 30 == 0){
     console.log(probabilities);
@@ -141,5 +143,18 @@ function draw() {
     40,
     height * probabilities[4]/100
   );
+
+  let rect1Height = (height * probabilities[0]/100)/2;
+  let rect2Height = (height * probabilities[0]/100) + (height * probabilities[1]/100)/2;
+  let rect3Height = (height * (probabilities[0] + probabilities[1]) /100) + (height * probabilities[2]/100)/2;
+  let rect4Height = (height * (probabilities[0] + probabilities[1] + probabilities[2]) /100) + (height * probabilities[3]/100)/2;
+  let rect5Height = (height * (probabilities[0] + probabilities[1] + probabilities[2] + probabilities[3]) /100) + (height * probabilities[4]/100)/2;
+
+  fill(100, 0, 100);
+  text("thinking: "+ probabilities[0] + "%", width/2 + 25, rect1Height);
+  text("typing: "+ probabilities[1] + "%", width/2 + 25, rect2Height);
+  text("texting: "+ probabilities[2] + "%", width/2 + 25, rect3Height);
+  text("negative empathy: "+ probabilities[3] + "%", width/2 + 25, rect4Height);
+  text("positive empathy: "+ probabilities[4] + "%", width/2 + 25, rect5Height);
 
 }

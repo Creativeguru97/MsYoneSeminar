@@ -70,10 +70,16 @@ let previousAction = "";
 let intervalCount = 0;
 let randomNum = Math.random(450, 1800);
 
+//Non interest version
 let pRange0;
 let pRange1;
 let pRange2;
 let pRange3;
+
+//otherOriented version
+let model;
+let c_Mdl_Width;
+let c_Mdl_Height;
 
 canvas = p => {
 
@@ -188,6 +194,11 @@ canvas = p => {
   p.setup = () => {
     agentCanvas = p.createCanvas(960, 540);
     agentCanvas.id("agentCanvas");
+    p.colorMode(p.HSB, 100, 100, 100);
+    p.angleMode(p.DEGREES);
+
+    c_Mdl_Width = 300;
+    c_Mdl_Height = 300;
 
     p.frameRate(30);
     p.imageMode(p.CENTER);
@@ -195,6 +206,7 @@ canvas = p => {
     agent = new Agent();
     iPhone  = new Phone();
     world = new World();
+    model = new Circumplex_model();
 
     let firstAction = p.int(p.random(0, 3));
     if(firstAction == 0){
@@ -230,8 +242,8 @@ canvas = p => {
 
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
-    // p.nonEmpathy(duration);
-    p.otherOriented(duration);
+    p.nonEmpathy(duration);
+    // p.otherOriented(duration);
 
     iPhone.display();
     iPhone.notification(9000, 8999, "sustain", 0, 0.5);
@@ -251,6 +263,8 @@ canvas = p => {
     p.image(flares[0], 1118, 102, 1600 * 1.5, 889 * 1.5);
     p.image(flares[1], 497, 285, 1600 * 0.2, 1333 * 0.2);
     p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
+
+    model.show();
 
   }
 
@@ -422,6 +436,8 @@ canvas = p => {
       }
     }
   }
+
+
 }//Canvas end
 
 
