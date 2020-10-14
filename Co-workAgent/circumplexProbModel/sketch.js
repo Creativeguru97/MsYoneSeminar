@@ -1,5 +1,7 @@
 let model;
 
+let neutralSliderDisplay;
+let neutralSlider;
 let happySliderDisplay;
 let happySlider;
 let angrySliderDisplay;
@@ -20,6 +22,8 @@ function setup() {
   angleMode(DEGREES);
   model = new Circumplex_model();
 
+  neutralSliderDisplay = createDiv();
+  neutralSlider = createSlider(0, 100, 0, 1);
   happySliderDisplay = createDiv();
   happySlider = createSlider(0, 100, 0, 1);
   angrySliderDisplay = createDiv();
@@ -44,6 +48,7 @@ function draw() {
 }
 
 function sliderValue(){
+  neutralSliderDisplay.html("user neutral: " + neutralSlider.value());
   happySliderDisplay.html("user happy: " + happySlider.value());
   angrySliderDisplay.html("user angry: " + angrySlider.value());
   sadSliderDisplay.html("user sad: " + sadSlider.value());
@@ -57,6 +62,7 @@ class Circumplex_model{
   constructor(){
     this.radius = width*5/6/2;
 
+    this.neutralPolar = createVector( this.PtoC(0, 0)[0], this.PtoC(0, 0)[1] );
     this.happyPolor = createVector( this.PtoC(this.radius, 330)[0], this.PtoC(this.radius, 330)[1] );
     this.angryPolor = createVector( this.PtoC(this.radius, 250)[0], this.PtoC(this.radius, 250)[1] );
     this.sadPolor = createVector( this.PtoC(this.radius, 150)[0], this.PtoC(this.radius, 150)[1] );
@@ -97,6 +103,7 @@ class Circumplex_model{
 
     strokeWeight(4);
 
+    point(this.neutralPolar.x, this.neutralPolar.y);
     point(this.happyPolor.x, this.happyPolor.y);
     point(this.angryPolor.x, this.angryPolor.y);
     point(this.sadPolor.x, this.sadPolor.y);
@@ -107,6 +114,7 @@ class Circumplex_model{
     this.agentEmotion();
     this.agentMove();
     this.agentFriction();
+    this.agentAttracted(this.neutralPolar, 10, 1, neutralSlider.value()/100);
     this.agentAttracted(this.happyPolor, 10, 1, happySlider.value()/100);
     this.agentAttracted(this.angryPolor, 10, 1, angrySlider.value()/100);
     this.agentAttracted(this.sadPolor, 10, 1, sadSlider.value()/100);
