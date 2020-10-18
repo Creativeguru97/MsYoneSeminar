@@ -60,8 +60,11 @@ let chairCreakingSound;
 let isThinking = false;
 let isTyping = false;
 let isTexting = false;
+
+let isDefaultState = false;
 let isDepressing = false;
 let isLaughing = false;
+
 
 //To impliment transittion animation between action to action
 //I need to store current action for later.
@@ -237,13 +240,10 @@ canvas = p => {
     p.image(background1, 480, 270, 960, 540);
     p.image(background0, 480, 270, 960, 540);
 
-    //In this project 30fps.
-    let duration = p.actionDuration(450, 1800);
-
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
-    p.nonEmpathy(duration);
-    // p.otherOriented(duration);
+    p.nonEmpathy(900);
+    // p.otherOriented(900);
 
     iPhone.display();
     iPhone.notification(9000, 8999, "sustain", 0, 0.5);
@@ -265,24 +265,25 @@ canvas = p => {
     p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
 
     model.show();
-
   }
 
-  p.actionDuration = (min, max) => {
-    // console.log("new action interval emerged");
-    if(intervalCount == 0){
-      randomNum = p.random(min, max);
-    }else{}
+  // p.actionDuration = (min, max) => {
+  //   console.log("new action interval emerged");
+  //   if(intervalCount == 0){
+  //     randomNum = p.random(min, max);
+  //   }else{}
+  //
+  //   if(intervalCount > randomNum){
+  //     intervalCount = 0;
+  //   }else{
+  //     intervalCount++;
+  //   }
+  //
+  //   // console.log(this.randomNum);
+  //   return myp5.int(randomNum);
+  // }
 
-    if(intervalCount > randomNum){
-      intervalCount = 0;
-    }else{
-      intervalCount++;
-    }
 
-    // console.log(this.randomNum);
-    return myp5.int(randomNum);
-  }
 
   p.nonEmpathy = (duration) => {
     if (p.frameCount % duration == 0) {
@@ -362,52 +363,36 @@ canvas = p => {
       agent.index = 0;//Re initialize
       console.log("previousAction: " + previousAction);
 
-      let whichAction = p.int(p.random(0, 100));
-
-      //This value represent a need for checking social media.
-      //The more unread messsage, more become want to check it.
-      let instantGratification = iPhone.UnreadMessagesNum * 2.5;
-      if(instantGratification > 60){
-        instantGratification = 60;
-      }else{}
-
-      let depressive = p.int(sad * 100);//0 to 100
-
-      if(isThinking == true){
-        let mappedDepressive = p.int(p.map(depressive, 0, 100, 0, 70 - instantGratification));
-        pRange0 = 70 - instantGratification - mappedDepressive;
-
-        mappedDepressive = p.map(depressive, 0, 100, 0, 100 - instantGratification*1.5);
-        pRange1 = 100 - instantGratification * 1.5 - mappedDepressive;
-
-        mappedDepressive = p.map(depressive, 0, 100, 0, 100);
-        pRange2 = 100 - mappedDepressive;
-        pRange3 = 100 - pRange2;
-      }else if(isTyping == true){
-        pRange0 = 30 - instantGratification * 0.5;
-        pRange1 = 100 - instantGratification * 1.5;
-        pRange2 = 100 - pRange1;
-        pRange3 = 100 - pRange2;
-      }else if(isTexting == true){
-        pRange0 = 40 - depressive;
-        pRange1 = 80 - depressive;
-        pRange2 = 100 - pRange1;
-        pRange3 = 100 - pRange2;
-
-        //Agent has already checked social media.
-        //So temporary no need for scratching the smartphone.
-        iPhone.UnreadMessagesNum = 0;
+      let prbDefaultState = p.map(
+        model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[0],
+        0,
+        model.radius,
+        100,
+        0
+      );
+      let prbPositiveState = p.map(model.agentEmotionPosition.x, 0, model.radius, 0, 100);
+      if(prbPositiveState < 0){
+        prbPositiveState = 0;
       }
+      let prbNegativcState = p.map(model.agentEmotionPosition.x, -model.radius, 0, 100, 0);
+      if(prbNegativcState < 0){
+        prbNegativcState = 0;
+      }
+      let multiRatio = 100 / (prbDefaultState + prbPositiveState + prbNegativcState);
 
-      console.log("instantGratification: "+instantGratification);
-      console.log("Next action probability: ");
-      console.log("thinking: " + pRange0 + "%");
-      console.log("typing: " + p.str(pRange1 - pRange0) + "%");
-      console.log("texting: " + p.str(100 - pRange1) + "%");
-      console.log("depressing" + p.str(pRange2));
-      console.log("↓");
+      prbDefaultState = prbDefaultState * multiRatio;
+      prbPositiveState = prbPositiveState * multiRatio;
+      prbNegativcState = prbNegativcState * multiRatio;
 
-      if(whichAction < pRange0){
+      // console.log("prbDefaultState: " + prbDefaultState);
+      // console.log("prbPositiveState: " + prbPositiveState);
+      // console.log("prbNegativcState: " + prbNegativcState);
+      // console.log("---------------------------------------");
+
+      let whichAction = p.random(0, 100);
+
+
+      if(whichAction < prbDefaultState){
         isThinking = true;
         isTyping = false;
         isTexting = false;

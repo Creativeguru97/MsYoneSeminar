@@ -673,8 +673,6 @@ canvas1 = p => {
       surpriseSound[index].play();
     }
 
-
-
     standUp(){
     }
 

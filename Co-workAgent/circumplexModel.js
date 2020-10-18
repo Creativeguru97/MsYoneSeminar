@@ -1,6 +1,8 @@
 class Circumplex_model{
 
   constructor(){
+    this.centerX = myp5.width - c_Mdl_Width/2;
+    this.centerY = myp5.height - c_Mdl_Height/2;
     this.radius = c_Mdl_Width*5/6/2;
 
     this.neutralPolar = myp5.createVector( this.PtoC(0, 0)[0], this.PtoC(0, 0)[1] );
@@ -43,7 +45,7 @@ class Circumplex_model{
 
   show(){
     myp5.push();
-    myp5.translate(myp5.width - c_Mdl_Width/2, myp5.height - c_Mdl_Height/2);
+    myp5.translate(this.centerX, this.centerY);
 
     myp5.noFill();
     myp5.stroke(100, 0, 100);
@@ -77,13 +79,12 @@ class Circumplex_model{
       this.agentAttracted(this.fearfulPolor, 20, 1, fearful);
     }
 
-    this.agentRangeLimit();
+    this.emotionRangeLimit();
 
     myp5.pop();
   }
 
   agentEmotion(){
-
     myp5.stroke(100, 100, 100);
     myp5.strokeWeight(8);
     myp5.point(this.agentEmotionPosition.x, this.agentEmotionPosition.y);
@@ -125,7 +126,7 @@ class Circumplex_model{
       this.applyForce(friction);
   }
 
-  agentRangeLimit(){
+  emotionRangeLimit(){
     let presentRadius = this.CtoP(
       this.agentEmotionPosition.x,
       this.agentEmotionPosition.y
