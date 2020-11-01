@@ -9,9 +9,14 @@ class Agent{
 
     this.samplingTime = 0;
 
+    //To store elapsed time of each action state
     this.thinkingFrame = 0;
     this.typingFrame = 0;
     this.textingFrame = 0;
+    //To store elapsed time of each emotion state
+    this.laughingFrame = 0;
+    this.depressingTime = 0;
+    this.
 
     this.typing_L0 = false;
     this.typing_L1 = false;
@@ -273,16 +278,30 @@ class Agent{
   }
 
 
-  depressing(){
+  laughing(currentAction){
+    if(currentAction == "thinking"){
+      
+    }else if(currentAction == "typing"){
+
+    }
+  }
+
+  depressing(currentAction){
     myp5.image(depressing[this.index], 480, 270, 960, 540);
     if(this.index > depressing.length - 2){
       this.index = depressing.length - 1;
     }
+  }
 
+  irritating(currentAction){
 
   }
 
-  laughing(currentAction){
+  disgusting(currentAction){
+
+  }
+
+  surprising(currentAction){
 
   }
 

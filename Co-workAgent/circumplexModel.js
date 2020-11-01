@@ -6,12 +6,12 @@ class Circumplex_model{
     this.radius = c_Mdl_Width*5/6/2;
 
     this.neutralPolar = myp5.createVector( this.PtoC(0, 0)[0], this.PtoC(0, 0)[1] );
-    this.happyPolor = myp5.createVector( this.PtoC(this.radius, 330)[0], this.PtoC(this.radius, 330)[1] );
-    this.angryPolor = myp5.createVector( this.PtoC(this.radius, 250)[0], this.PtoC(this.radius, 250)[1] );
-    this.sadPolor = myp5.createVector( this.PtoC(this.radius, 150)[0], this.PtoC(this.radius, 150)[1] );
-    this.disgustedPolor = myp5.createVector( this.PtoC(this.radius, 210)[0], this.PtoC(this.radius, 210)[1] );
-    this.surprisedPolor = myp5.createVector( this.PtoC(this.radius, 270)[0], this.PtoC(this.radius, 270)[1] );
-    this.fearfulPolor = myp5.createVector( this.PtoC(this.radius, 235)[0], this.PtoC(this.radius, 235)[1] );
+    this.happyPolar = myp5.createVector( this.PtoC(this.radius, 330)[0], this.PtoC(this.radius, 330)[1] );
+    this.angryPolar = myp5.createVector( this.PtoC(this.radius, 250)[0], this.PtoC(this.radius, 250)[1] );
+    this.sadPolar = myp5.createVector( this.PtoC(this.radius, 150)[0], this.PtoC(this.radius, 150)[1] );
+    this.disgustedPolar = myp5.createVector( this.PtoC(this.radius, 210)[0], this.PtoC(this.radius, 210)[1] );
+    this.surprisedPolar = myp5.createVector( this.PtoC(this.radius, 270)[0], this.PtoC(this.radius, 270)[1] );
+    this.fearfulPolar = myp5.createVector( this.PtoC(this.radius, 235)[0], this.PtoC(this.radius, 235)[1] );
 
     this.agentEmotionPosition = myp5.createVector( this.PtoC(0, 0)[0], this.PtoC(0, 0)[1] );
     this.velocity = myp5.createVector(0, 0);
@@ -29,7 +29,7 @@ class Circumplex_model{
 
   CtoP(x, y){
     let r = myp5.sqrt( myp5.pow(x, 2)+myp5.pow(y, 2) );
-    let phi = myp5.degrees(myp5.atan2(y, x));
+    let phi = myp5.radians(myp5.atan2(y, x));
 
     let coordinate = [r, phi];
     return coordinate;
@@ -58,12 +58,12 @@ class Circumplex_model{
     myp5.strokeWeight(3);
 
     myp5.point(this.neutralPolar.x, this.neutralPolar.y);
-    myp5.point(this.happyPolor.x, this.happyPolor.y);
-    myp5.point(this.angryPolor.x, this.angryPolor.y);
-    myp5.point(this.sadPolor.x, this.sadPolor.y);
-    myp5.point(this.disgustedPolor.x, this.disgustedPolor.y);
-    myp5.point(this.surprisedPolor.x, this.surprisedPolor.y);
-    myp5.point(this.fearfulPolor.x, this.fearfulPolor.y);
+    myp5.point(this.happyPolar.x, this.happyPolar.y);
+    myp5.point(this.angryPolar.x, this.angryPolar.y);
+    myp5.point(this.sadPolar.x, this.sadPolar.y);
+    myp5.point(this.disgustedPolar.x, this.disgustedPolar.y);
+    myp5.point(this.surprisedPolar.x, this.surprisedPolar.y);
+    myp5.point(this.fearfulPolar.x, this.fearfulPolar.y);
 
     this.agentEmotion();
     this.agentMove();
@@ -71,12 +71,12 @@ class Circumplex_model{
 
     if(neutral != undefined){
       this.agentAttracted(this.neutralPolar, 20, 1, neutral);
-      this.agentAttracted(this.happyPolor, 20, 1, happy);
-      this.agentAttracted(this.angryPolor, 20, 1, angry);
-      this.agentAttracted(this.sadPolor, 20, 1, sad);
-      this.agentAttracted(this.disgustedPolor, 20, 1, disgusted);
-      this.agentAttracted(this.surprisedPolor, 20, 1, surprised);
-      this.agentAttracted(this.fearfulPolor, 20, 1, fearful);
+      this.agentAttracted(this.happyPolar, 20, 1, happy);
+      this.agentAttracted(this.angryPolar, 20, 1, angry);
+      this.agentAttracted(this.sadPolar, 20, 1, sad);
+      this.agentAttracted(this.disgustedPolar, 20, 1, disgusted);
+      this.agentAttracted(this.surprisedPolar, 20, 1, surprised);
+      this.agentAttracted(this.fearfulPolar, 20, 1, fearful);
     }
 
     this.emotionRangeLimit();

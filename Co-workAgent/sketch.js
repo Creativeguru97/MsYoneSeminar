@@ -19,12 +19,30 @@ let texting = [];
 let pullIPhone = [];
 let thinking_texting = [];
 let thinking_typing = [];
+let depressing = [];
+
 let laughing = [];
 //Make the laughing 2D array!!!
 for(let i=0; i<3; i++){
   laughing[i] = [];
 }
-let depressing = [];
+
+let irritating = [];
+for(let i=0; i<2; i++){
+  irritating[i] = [];
+}
+
+let disgusting = [];
+for(let i=0; i<2; i++){
+  disgusting[i] = [];
+}
+
+let surprising = [];
+for(let i=0; i<2; i++){
+  surprising[i] = [];
+}
+
+
 let typingProbability;
 let notification = [];
 //Make the notification 2D array!!!
@@ -56,14 +74,18 @@ let ambientSound;
 let putPhoneSound;
 let chairCreakingSound;
 
-//Agent states
+//Agent default states
 let isThinking = false;
 let isTyping = false;
 let isTexting = false;
 
+//Agent emotional emotionalStates
 let isDefaultState = false;
 let isDepressing = false;
 let isLaughing = false;
+let isIrritating = false;
+let isDisgusting = false;
+let isSurprising = false;
 
 
 //To impliment transittion animation between action to action
@@ -135,20 +157,32 @@ canvas = p => {
       thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
     }
 
+    for(let i=0; i<61; i++){
+      depressing[i] = p.loadImage("animations/agent_depressing/" + p.nf(i, 3) + ".png");
+    }
+
     for(let i=0; i<3; i++){
       for(let j=0; j<7; j++){
-        if(i == 0){
-          laughing[i][j] = p.loadImage("animations/agent_laughing/duringThinking/"+ p.nf(j, 2) + ".png");
-        }else if(i == 1){
-          laughing[i][j] = p.loadImage("animations/agent_laughing/duringTyping/"+ p.nf(j, 2) + ".png");
-        }else if(i == 2){
-          laughing[i][j] = p.loadImage("animations/agent_laughing/duringTexting/"+ p.nf(j, 2) + ".png");
-        }
+        laughing[i][j] = p.loadImage("animations/agent_laughing/"+i+"/"+ p.nf(j, 2) + ".png");
       }
     }
 
-    for(let i=0; i<61; i++){
-      depressing[i] = p.loadImage("animations/agent_depressing/" + p.nf(i, 3) + ".png");
+    for(let i=0; i<2; i++){
+      for(let j=0; j<9; j++){
+        irritating[i][j] = p.loadImage("animations/agent_irritating/"+i+"/"+ p.nf(j, 2) + ".png");
+      }
+    }
+
+    for(let i=0; i<2; i++){
+      for(let j=0; j<121; j++){
+        disgusting[i][j] = p.loadImage("animations/agent_disgusting/"+i+"/"+ p.nf(j, 4) + ".png");
+      }
+    }
+
+    for(let i=0; i<2; i++){
+      for(let j=0; j<91; j++){
+        surprising[i][j] = p.loadImage("animations/agent_surprising/"+i+"/"+ p.nf(j, 3) + ".png");
+      }
     }
 
     for(let i=0; i<4; i++){
@@ -156,8 +190,6 @@ canvas = p => {
         notification[i][j] = p.loadImage("animations/notifications/"+i+"/"+ p.nf(j, 4) + ".png");
       }
     }
-
-    // console.log(notification);
 
     //Load typing sounds for typing()
     for(let i=0; i < 4; i++){
@@ -243,20 +275,11 @@ canvas = p => {
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
     p.nonEmpathy(900);
+    // p.emotionalTransference(30);
     // p.otherOriented(900);
 
     iPhone.display();
     iPhone.notification(9000, 8999, "sustain", 0, 0.5);
-
-    if(isThinking == true){
-      agent.thinking();
-    }else if(isTyping == true){
-      agent.typing(8, "sustain", 0, 0.5);
-    }else if(isTexting == true){
-      agent.texting();
-    }
-    // agent.put_iPhone();
-
 
     //Add some optical flare effects!
     p.blendMode(p.SCREEN);
@@ -284,8 +307,7 @@ canvas = p => {
   // }
 
 
-
-  p.nonEmpathy = (duration) => {
+  p.defaultActionChoicer = (duration) => {
     if (p.frameCount % duration == 0) {
 
       agent.index = 0;//Re initialize
@@ -353,73 +375,254 @@ canvas = p => {
     }
   }
 
+  p.emotionProbability = (duration) => {
+    if (p.frameCount % duration == 0) {
+
+      //Iniciating all booleans
+      isDefaultState = true;
+      isDepressing = false;
+      isLaughing = false;
+      isIrritating = false;
+      isDisgusting = false;
+      isSurprising = false;
+
+      //If the agent's emotion is positive and arosal
+      if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] >= -p.PI/2 &&
+      model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < 0){
+
+        let dDefault = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.neutralPolar.x,
+          model.neutralPolar.y
+        );
+
+        let dHappy = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.happyPolar.x,
+          model.happyPolar.y
+        );
+
+        let dSurprised = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.surprisedPolar.x,
+          model.surprisedPolar.y
+        );
+
+        let pDefault = model.radius * p.sqrt(2) / dDefault;
+        let pHappy = model.radius * p.sqrt(2) / dHappy;
+        let pSurprised = model.radius * p.sqrt(2) / dSurprised;
+
+
+        let multiRatio = 100 / (pDefault + pHappy + pSurprised);
+        pDefault = pDefault * multiRatio;
+        pHappy = pHappy * multiRatio;
+        pSurprised = pSurprised * multiRatio;
+
+        console.log("--- emotion probabilities ---");
+        console.log("pDefault: " + pDefault);
+        console.log("pHappy: " + pHappy);
+        console.log("pSurprised: " + pSurprised);
+
+        let whichEmotion = p.int(p.random(0, 100));
+        if(whichAction <= pDefault){
+          isDefaultState = true;
+          console.log("--- emotion ---");
+          console.log("Agent is default state");
+        }else if (whichAction > pDefault && whichAction <= pDefault + pHappy) {
+          isLaughing = true;
+          console.log("--- emotion ---");
+          console.log("Agent is laughing");
+        }else if (whichAction > pDefault + pHappy && whichAction <= 100) {
+          isSurprising = true;
+          console.log("--- emotion ---");
+          console.log("Agent is surprised");
+        }
+
+        //If the agent's emotion is negative and arosal
+      }else if (model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > -p.PI &&
+      model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < -p.PI/2) {
+
+        let dDefault = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.neutralPolar.x,
+          model.neutralPolar.y
+        );
+
+        let dAngry = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.angryPolar.x,
+          model.angryPolar.y
+        );
+
+        let dFear = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.fearfulPolar.x,
+          model.fearfulPolar.y
+        );
+
+        let dDisgust = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.disgustedPolar.x,
+          model.disgustedPolar.y
+        );
+
+        let pDefault = model.radius * p.sqrt(2) / dDefault;
+        let pAngry = model.radius * p.sqrt(2) / dAngry;
+        let pFear = model.radius * p.sqrt(2) / dFear;
+        let pDisgust = model.radius * p.sqrt(2) / dDisgust;
+
+
+        let multiRatio = 100 / (pDefault + pAngry + pFear + pDisgust);
+        pDefault = pDefault * multiRatio;
+        pAngry = pAngry * multiRatio;
+        pFear = pFear * multiRatio;
+        pDisgust = pDisgust * multiRatio;
+
+        console.log("-----------");
+        console.log("pDefault: " + pDefault);
+        console.log("pAngry: " + pAngry);
+        console.log("pFear: " + pFear);
+        console.log("pDisgust: " + pDisgust);
+
+        let whichEmotion = p.int(p.random(0, 100));
+        if(whichAction <= pDefault){
+          isDefaultState = true;
+          console.log("--- emotion ---");
+          console.log("Agent is default state");
+        }else if (whichAction > pDefault && whichAction <= pDefault + pAngry) {
+          isirritating = true;
+          console.log("--- emotion ---");
+          console.log("Agent is irritating");
+        }else if (whichAction > pDefault + pAngry && whichAction <= pDefault + pAngry + pFear) {
+          isDisgusting = true;
+          console.log("--- emotion ---");
+          console.log("Agent is fearful");
+        }else if (whichAction > pDefault + pAngry + pFear && whichAction <= 100) {
+          isDisgusting = true;
+          console.log("--- emotion ---");
+          console.log("Agent is disgusted");
+        }
+
+      //If the agent's emotion is positive and unarosal
+      }else if (model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > 0 &&
+      model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < p.PI/2) {
+
+        isDefaultState = true;
+
+      //If the agent's emotion is negative and unarosal
+      }else if (model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > p.PI/2 &&
+      model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < p.PI) {
+
+        let dDefault = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.neutralPolar.x,
+          model.neutralPolar.y
+        );
+
+        let dSad = p.dist(
+          model.agentEmotionPosition.x,
+          model.agentEmotionPosition.y,
+          model.sadPolar.x,
+          model.sadPolar.y
+        );
+
+        let pDefault = model.radius * p.sqrt(2) / dDefault;
+        let pSad = model.radius * p.sqrt(2) / dSad;
+
+
+        let multiRatio = 100 / (pDefault + pSad);
+        pDefault = pDefault * multiRatio;
+        pSad = pSad * multiRatio;
+
+        console.log("-----------");
+        console.log("pDefault: " + pDefault);
+        console.log("pSad: " + pSad);
+
+        let whichEmotion = p.int(p.random(0, 100));
+        if(whichAction <= pDefault){
+          isDefaultState = true;
+          console.log("--- emotion ---");
+          console.log("Agent is default state");
+        }else if (whichAction > pDefault && whichAction <= 100){
+          isDepressing = true;
+          console.log("--- emotion ---");
+          console.log("Agent is isDepressing");
+        }
+
+      }
+    }
+  }//emotionProbability finished
+
+  p.nonEmpathy = (duration) => {
+      p.defaultActionChoicer(duration);
+
+    //Agent actual actions below
+    if(isThinking == true){
+      agent.thinking();
+    }else if(isTyping == true){
+      agent.typing(8, "sustain", 0, 0.5);
+    }else if(isTexting == true){
+      agent.texting();
+    }
+    // agent.put_iPhone();
+  }
+
   p.motorMimicry = () => {
 
   }
 
-  p.otherOriented = (duration) => {
-    if (p.frameCount % duration == 0) {
+  p.emotionalTransference = (duration) => {
+    p.defaultActionChoicer(duration);
 
-      agent.index = 0;//Re initialize
-      console.log("previousAction: " + previousAction);
+    p.emotionProbability(duration);
 
-      let prbDefaultState = p.map(
-        model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[0],
-        0,
-        model.radius,
-        100,
-        0
-      );
-      let prbPositiveState = p.map(model.agentEmotionPosition.x, 0, model.radius, 0, 100);
-      if(prbPositiveState < 0){
-        prbPositiveState = 0;
+    if(isThinking == true){
+
+      if(isDefaultState == true){
+        agent.thinking();
+      }else if(isLaughing == true){
+        agent.laughing("thinking");
+      }else if(isDepressing == true){
+        agent.depressing("thinking");
+      }else if(isIrritating == true){
+        agent.irritating("thinking");
+      }else if(isDisgusting == true){
+        agent.disgusting("thinking");
+      }else if(isSurprising == true){
+        agent.surprising("thinking");
       }
-      let prbNegativcState = p.map(model.agentEmotionPosition.x, -model.radius, 0, 100, 0);
-      if(prbNegativcState < 0){
-        prbNegativcState = 0;
+
+    }else if(isTyping == true){
+
+      if(isDefaultState == true){
+        agent.thinking();
+      }else if(isLaughing == true){
+        agent.laughing("typing");
+      }else if(isDepressing == true){
+        agent.depressing("typing");
+      }else if(isIrritating == true){
+        agent.irritating("typing");
+      }else if(isDisgusting == true){
+        agent.disgusting("typing");
+      }else if(isSurprising == true){
+        agent.surprising("typing");
       }
-      let multiRatio = 100 / (prbDefaultState + prbPositiveState + prbNegativcState);
 
-      prbDefaultState = prbDefaultState * multiRatio;
-      prbPositiveState = prbPositiveState * multiRatio;
-      prbNegativcState = prbNegativcState * multiRatio;
+    }else if(isTexting == true){
 
-      // console.log("prbDefaultState: " + prbDefaultState);
-      // console.log("prbPositiveState: " + prbPositiveState);
-      // console.log("prbNegativcState: " + prbNegativcState);
-      // console.log("---------------------------------------");
-
-      let whichAction = p.random(0, 100);
-
-
-      if(whichAction < prbDefaultState){
-        isThinking = true;
-        isTyping = false;
-        isTexting = false;
-        console.log("Agent is thinking");
-        console.log("----------");
-
-        agent.thinkingFrame = 0;
-      }else if(whichAction >= pRange0 && whichAction < pRange1){
-        isThinking = false;
-        isTyping = true;
-        isTexting = false;
-        console.log("Agent is typing");
-        console.log("----------");
-
-        agent.typingFrame = 0;
-      }else{
-        isThinking = false;
-        isTyping = false;
-        isTexting = true;
-        console.log("Agent is texting");
-        console.log("----------");
-
-        //I imprimented an other action -> texting animation.
-        //So I need to reset the index to display images every time.
-        agent.textingFrame = 0;
-      }
     }
+  }
+
+  p.otherOriented = (duration) => {
+
   }
 
 
