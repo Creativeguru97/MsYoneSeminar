@@ -379,7 +379,7 @@ canvas = p => {
     if (p.frameCount % duration == 0) {
 
       //Iniciating all booleans
-      isDefaultState = true;
+      isDefaultState = false;
       isDepressing = false;
       isLaughing = false;
       isIrritating = false;
@@ -433,6 +433,7 @@ canvas = p => {
           console.log("Agent is default state");
         }else if (whichAction > pDefault && whichAction <= pDefault + pHappy) {
           isLaughing = true;
+          agent.epochCount = 0;//reinitialize for loopAnimation()
           console.log("--- emotion ---");
           console.log("Agent is laughing");
         }else if (whichAction > pDefault + pHappy && whichAction <= 100) {
@@ -589,7 +590,7 @@ canvas = p => {
       if(isDefaultState == true){
         agent.thinking();
       }else if(isLaughing == true){
-        agent.laughing("thinking");
+        agent.laughing("thinking", p.random(6, 10));
       }else if(isDepressing == true){
         agent.depressing("thinking");
       }else if(isIrritating == true){
@@ -605,7 +606,7 @@ canvas = p => {
       if(isDefaultState == true){
         agent.thinking();
       }else if(isLaughing == true){
-        agent.laughing("typing");
+        agent.laughing("typing", p.random(6, 10));
       }else if(isDepressing == true){
         agent.depressing("typing");
       }else if(isIrritating == true){

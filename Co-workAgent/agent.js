@@ -16,11 +16,13 @@ class Agent{
     //To store elapsed time of each emotion state
     this.laughingFrame = 0;
     this.depressingTime = 0;
-    this.
+
 
     this.typing_L0 = false;
     this.typing_L1 = false;
     this.typing_R0 = false;
+
+    this.epochCount = 0;
 
     this.isTypingSomething = false;
     this.isScrolling = false;
@@ -75,6 +77,18 @@ class Agent{
 
     }else{
       this.index++;
+    }
+  }
+
+  loopAnimation(animationArray, epoch){
+    myp5.image(animationArray[this.index], 480, 270, 960, 540);
+
+    if(this.epochCount <= 3){
+      if(this.index == animationArray.length - 1){
+        this.epochCount++;
+      }else{
+        this.index++;
+      }
     }
   }
 
@@ -278,12 +292,64 @@ class Agent{
   }
 
 
-  laughing(currentAction){
+  laughing(currentAction, epoch){
     if(currentAction == "thinking"){
-      
-    }else if(currentAction == "typing"){
+      if(previousAction == "thinking"){
 
-    }
+        if(this.laughingFrame < laughing[0].length * epoch){
+          loopAnimation(laughing[0], epoch);
+        }else{
+          this.thinking();
+        }
+
+      }else if(previousAction == "typing"){
+
+        if(this.thinkingFrame < 21){
+          this.thinking();
+        }else if (this.thinkingFrame >= 21 && this.thinkingFrame < laughing[0].length * epoch + 21) {
+          loopAnimation(laughing[0], epoch);
+        }else if (this.thinkingFrame >= laughing[0].length * epoch + 21) {
+          this.thinking();
+        }
+
+      }else if(previousAction == "texting"){
+        if(this.thinkingFrame < 91){
+          this.thinking();
+        }else if (this.thinkingFrame >= 91 && this.thinkingFrame < laughing[0].length * epoch + 91) {
+          loopAnimation(laughing[0], epoch);
+        }else if (this.thinkingFrame >= laughing[0].length * epoch + 91) {
+          this.thinking();
+        }
+      }
+    }else if (currentAction == "typing") {
+      if(previousAction == "thinking"){
+
+        if(this.typingFrame < 21){
+          this.typing();
+        }else if (this.typingFrame >= 21 && this.typingFrame < laughing[1].length * epoch + 21) {
+          loopAnimation(laughing[1], epoch);
+        }else if (this.typingFrame >= laughing[0].length * epoch + 21) {
+          this.typing();
+        }
+
+      }else if(previousAction == "typing"){
+
+        if(this.laughingFrame < laughing[1].length * epoch){
+          loopAnimation(laughing[1], epoch);
+        }else{
+          this.typing();
+        }
+
+      }else if(previousAction == "texting"){
+        if(this.typingFrame < 91){
+          this.typing();
+        }else if (this.typingFrame >= 91 && this.typingFrame < laughing[1].length * epoch + 91) {
+          loopAnimation(laughing[1], epoch);
+        }else if (this.typingFrame >= laughing[0].length * epoch + 91) {
+          this.typing();
+        }
+      }//previousAction == "texting"...end
+    }//currentAction == "typing"...end
   }
 
   depressing(currentAction){
