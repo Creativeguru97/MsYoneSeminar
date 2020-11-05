@@ -5,6 +5,9 @@ let detections = [];
 // Video
 let video;
 
+let happy;
+let angry;
+
 function setup() {
   createCanvas(360, 270);
 
@@ -12,7 +15,7 @@ function setup() {
   video = createCapture(VIDEO);
   video.size(width, height);
   // Only need landmarks for this example
-  const faceOptions = { withLandmarks: true, withExpressions: false, withDescriptors: false };
+  const faceOptions = { withLandmarks: true, withExpressions: true, withDescriptors: false };
   faceapi = ml5.faceApi(video, faceOptions, faceReady);
 }
 
@@ -29,6 +32,14 @@ function gotFaces(error, result) {
   }
   detections = result;
   faceapi.detect(gotFaces);
+
+
+  happy = detections[0].expressions.happy;
+  angry = detections[0].expressions.angry;
+
+  // console.log("----------");
+  console.log("happy: "+ happy);
+  // console.log("angry: "+angry);
 }
 
 // Draw everything
