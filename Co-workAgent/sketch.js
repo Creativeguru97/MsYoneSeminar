@@ -90,7 +90,7 @@ let isSurprising = false;
 
 //To impliment transittion animation between action to action
 //I need to store current action for later.
-let previousAction = "";
+let previousAction = "thinking";
 
 let intervalCount = 0;
 let randomNum = Math.random(450, 1800);
@@ -274,8 +274,8 @@ canvas = p => {
 
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
-    p.nonEmpathy(900);
-    // p.emotionalTransference(30);
+    // p.nonEmpathy(900);
+    p.emotionalTransference(300);
     // p.otherOriented(900);
 
     iPhone.display();
@@ -427,16 +427,16 @@ canvas = p => {
         console.log("pSurprised: " + pSurprised);
 
         let whichEmotion = p.int(p.random(0, 100));
-        if(whichAction <= pDefault){
+        if(whichEmotion <= pDefault){
           isDefaultState = true;
           console.log("--- emotion ---");
           console.log("Agent is default state");
-        }else if (whichAction > pDefault && whichAction <= pDefault + pHappy) {
+        }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pHappy) {
           isLaughing = true;
           agent.epochCount = 0;//reinitialize for loopAnimation()
           console.log("--- emotion ---");
           console.log("Agent is laughing");
-        }else if (whichAction > pDefault + pHappy && whichAction <= 100) {
+        }else if (whichEmotion > pDefault + pHappy && whichEmotion <= 100) {
           isSurprising = true;
           console.log("--- emotion ---");
           console.log("Agent is surprised");
@@ -493,19 +493,19 @@ canvas = p => {
         console.log("pDisgust: " + pDisgust);
 
         let whichEmotion = p.int(p.random(0, 100));
-        if(whichAction <= pDefault){
+        if(whichEmotion <= pDefault){
           isDefaultState = true;
           console.log("--- emotion ---");
           console.log("Agent is default state");
-        }else if (whichAction > pDefault && whichAction <= pDefault + pAngry) {
+        }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pAngry) {
           isirritating = true;
           console.log("--- emotion ---");
           console.log("Agent is irritating");
-        }else if (whichAction > pDefault + pAngry && whichAction <= pDefault + pAngry + pFear) {
+        }else if (whichEmotion > pDefault + pAngry && whichEmotion <= pDefault + pAngry + pFear) {
           isDisgusting = true;
           console.log("--- emotion ---");
           console.log("Agent is fearful");
-        }else if (whichAction > pDefault + pAngry + pFear && whichAction <= 100) {
+        }else if (whichEmotion > pDefault + pAngry + pFear && whichEmotion <= 100) {
           isDisgusting = true;
           console.log("--- emotion ---");
           console.log("Agent is disgusted");
@@ -548,11 +548,11 @@ canvas = p => {
         console.log("pSad: " + pSad);
 
         let whichEmotion = p.int(p.random(0, 100));
-        if(whichAction <= pDefault){
+        if(whichEmotion <= pDefault){
           isDefaultState = true;
           console.log("--- emotion ---");
           console.log("Agent is default state");
-        }else if (whichAction > pDefault && whichAction <= 100){
+        }else if (whichEmotion > pDefault && whichEmotion <= 100){
           isDepressing = true;
           console.log("--- emotion ---");
           console.log("Agent is isDepressing");
@@ -618,7 +618,7 @@ canvas = p => {
       }
 
     }else if(isTexting == true){
-
+      agent.texting();
     }
   }
 

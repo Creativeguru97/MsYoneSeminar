@@ -83,8 +83,10 @@ class Agent{
   loopAnimation(animationArray, epoch){
     myp5.image(animationArray[this.index], 480, 270, 960, 540);
 
-    if(this.epochCount <= 3){
+    //epochCount is reseted everytime in emotionProbability() in sketch.js!
+    if(this.epochCount <= epoch){
       if(this.index == animationArray.length - 1){
+        this.index = 0;
         this.epochCount++;
       }else{
         this.index++;
@@ -297,7 +299,7 @@ class Agent{
       if(previousAction == "thinking"){
 
         if(this.laughingFrame < laughing[0].length * epoch){
-          loopAnimation(laughing[0], epoch);
+          this.loopAnimation(laughing[0], epoch);
         }else{
           this.thinking();
         }
@@ -307,7 +309,7 @@ class Agent{
         if(this.thinkingFrame < 21){
           this.thinking();
         }else if (this.thinkingFrame >= 21 && this.thinkingFrame < laughing[0].length * epoch + 21) {
-          loopAnimation(laughing[0], epoch);
+          this.loopAnimation(laughing[0], epoch);
         }else if (this.thinkingFrame >= laughing[0].length * epoch + 21) {
           this.thinking();
         }
@@ -316,7 +318,7 @@ class Agent{
         if(this.thinkingFrame < 91){
           this.thinking();
         }else if (this.thinkingFrame >= 91 && this.thinkingFrame < laughing[0].length * epoch + 91) {
-          loopAnimation(laughing[0], epoch);
+          this.loopAnimation(laughing[0], epoch);
         }else if (this.thinkingFrame >= laughing[0].length * epoch + 91) {
           this.thinking();
         }
@@ -327,7 +329,7 @@ class Agent{
         if(this.typingFrame < 21){
           this.typing();
         }else if (this.typingFrame >= 21 && this.typingFrame < laughing[1].length * epoch + 21) {
-          loopAnimation(laughing[1], epoch);
+          this.loopAnimation(laughing[1], epoch);
         }else if (this.typingFrame >= laughing[0].length * epoch + 21) {
           this.typing();
         }
@@ -335,7 +337,7 @@ class Agent{
       }else if(previousAction == "typing"){
 
         if(this.laughingFrame < laughing[1].length * epoch){
-          loopAnimation(laughing[1], epoch);
+          this.loopAnimation(laughing[1], epoch);
         }else{
           this.typing();
         }
@@ -344,7 +346,7 @@ class Agent{
         if(this.typingFrame < 91){
           this.typing();
         }else if (this.typingFrame >= 91 && this.typingFrame < laughing[1].length * epoch + 91) {
-          loopAnimation(laughing[1], epoch);
+          this.loopAnimation(laughing[1], epoch);
         }else if (this.typingFrame >= laughing[0].length * epoch + 91) {
           this.typing();
         }
@@ -353,9 +355,30 @@ class Agent{
   }
 
   depressing(currentAction){
-    myp5.image(depressing[this.index], 480, 270, 960, 540);
-    if(this.index > depressing.length - 2){
-      this.index = depressing.length - 1;
+    if(currentAction == "thinking"){
+      if(previousAction == "thinking"){
+        
+      }else if(previousAction == "typing"){
+
+      }else if(previousAction == "texting"){
+
+      }
+    }else if (currentAction == "typing"){
+      if(previousAction == "thinking"){
+
+      }else if(previousAction == "typing"){
+
+      }else if(previousAction == "texting"){
+
+      }
+    }else if(currentAction == "texting"){
+      if(previousAction == "thinking"){
+
+      }else if(previousAction == "typing"){
+
+      }else if(previousAction == "texting"){
+
+      }
     }
   }
 
