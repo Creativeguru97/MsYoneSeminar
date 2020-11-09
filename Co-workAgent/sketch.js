@@ -157,8 +157,8 @@ canvas = p => {
       thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
     }
 
-    for(let i=0; i<61; i++){
-      depressing[i] = p.loadImage("animations/agent_depressing/" + p.nf(i, 3) + ".png");
+    for(let i=0; i<271; i++){
+      depressing[i] = p.loadImage("animations/agent_depressing/" + p.nf(i, 4) + ".png");
     }
 
     for(let i=0; i<3; i++){
@@ -378,6 +378,8 @@ canvas = p => {
   p.emotionProbability = (duration) => {
     if (p.frameCount % duration == 0) {
 
+      agent.emotionArrayIndex = 0;
+
       //Iniciating all booleans
       isDefaultState = false;
       isDepressing = false;
@@ -434,6 +436,7 @@ canvas = p => {
         }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pHappy) {
           isLaughing = true;
           agent.epochCount = 0;//reinitialize for loopAnimation()
+          agent.laughingFrame = 0;
           console.log("--- emotion ---");
           console.log("Agent is laughing");
         }else if (whichEmotion > pDefault + pHappy && whichEmotion <= 100) {
@@ -512,13 +515,13 @@ canvas = p => {
         }
 
       //If the agent's emotion is positive and unarosal
-      }else if (model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > 0 &&
+      }else if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > 0 &&
       model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < p.PI/2) {
 
         isDefaultState = true;
 
       //If the agent's emotion is negative and unarosal
-      }else if (model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > p.PI/2 &&
+      }else if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > p.PI/2 &&
       model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < p.PI) {
 
         let dDefault = p.dist(
@@ -554,6 +557,7 @@ canvas = p => {
           console.log("Agent is default state");
         }else if (whichEmotion > pDefault && whichEmotion <= 100){
           isDepressing = true;
+          agent.depressingFrame = 0;
           console.log("--- emotion ---");
           console.log("Agent is isDepressing");
         }
@@ -618,7 +622,11 @@ canvas = p => {
       }
 
     }else if(isTexting == true){
-      agent.texting();
+      if(isDefaultState == true){
+        agent.thinking();
+      }else if(isDepressing == true){
+        agent.depressing("texting");
+      }else{}
     }
   }
 

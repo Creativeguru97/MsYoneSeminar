@@ -1,6 +1,8 @@
 class Agent{
   constructor(){
     this.index = 0;
+    this.emotionArrayIndex = 0;
+
     this.typingProbability = 0;
 
     this.noiseOffset = 0.0;
@@ -15,7 +17,8 @@ class Agent{
     this.textingFrame = 0;
     //To store elapsed time of each emotion state
     this.laughingFrame = 0;
-    this.depressingTime = 0;
+    this.depressingFrame = 0;
+    this.irritatingFrame = 0;
 
 
     this.typing_L0 = false;
@@ -352,38 +355,123 @@ class Agent{
         }
       }//previousAction == "texting"...end
     }//currentAction == "typing"...end
+
+    this.laughingFrame++;
   }
 
   depressing(currentAction){
     if(currentAction == "thinking"){
       if(previousAction == "thinking"){
-        
+        if(this.depressingFrame < depressing.length){
+          //Depressing move
+          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
+          this.emotionArrayIndex++;
+        }else if (this.depressingFrame >= depressing.length) {
+          this.thinking();
+        }
+
       }else if(previousAction == "typing"){
+        if(this.depressingFrame < thinking_typing.length){
+          //Change the posture from typing to thinking once
+          myp5.image(thinking_typing[(thinking_typing.length - 1) - this.depressingFrame], 480, 270, 960, 540);
+        }else if (this.depressingFrame >= thinking_typing.length && this.depressingFrame < thinking_typing.length + depressing.length) {
+          // Depressing move
+          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
+          this.emotionArrayIndex++;
+
+          if(this.depressingFrame = thinking_typing.length + depressing.length - 1){
+            this.thinkingFrame = thinking_typing.length;//Which is 21
+          }
+        }else if (this.depressingFrame >= thinking_typing.length + depressing.length) {
+          this.thinking();
+        }
 
       }else if(previousAction == "texting"){
+        if(this.depressingFrame < thinking_texting.length){
+          //Change the posture from texting to thinking once
+          myp5.image(thinking_texting[(thinking_texting.length - 1) - this.depressingFrame], 480, 270, 960, 540);
+        }else if (this.depressingFrame >= thinking_texting.length && this.depressingFrame < thinking_texting.length + depressing.length) {
+          // Depressing move
+          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
+          this.emotionArrayIndex++;
 
+          if(this.depressingFrame = thinking_texting.length + depressing.length - 1){
+            this.thinkingFrame = thinking_texting.length;//Which is 91
+          }
+        }else if (this.depressingFrame >= thinking_texting.length + depressing.length) {
+          this.thinking();
+        }
       }
     }else if (currentAction == "typing"){
       if(previousAction == "thinking"){
+        if(this.depressingFrame < depressing.length){
+          // Depressing move
+          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
+          this.emotionArrayIndex++;
+        }else if (this.depressingFrame >= depressing.length && this.depressingFrame < depressing.length+thinking_typing.length) {
+          //Change the posture from thinking to typing once
+          myp5.image(thinking_typing[this.depressingFrame - depressing.length], 480, 270, 960, 540);
 
+          if(this.depressingFrame = depressing.length+thinking_typing.length - 1){
+            this.typingFrame = thinking_typing.length;//Which is 21
+          }
+        }else if (this.depressingFrame >= thinking_typing.length + depressing.length) {
+          this.typing();
+        }
       }else if(previousAction == "typing"){
+        if(this.depressingFrame < thinking_typing.length){
+          //Change the posture from typing to thinking once
+          myp5.image(thinking_typing[(thinking_typing.length - 1) - this.depressingFrame], 480, 270, 960, 540);
+        }else if (this.depressingFrame >= thinking_typing.length && this.depressingFrame < thinking_typing.length + depressing.length) {
+          // Depressing move
+          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
+          this.emotionArrayIndex++;
+        }else if(this.depressingFrame >= thinking_typing.length + depressing.length && this.depressingFrame < depressing.length+thinking_typing.length*2) {
+          //Change the posture from thinking to typing once
+          myp5.image(thinking_typing[this.depressingFrame - depressing.length], 480, 270, 960, 540);
+
+          if(this.depressingFrame = depressing.length+thinking_typing.length*2 - 1){
+            this.typingFrame = thinking_typing.length;//Which is 21
+          }
+        }else if (this.depressingFrame >= depressing.length+thinking_typing.length*2) {
+          this.typing();
+        }
 
       }else if(previousAction == "texting"){
 
-      }
     }else if(currentAction == "texting"){
-      if(previousAction == "thinking"){
 
-      }else if(previousAction == "typing"){
-
-      }else if(previousAction == "texting"){
-
-      }
     }
+
+    this.depressingFrame++;
   }
 
   irritating(currentAction){
+    if(currentAction == "thinking"){
+      if(currentAction == "thinking"){
+        if(this.irritatingFrame < irritating[0].length){
+          //Depressing move
+          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
+          this.emotionArrayIndex++;
+        }else if (this.depressingFrame >= depressing.length) {
+          this.thinking();
+        }
+      }else if (currentAction == "typing") {
 
+      }else if (currentAction == "texting") {
+
+      }
+    }else if (currentAction == "typing") {
+      if(currentAction == "thinking"){
+
+      }else if (currentAction == "typing") {
+
+      }else if (currentAction == "texting") {
+
+      }
+    }
+
+    this.irritatingFrame++;
   }
 
   disgusting(currentAction){
