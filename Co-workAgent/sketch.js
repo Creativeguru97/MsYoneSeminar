@@ -19,12 +19,16 @@ let texting = [];
 let pullIPhone = [];
 let thinking_texting = [];
 let thinking_typing = [];
-let depressing = [];
 
 let laughing = [];
 //Make the laughing 2D array!!!
 for(let i=0; i<3; i++){
   laughing[i] = [];
+}
+
+let depressing = [];
+for(let i=0; i<2; i++){
+  depressing[i] = [];
 }
 
 let irritating = [];
@@ -157,13 +161,15 @@ canvas = p => {
       thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
     }
 
-    for(let i=0; i<271; i++){
-      depressing[i] = p.loadImage("animations/agent_depressing/" + p.nf(i, 4) + ".png");
-    }
-
     for(let i=0; i<3; i++){
       for(let j=0; j<7; j++){
         laughing[i][j] = p.loadImage("animations/agent_laughing/"+i+"/"+ p.nf(j, 2) + ".png");
+      }
+    }
+
+    for(let i=0; i<2; i++){
+      for(let j=0; j<271; j++){
+        depressing[i][j] = p.loadImage("animations/agent_depressing/"+i+"/"+ p.nf(j, 4) + ".png");
       }
     }
 
@@ -275,7 +281,7 @@ canvas = p => {
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
     // p.nonEmpathy(900);
-    p.emotionalTransference(300);
+    p.emotionalTransference(600);
     // p.otherOriented(900);
 
     iPhone.display();
@@ -375,10 +381,15 @@ canvas = p => {
     }
   }
 
+
   p.emotionProbability = (duration) => {
     if (p.frameCount % duration == 0) {
 
       agent.emotionArrayIndex = 0;
+
+      agent.epochCount = 0;//reinitialize for loopAnimation()
+      agent.irritatingFrame = 0;
+      agent.depressingFrame = 0;
 
       //Iniciating all booleans
       isDefaultState = false;
@@ -435,8 +446,6 @@ canvas = p => {
           console.log("Agent is default state");
         }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pHappy) {
           isLaughing = true;
-          agent.epochCount = 0;//reinitialize for loopAnimation()
-          agent.laughingFrame = 0;
           console.log("--- emotion ---");
           console.log("Agent is laughing");
         }else if (whichEmotion > pDefault + pHappy && whichEmotion <= 100) {
@@ -501,7 +510,8 @@ canvas = p => {
           console.log("--- emotion ---");
           console.log("Agent is default state");
         }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pAngry) {
-          isirritating = true;
+
+          isIrritating = true;
           console.log("--- emotion ---");
           console.log("Agent is irritating");
         }else if (whichEmotion > pDefault + pAngry && whichEmotion <= pDefault + pAngry + pFear) {
@@ -557,7 +567,6 @@ canvas = p => {
           console.log("Agent is default state");
         }else if (whichEmotion > pDefault && whichEmotion <= 100){
           isDepressing = true;
-          agent.depressingFrame = 0;
           console.log("--- emotion ---");
           console.log("Agent is isDepressing");
         }
@@ -596,11 +605,11 @@ canvas = p => {
       }else if(isLaughing == true){
         agent.laughing("thinking", p.random(6, 10));
       }else if(isDepressing == true){
-        agent.depressing("thinking");
+        agent.depressing("thinking", 1);
       }else if(isIrritating == true){
-        agent.irritating("thinking");
+        agent.irritating("thinking", p.random(3, 6));
       }else if(isDisgusting == true){
-        agent.disgusting("thinking");
+        agent.disgusting("thinking", 1);
       }else if(isSurprising == true){
         agent.surprising("thinking");
       }
@@ -608,22 +617,22 @@ canvas = p => {
     }else if(isTyping == true){
 
       if(isDefaultState == true){
-        agent.thinking();
+        agent.typing(8, "sustain", 0, 0.5);
       }else if(isLaughing == true){
         agent.laughing("typing", p.random(6, 10));
       }else if(isDepressing == true){
-        agent.depressing("typing");
+        agent.depressing("typing", 1);
       }else if(isIrritating == true){
-        agent.irritating("typing");
+        agent.irritating("typing", p.random(3, 6));
       }else if(isDisgusting == true){
-        agent.disgusting("typing");
+        agent.disgusting("typing", 1);
       }else if(isSurprising == true){
         agent.surprising("typing");
       }
 
     }else if(isTexting == true){
       if(isDefaultState == true){
-        agent.thinking();
+        agent.texting();
       }else if(isDepressing == true){
         agent.depressing("texting");
       }else{}

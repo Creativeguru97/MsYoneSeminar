@@ -19,6 +19,7 @@ class Agent{
     this.laughingFrame = 0;
     this.depressingFrame = 0;
     this.irritatingFrame = 0;
+    this.disgustingFrame = 0;
 
 
     this.typing_L0 = false;
@@ -83,16 +84,16 @@ class Agent{
     }
   }
 
-  loopAnimation(animationArray, epoch){
-    myp5.image(animationArray[this.index], 480, 270, 960, 540);
+  emotionAnimation(animationArray, epoch){
+    myp5.image(animationArray[this.emotionArrayIndex], 480, 270, 960, 540);
 
     //epochCount is reseted everytime in emotionProbability() in sketch.js!
-    if(this.epochCount <= epoch){
-      if(this.index == animationArray.length - 1){
-        this.index = 0;
+    if(this.epochCount < epoch){
+      if(this.emotionArrayIndex == animationArray.length - 1){
+        this.emotionArrayIndex = 0;
         this.epochCount++;
       }else{
-        this.index++;
+        this.emotionArrayIndex++;
       }
     }
   }
@@ -302,56 +303,56 @@ class Agent{
       if(previousAction == "thinking"){
 
         if(this.laughingFrame < laughing[0].length * epoch){
-          this.loopAnimation(laughing[0], epoch);
+          this.emotionAnimation(laughing[0], epoch);
         }else{
           this.thinking();
         }
 
       }else if(previousAction == "typing"){
 
-        if(this.thinkingFrame < 21){
+        if(this.thinkingFrame < thinking_typing.length){
           this.thinking();
-        }else if (this.thinkingFrame >= 21 && this.thinkingFrame < laughing[0].length * epoch + 21) {
-          this.loopAnimation(laughing[0], epoch);
-        }else if (this.thinkingFrame >= laughing[0].length * epoch + 21) {
+        }else if (this.thinkingFrame >= thinking_typing.length && this.thinkingFrame < laughing[0].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(laughing[0], epoch);
+        }else if (this.thinkingFrame >= laughing[0].length * epoch + thinking_typing.length) {
           this.thinking();
         }
 
       }else if(previousAction == "texting"){
-        if(this.thinkingFrame < 91){
+        if(this.thinkingFrame < thinking_texting.length){
           this.thinking();
-        }else if (this.thinkingFrame >= 91 && this.thinkingFrame < laughing[0].length * epoch + 91) {
-          this.loopAnimation(laughing[0], epoch);
-        }else if (this.thinkingFrame >= laughing[0].length * epoch + 91) {
+        }else if (this.thinkingFrame >= thinking_texting.length && this.thinkingFrame < laughing[0].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(laughing[0], epoch);
+        }else if (this.thinkingFrame >= laughing[0].length * epoch + thinking_texting.length) {
           this.thinking();
         }
       }
     }else if (currentAction == "typing") {
       if(previousAction == "thinking"){
 
-        if(this.typingFrame < 21){
-          this.typing();
-        }else if (this.typingFrame >= 21 && this.typingFrame < laughing[1].length * epoch + 21) {
-          this.loopAnimation(laughing[1], epoch);
-        }else if (this.typingFrame >= laughing[0].length * epoch + 21) {
-          this.typing();
+        if(this.typingFrame < thinking_typing.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < laughing[1].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(laughing[1], epoch);
+        }else if (this.typingFrame >= laughing[1].length * epoch + thinking_typing.length) {
+          this.typing(8, "sustain", 0, 0.5);
         }
 
       }else if(previousAction == "typing"){
 
         if(this.laughingFrame < laughing[1].length * epoch){
-          this.loopAnimation(laughing[1], epoch);
-        }else{
-          this.typing();
+          this.emotionAnimation(laughing[1], epoch);
+        }else if(this.laughingFrame >= laughing[1].length * epoch){
+          this.typing(8, "sustain", 0, 0.5);
         }
 
       }else if(previousAction == "texting"){
-        if(this.typingFrame < 91){
-          this.typing();
-        }else if (this.typingFrame >= 91 && this.typingFrame < laughing[1].length * epoch + 91) {
-          this.loopAnimation(laughing[1], epoch);
-        }else if (this.typingFrame >= laughing[0].length * epoch + 91) {
-          this.typing();
+        if(this.typingFrame < thinking_texting.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_texting.length && this.typingFrame < laughing[1].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(laughing[1], epoch);
+        }else if (this.typingFrame >= laughing[1].length * epoch + thinking_texting.length) {
+          this.typing(8, "sustain", 0, 0.5);
         }
       }//previousAction == "texting"...end
     }//currentAction == "typing"...end
@@ -359,127 +360,201 @@ class Agent{
     this.laughingFrame++;
   }
 
-  depressing(currentAction){
+
+  depressing(currentAction, epoch){
     if(currentAction == "thinking"){
       if(previousAction == "thinking"){
-        if(this.depressingFrame < depressing.length){
+
+        if(this.depressingFrame < depressing[0].length * epoch){
           //Depressing move
-          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
-          this.emotionArrayIndex++;
-        }else if (this.depressingFrame >= depressing.length) {
+          this.emotionAnimation(depressing[0], epoch);
+        }else if (this.depressingFrame >= depressing[0].length * epoch) {
           this.thinking();
         }
 
-      }else if(previousAction == "typing"){
-        if(this.depressingFrame < thinking_typing.length){
-          //Change the posture from typing to thinking once
-          myp5.image(thinking_typing[(thinking_typing.length - 1) - this.depressingFrame], 480, 270, 960, 540);
-        }else if (this.depressingFrame >= thinking_typing.length && this.depressingFrame < thinking_typing.length + depressing.length) {
-          // Depressing move
-          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
-          this.emotionArrayIndex++;
+      }else if (previousAction == "typing") {
 
-          if(this.depressingFrame = thinking_typing.length + depressing.length - 1){
-            this.thinkingFrame = thinking_typing.length;//Which is 21
-          }
-        }else if (this.depressingFrame >= thinking_typing.length + depressing.length) {
+        if(this.thinkingFrame < thinking_typing.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_typing.length && this.thinkingFrame < depressing[0].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(depressing[0], epoch);
+        }else if (this.thinkingFrame >= depressing[0].length * epoch + thinking_typing.length) {
           this.thinking();
         }
 
       }else if(previousAction == "texting"){
-        if(this.depressingFrame < thinking_texting.length){
-          //Change the posture from texting to thinking once
-          myp5.image(thinking_texting[(thinking_texting.length - 1) - this.depressingFrame], 480, 270, 960, 540);
-        }else if (this.depressingFrame >= thinking_texting.length && this.depressingFrame < thinking_texting.length + depressing.length) {
-          // Depressing move
-          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
-          this.emotionArrayIndex++;
-
-          if(this.depressingFrame = thinking_texting.length + depressing.length - 1){
-            this.thinkingFrame = thinking_texting.length;//Which is 91
-          }
-        }else if (this.depressingFrame >= thinking_texting.length + depressing.length) {
+        if(this.thinkingFrame < thinking_texting.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_texting.length && this.thinkingFrame < depressing[0].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(depressing[0], epoch);
+        }else if (this.thinkingFrame >= depressing[0].length * epoch + thinking_texting.length) {
           this.thinking();
         }
       }
-    }else if (currentAction == "typing"){
+    }else if (currentAction == "typing") {
       if(previousAction == "thinking"){
-        if(this.depressingFrame < depressing.length){
-          // Depressing move
-          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
-          this.emotionArrayIndex++;
-        }else if (this.depressingFrame >= depressing.length && this.depressingFrame < depressing.length+thinking_typing.length) {
-          //Change the posture from thinking to typing once
-          myp5.image(thinking_typing[this.depressingFrame - depressing.length], 480, 270, 960, 540);
 
-          if(this.depressingFrame = depressing.length+thinking_typing.length - 1){
-            this.typingFrame = thinking_typing.length;//Which is 21
-          }
-        }else if (this.depressingFrame >= thinking_typing.length + depressing.length) {
-          this.typing();
+        if(this.typingFrame < thinking_typing.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < depressing[1].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(depressing[1], epoch);
+        }else if (this.typingFrame >= depressing[1].length * epoch + thinking_typing.length) {
+          this.typing(8, "sustain", 0, 0.5);
         }
-      }else if(previousAction == "typing"){
-        if(this.depressingFrame < thinking_typing.length){
-          //Change the posture from typing to thinking once
-          myp5.image(thinking_typing[(thinking_typing.length - 1) - this.depressingFrame], 480, 270, 960, 540);
-        }else if (this.depressingFrame >= thinking_typing.length && this.depressingFrame < thinking_typing.length + depressing.length) {
-          // Depressing move
-          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
-          this.emotionArrayIndex++;
-        }else if(this.depressingFrame >= thinking_typing.length + depressing.length && this.depressingFrame < depressing.length+thinking_typing.length*2) {
-          //Change the posture from thinking to typing once
-          myp5.image(thinking_typing[this.depressingFrame - depressing.length], 480, 270, 960, 540);
 
-          if(this.depressingFrame = depressing.length+thinking_typing.length*2 - 1){
-            this.typingFrame = thinking_typing.length;//Which is 21
-          }
-        }else if (this.depressingFrame >= depressing.length+thinking_typing.length*2) {
-          this.typing();
+      }else if (previousAction == "typing") {
+
+        if(this.depressingFrame < depressing[1].length * epoch){
+          this.emotionAnimation(depressing[1], epoch);
+        }else if(this.depressingFrame >= depressing[1].length * epoch){
+          this.typing(8, "sustain", 0, 0.5);
         }
 
       }else if(previousAction == "texting"){
 
-    }else if(currentAction == "texting"){
+        if(this.typingFrame < thinking_texting.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_texting.length && this.typingFrame < depressing[1].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(depressing[1], epoch);
+        }else if (this.typingFrame >= depressing[1].length * epoch + thinking_texting.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
 
-    }
+      }//previousAction == "texting"...end
+    }//currentAction == "typing"...end
 
     this.depressingFrame++;
   }
 
-  irritating(currentAction){
+  irritating(currentAction, epoch){
     if(currentAction == "thinking"){
-      if(currentAction == "thinking"){
-        if(this.irritatingFrame < irritating[0].length){
-          //Depressing move
-          myp5.image(depressing[this.emotionArrayIndex], 480, 270, 960, 540);
-          this.emotionArrayIndex++;
-        }else if (this.depressingFrame >= depressing.length) {
+      if(previousAction == "thinking"){
+        console.log("hello");
+        if(this.irritatingFrame < irritating[0].length * epoch){
+          this.emotionAnimation(irritating[0], epoch);
+        }else if(this.irritatingFrame >= irritating[0].length * epoch){
           this.thinking();
         }
-      }else if (currentAction == "typing") {
 
-      }else if (currentAction == "texting") {
+      }else if(previousAction == "typing"){
+        console.log("hello");
+        if(this.thinkingFrame < thinking_typing.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_typing.length && this.thinkingFrame < irritating[0].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(irritating[0], epoch);
+        }else if (this.thinkingFrame >= irritating[0].length * epoch + thinking_typing.length) {
+          this.thinking();
+        }
 
+      }else if(previousAction == "texting"){
+        if(this.thinkingFrame < thinking_texting.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_texting.length && this.thinkingFrame < irritating[0].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(irritating[0], epoch);
+        }else if (this.thinkingFrame >= irritating[0].length * epoch + thinking_texting.length) {
+          this.thinking();
+        }
       }
     }else if (currentAction == "typing") {
-      if(currentAction == "thinking"){
+      if(previousAction == "thinking"){
+        console.log("hello");
+        if(this.typingFrame < thinking_typing.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < irritating[1].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(irritating[1], epoch);
+        }else if (this.typingFrame >= irritating[1].length * epoch + thinking_typing.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
 
-      }else if (currentAction == "typing") {
+      }else if(previousAction == "typing"){
+        console.log("hello");
+        if(this.irritatingFrame < irritating[1].length * epoch){
+          this.emotionAnimation(irritating[1], epoch);
+        }else if(this.irritatingFrame >= irritating[1].length * epoch){
+          this.typing(8, "sustain", 0, 0.5);
+        }
 
-      }else if (currentAction == "texting") {
-
-      }
-    }
+      }else if(previousAction == "texting"){
+        if(this.typingFrame < thinking_typing.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < irritating[1].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(irritating[1], epoch);
+        }else if (this.typingFrame >= irritating[1].length * epoch + thinking_typing.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
+      }//previousAction == "texting"...end
+    }//currentAction == "typing"...end
 
     this.irritatingFrame++;
   }
 
-  disgusting(currentAction){
+  disgusting(currentAction, epoch){
+    if(currentAction == "thinking"){
+      if(previousAction == "thinking"){
 
+        if(this.disgustingFrame < disgusting[0].length * epoch){
+          //Depressing move
+          this.emotionAnimation(disgusting[0], epoch);
+        }else if (this.disgustingFrame >= disgusting[0].length) {
+          this.thinking();
+        }
+
+      }else if (previousAction == "typing") {
+
+        if(this.thinkingFrame < thinking_typing.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_typing.length && this.thinkingFrame < disgusting[0].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(disgusting[0], epoch);
+        }else if (this.thinkingFrame >= disgusting[0].length * epoch + thinking_typing.length) {
+          this.thinking();
+        }
+
+      }else if(previousAction == "texting"){
+        if(this.thinkingFrame < thinking_texting.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_texting.length && this.thinkingFrame < disgusting[0].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(disgusting[0], epoch);
+        }else if (this.thinkingFrame >= disgusting[0].length * epoch + thinking_texting.length) {
+          this.thinking();
+        }
+      }
+    }else if (currentAction == "typing") {
+      if(previousAction == "thinking"){
+
+        if(this.typingFrame < thinking_typing.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < disgusting[1].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(disgusting[1], epoch);
+        }else if (this.typingFrame >= disgusting[1].length * epoch + thinking_typing.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
+
+      }else if (previousAction == "typing") {
+
+        if(this.disgustingFrame < disgusting[1].length * epoch){
+          this.emotionAnimation(disgusting[1], epoch);
+        }else if(this.disgustingFrame >= disgusting[1].length * epoch){
+          this.typing(8, "sustain", 0, 0.5);
+        }
+
+      }else if(previousAction == "texting"){
+
+        if(this.typingFrame < thinking_texting.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_texting.length && this.typingFrame < disgusting[1].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(disgusting[1], epoch);
+        }else if (this.typingFrame >= disgusting[1].length * epoch + thinking_texting.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
+
+      }//previousAction == "texting"...end
+    }//currentAction == "typing"...end
+
+    this.disgustingFrame++;
   }
 
   surprising(currentAction){
-
+    
   }
 
 }
