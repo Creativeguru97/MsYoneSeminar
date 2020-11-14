@@ -297,8 +297,8 @@ canvas = p => {
     //I'll make those ba able to switch in need.
 
     // p.mode_nonInterest(900);
-    p.mode_motorMimicry();
-    // p.mode_emotionalTransference(600);
+    // p.mode_motorMimicry();
+    p.mode_emotionalTransference(600);
     // p.mode_otherOriented(900);
 
     iPhone.display();
@@ -651,11 +651,7 @@ canvas = p => {
       }
 
     }else if(isTexting == true){
-      if(isDefaultState == true){
-        agent.texting();
-      }else if(isDepressing == true){
-        agent.depressing("texting");
-      }else{}
+      agent.texting();
     }
   }
 
