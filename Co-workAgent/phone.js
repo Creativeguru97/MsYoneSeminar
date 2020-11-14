@@ -13,28 +13,32 @@ class Phone{
 
 
   display(){
-    if(isTexting == true){
-      if(previousAction == "typing" && agent.textingFrame < 90){
-        myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
-      }else if(previousAction == "thinking" && agent.textingFrame < 90){
-        myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
-      }else{
-        myp5.image(textingIPhone, 480, 270, 960, 540);
-      }
-    }else if(isThinking == true){
-      if(previousAction == "texting" && agent.thinkingFrame < 90){
-        myp5.image(pullediPhone[(pullediPhone.length - 1) - agent.thinkingFrame], 480, 270, 960, 540);
-      }else{
-        myp5.image(defaultIPhone, 480, 270, 960, 540);
-      }
-    }else if(isTyping == true){
-      if(previousAction == "texting" && agent.typingFrame < 90){
-        myp5.image(pullediPhone[(pullediPhone.length - 1) - agent.typingFrame], 480, 270, 960, 540);
-      }else{
-        myp5.image(defaultIPhone, 480, 270, 960, 540);
-      }
-    }else{
+    if(isMotorMimicking == true){
       myp5.image(defaultIPhone, 480, 270, 960, 540);
+    }else{
+      if(isTexting == true){
+        if(previousAction == "typing" && agent.textingFrame < 90){
+          myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
+        }else if(previousAction == "thinking" && agent.textingFrame < 90){
+          myp5.image(pullediPhone[agent.textingFrame], 480, 270, 960, 540);
+        }else{
+          myp5.image(textingIPhone, 480, 270, 960, 540);
+        }
+      }else if(isThinking == true){
+        if(previousAction == "texting" && agent.thinkingFrame < 90){
+          myp5.image(pullediPhone[(pullediPhone.length - 1) - agent.thinkingFrame], 480, 270, 960, 540);
+        }else{
+          myp5.image(defaultIPhone, 480, 270, 960, 540);
+        }
+      }else if(isTyping == true){
+        if(previousAction == "texting" && agent.typingFrame < 90){
+          myp5.image(pullediPhone[(pullediPhone.length - 1) - agent.typingFrame], 480, 270, 960, 540);
+        }else{
+          myp5.image(defaultIPhone, 480, 270, 960, 540);
+        }
+      }else{
+        myp5.image(defaultIPhone, 480, 270, 960, 540);
+      }
     }
   }
 

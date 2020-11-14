@@ -307,7 +307,7 @@ class Agent{
 
   mimic(){
     if(faceCenter != undefined){
-      let value = myp5.map(faceCenter[0], 0+margin, video.width-margin, 0, 60);
+      let value = myp5.map(faceCenter[0], 0+margin, 480-margin, 0, 60);
       if(value > 60) value = 60;
       if(value < 0) value = 0;
 

@@ -94,6 +94,10 @@ let ambientSound;
 let putPhoneSound;
 let chairCreakingSound;
 
+//Agent mode
+let isMotorMimicking = false;
+let isNoInterest = false;
+
 //Agent default states
 let isThinking = false;
 let isTyping = false;
@@ -280,8 +284,6 @@ canvas = p => {
       console.log("----------");
     }
 
-
-
     //Add all of ambient sounds
     world.ambience();
   }
@@ -296,9 +298,9 @@ canvas = p => {
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
 
-    // p.mode_nonInterest(900);
+    p.mode_nonInterest(900);
     // p.mode_motorMimicry();
-    p.mode_emotionalTransference(600);
+    // p.mode_emotionalTransference(600);
     // p.mode_otherOriented(900);
 
     iPhone.display();
@@ -591,7 +593,10 @@ canvas = p => {
   }//emotionProbability finished
 
   p.mode_nonInterest = (duration) => {
-      p.defaultActionChoicer(duration);
+    isNoInterest = true;
+    isMotorMimicking = false;
+
+    p.defaultActionChoicer(duration);
 
     //Agent actual actions below
     if(isThinking == true){
@@ -605,12 +610,16 @@ canvas = p => {
   }
 
   p.mode_motorMimicry = () => {
-    isTexting = false;
-    isTyping = true;
+    isNoInterest = false;
+    isMotorMimicking = true;
+
     agent.mimic();
   }
 
   p.mode_emotionalTransference = (duration) => {
+
+    isNoInterest = false;
+    isMotorMimicking = false;
 
     p.defaultActionChoicer(duration);
 
@@ -656,7 +665,8 @@ canvas = p => {
   }
 
   p.mode_otherOriented = (duration) => {
-
+    isNoInterest = false;
+    isMotorMimicking = false;
   }
 
 

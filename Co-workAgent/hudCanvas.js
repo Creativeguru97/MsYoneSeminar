@@ -18,7 +18,7 @@ let textYSpace = 16;
 canvas0 = p => { //let canvas0 = function(p){...
   p.setup = () => {
     p.createDiv();
-    hudCanvas = p.createCanvas(640, 360);
+    hudCanvas = p.createCanvas(480, 360);
     hudCanvas.id("hudCanvas");
 
     p.colorMode(p.HSB, 360, 100, 100, 100);//(Mode, Hue, Saturation, Brightness, Alpha)
@@ -29,6 +29,17 @@ canvas0 = p => { //let canvas0 = function(p){...
 
     p.clear();
     p.emotionalStatesHUD(25, 250);
+      // 
+      // if (detections.length > 0) {
+      //   let points = detections[0].landmarks.positions;
+      //   for (let i = 0; i < points.length; i++) {
+      //     p.stroke(161, 95, 251);
+      //     p.strokeWeight(2);
+      //     p.point(points[i]._x+15, points[i]._y+15);
+      //
+      //     // p.ellipse(faceCenter[0]+15, faceCenter[1]+15, 10, 10);
+      //   }
+      // }
 
   }
 

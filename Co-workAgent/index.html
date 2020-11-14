@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -9,8 +10,13 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script> -->
     <script language="javascript" src="libraries/p5.sound.js"></script>
     <script language="javascript" src="libraries/p5.dom.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/ml5js/Intro-ML-Arts-IMA@ml5-build-10-7-19/ml5_build/ml5.min.js"></script> -->
     <script defer src="face-api.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+
+  <body>
     <script defer language="javascript" type="text/javascript" src="faceDetection.js"></script>
     <script defer language="javascript" type="text/javascript" src="hudCanvas.js"></script>
     <script defer language="javascript" type="text/javascript" src="sketch.js"></script>
@@ -18,12 +24,7 @@
     <script defer language="javascript" type="text/javascript" src="phone.js"></script>
     <script defer language="javascript" type="text/javascript" src="world.js"></script>
     <script defer language="javascript" type="text/javascript" src="circumplexModel.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="style.css">
-  </head>
-
-  <body>
-    <video id="video" width="640" height="360" autoplay muted></video>
-    <canvas id="faceAPICanvas" width="640" height="360"></canvas>
+    <video id="video" width="480" height="360" autoplay muted></video>
+    <canvas id="faceAPICanvas" width="480" height="360"></canvas>
   </body>
 </html>
