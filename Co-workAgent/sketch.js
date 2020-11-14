@@ -5,12 +5,22 @@ let background1;
 let flares = [];
 
 
-let agent;
+let agent;//Class
 let iPhone;//Class
 let world;//Class
+let model;//Class
 
-//Animations
-let agentApperance = [];
+let c_Mdl_Width;
+let c_Mdl_Height;
+
+//Non interest version
+let pRange0;
+let pRange1;
+let pRange2;
+let pRange3;
+
+//----- Animations -----
+//-- Non interest mode ---
 let typing_L0 = [];
 let typing_L1 = [];
 let typing_R0 = [];
@@ -20,6 +30,21 @@ let pullIPhone = [];
 let thinking_texting = [];
 let thinking_typing = [];
 
+let notification = [];
+//Make the notification 2D array!!!
+for(let i=0; i<4; i++){
+  notification[i] = [];
+}
+
+let defaultIPhone;
+let textingIPhone;
+let pullediPhone = [];
+
+//-- Motor mimicry mode ---
+let mimicking = [];
+
+
+//-- Emotional transference mode ---
 let laughing = [];
 //Make the laughing 2D array!!!
 for(let i=0; i<3; i++){
@@ -45,20 +70,6 @@ let surprising = [];
 for(let i=0; i<2; i++){
   surprising[i] = [];
 }
-
-
-let typingProbability;
-let notification = [];
-//Make the notification 2D array!!!
-for(let i=0; i<4; i++){
-  notification[i] = [];
-}
-
-
-let defaultIPhone;
-let textingIPhone;
-let pullediPhone = [];
-
 
 //Sounds
 let keySound = [];
@@ -89,7 +100,7 @@ let isDepressing = false;
 let isLaughing = false;
 let isIrritating = false;
 let isDisgusting = false;
-let isSurprising = false;
+let isSurprised = false;
 
 
 //To impliment transittion animation between action to action
@@ -99,16 +110,7 @@ let previousAction = "thinking";
 let intervalCount = 0;
 let randomNum = Math.random(450, 1800);
 
-//Non interest version
-let pRange0;
-let pRange1;
-let pRange2;
-let pRange3;
 
-//otherOriented version
-let model;
-let c_Mdl_Width;
-let c_Mdl_Height;
 
 canvas = p => {
 
@@ -280,9 +282,11 @@ canvas = p => {
 
     //This is the agent behaviors.
     //I'll make those ba able to switch in need.
-    // p.nonEmpathy(900);
-    p.emotionalTransference(600);
-    // p.otherOriented(900);
+
+    // p.mode_nonInterest(900);
+    p.mode_motorMimicry(900);
+    // p.mode_emotionalTransference(600);
+    // p.mode_otherOriented(900);
 
     iPhone.display();
     iPhone.notification(9000, 8999, "sustain", 0, 0.5);
@@ -397,7 +401,7 @@ canvas = p => {
       isLaughing = false;
       isIrritating = false;
       isDisgusting = false;
-      isSurprising = false;
+      isSurprised = false;
 
       //If the agent's emotion is positive and arosal
       if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] >= -p.PI/2 &&
@@ -449,7 +453,7 @@ canvas = p => {
           console.log("--- emotion ---");
           console.log("Agent is laughing");
         }else if (whichEmotion > pDefault + pHappy && whichEmotion <= 100) {
-          isSurprising = true;
+          isSurprised = true;
           console.log("--- emotion ---");
           console.log("Agent is surprised");
         }
@@ -575,7 +579,7 @@ canvas = p => {
     }
   }//emotionProbability finished
 
-  p.nonEmpathy = (duration) => {
+  p.mode_nonInterest = (duration) => {
       p.defaultActionChoicer(duration);
 
     //Agent actual actions below
@@ -589,11 +593,11 @@ canvas = p => {
     // agent.put_iPhone();
   }
 
-  p.motorMimicry = () => {
-
+  p.mode_motorMimicry = (duration) => {
+    // p.ellipse(faceCenter[0], faceCenter[1], 20, 20);
   }
 
-  p.emotionalTransference = (duration) => {
+  p.mode_emotionalTransference = (duration) => {
     p.defaultActionChoicer(duration);
 
     p.emotionProbability(duration);
@@ -610,8 +614,8 @@ canvas = p => {
         agent.irritating("thinking", p.random(3, 6));
       }else if(isDisgusting == true){
         agent.disgusting("thinking", 1);
-      }else if(isSurprising == true){
-        agent.surprising("thinking");
+      }else if(isSurprised == true){
+        agent.surprised("thinking");
       }
 
     }else if(isTyping == true){
@@ -626,8 +630,8 @@ canvas = p => {
         agent.irritating("typing", p.random(3, 6));
       }else if(isDisgusting == true){
         agent.disgusting("typing", 1);
-      }else if(isSurprising == true){
-        agent.surprising("typing");
+      }else if(isSurprised == true){
+        agent.surprised("typing");
       }
 
     }else if(isTexting == true){
@@ -639,7 +643,7 @@ canvas = p => {
     }
   }
 
-  p.otherOriented = (duration) => {
+  p.mode_otherOriented = (duration) => {
 
   }
 

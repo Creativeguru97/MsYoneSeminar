@@ -60,8 +60,10 @@ video.addEventListener("play", () => {
       surprised = detections[0].expressions.surprised;
       fearful = detections[0].expressions.fearful;
 
-      // faceCenter = [detections[0].landmarks.positions[30].x,
-      //               detections[0].landmarks.positions[30].y];
+      faceCenter = [detections[0].landmarks.positions[30].x,
+                    detections[0].landmarks.positions[30].y];
+
+
 
       // checkDisplacementTime++;
       // if(checkDisplacementTime > 10){
@@ -69,7 +71,7 @@ video.addEventListener("play", () => {
       // }
 
       // console.log(detections[0]);
-      // console.log(faceCenter);
+      console.log(faceCenter);
       // console.log(detections[0].landmarks.positions[34].x);
       // console.log(detections[0].landmarks.positions[34].y);
       // console.log("-----------------------");

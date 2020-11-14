@@ -20,6 +20,7 @@ class Agent{
     this.depressingFrame = 0;
     this.irritatingFrame = 0;
     this.disgustingFrame = 0;
+    this.surprisedFrame = 0;
 
 
     this.typing_L0 = false;
@@ -429,7 +430,6 @@ class Agent{
   irritating(currentAction, epoch){
     if(currentAction == "thinking"){
       if(previousAction == "thinking"){
-        console.log("hello");
         if(this.irritatingFrame < irritating[0].length * epoch){
           this.emotionAnimation(irritating[0], epoch);
         }else if(this.irritatingFrame >= irritating[0].length * epoch){
@@ -437,7 +437,6 @@ class Agent{
         }
 
       }else if(previousAction == "typing"){
-        console.log("hello");
         if(this.thinkingFrame < thinking_typing.length){
           this.thinking();
         }else if (this.thinkingFrame >= thinking_typing.length && this.thinkingFrame < irritating[0].length * epoch + thinking_typing.length) {
@@ -457,7 +456,6 @@ class Agent{
       }
     }else if (currentAction == "typing") {
       if(previousAction == "thinking"){
-        console.log("hello");
         if(this.typingFrame < thinking_typing.length){
           this.typing(8, "sustain", 0, 0.5);
         }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < irritating[1].length * epoch + thinking_typing.length) {
@@ -467,7 +465,6 @@ class Agent{
         }
 
       }else if(previousAction == "typing"){
-        console.log("hello");
         if(this.irritatingFrame < irritating[1].length * epoch){
           this.emotionAnimation(irritating[1], epoch);
         }else if(this.irritatingFrame >= irritating[1].length * epoch){
@@ -553,8 +550,69 @@ class Agent{
     this.disgustingFrame++;
   }
 
-  surprising(currentAction){
-    
+  surprised(currentAction){
+    if(currentAction == "thinking"){
+      if(previousAction == "thinking"){
+
+        if(this.surprisedFrame < surprised[0].length * epoch){
+          //Depressing move
+          this.emotionAnimation(surprised[0], epoch);
+        }else if (this.surprisedFrame >= surprised[0].length) {
+          this.thinking();
+        }
+
+      }else if (previousAction == "typing") {
+
+        if(this.thinkingFrame < thinking_typing.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_typing.length && this.thinkingFrame < surprised[0].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(surprised[0], epoch);
+        }else if (this.thinkingFrame >= surprised[0].length * epoch + thinking_typing.length) {
+          this.thinking();
+        }
+
+      }else if(previousAction == "texting"){
+        if(this.thinkingFrame < thinking_texting.length){
+          this.thinking();
+        }else if (this.thinkingFrame >= thinking_texting.length && this.thinkingFrame < surprised[0].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(surprised[0], epoch);
+        }else if (this.thinkingFrame >= surprised[0].length * epoch + thinking_texting.length) {
+          this.thinking();
+        }
+      }
+    }else if (currentAction == "typing") {
+      if(previousAction == "thinking"){
+
+        if(this.typingFrame < thinking_typing.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_typing.length && this.typingFrame < surprised[1].length * epoch + thinking_typing.length) {
+          this.emotionAnimation(surprised[1], epoch);
+        }else if (this.typingFrame >= surprised[1].length * epoch + thinking_typing.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
+
+      }else if (previousAction == "typing") {
+
+        if(this.surprisedFrame < surprised[1].length * epoch){
+          this.emotionAnimation(surprised[1], epoch);
+        }else if(this.surprisedFrame >= surprised[1].length * epoch){
+          this.typing(8, "sustain", 0, 0.5);
+        }
+
+      }else if(previousAction == "texting"){
+
+        if(this.typingFrame < thinking_texting.length){
+          this.typing(8, "sustain", 0, 0.5);
+        }else if (this.typingFrame >= thinking_texting.length && this.typingFrame < surprised[1].length * epoch + thinking_texting.length) {
+          this.emotionAnimation(surprised[1], epoch);
+        }else if (this.typingFrame >= surprised[1].length * epoch + thinking_texting.length) {
+          this.typing(8, "sustain", 0, 0.5);
+        }
+
+      }//previousAction == "texting"...end
+    }//currentAction == "typing"...end
+
+    this.surprisedFrame++;
   }
 
 }
