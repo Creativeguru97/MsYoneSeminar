@@ -42,6 +42,11 @@ let pullediPhone = [];
 
 //-- Motor mimicry mode ---
 let mimicking = [];
+for(let i=0; i<2; i++){
+  mimicking[i] = [];
+}
+
+let margin = 60;
 
 
 //-- Emotional transference mode ---
@@ -163,35 +168,41 @@ canvas = p => {
       thinking_typing[i] = p.loadImage("animations/thinking_typing/" + p.nf(i, 3) + ".png");
     }
 
-    for(let i=0; i<3; i++){
-      for(let j=0; j<7; j++){
-        laughing[i][j] = p.loadImage("animations/agent_laughing/"+i+"/"+ p.nf(j, 2) + ".png");
+    for(let i=0; i<2; i++){
+      for(let j=0; j<61; j++){
+        mimicking[i][j] = p.loadImage("animations/agent_motorMimicry/"+i+"/"+ p.nf(j, 3) + ".png");
       }
     }
 
-    for(let i=0; i<2; i++){
-      for(let j=0; j<271; j++){
-        depressing[i][j] = p.loadImage("animations/agent_depressing/"+i+"/"+ p.nf(j, 4) + ".png");
-      }
-    }
-
-    for(let i=0; i<2; i++){
-      for(let j=0; j<9; j++){
-        irritating[i][j] = p.loadImage("animations/agent_irritating/"+i+"/"+ p.nf(j, 2) + ".png");
-      }
-    }
-
-    for(let i=0; i<2; i++){
-      for(let j=0; j<121; j++){
-        disgusting[i][j] = p.loadImage("animations/agent_disgusting/"+i+"/"+ p.nf(j, 4) + ".png");
-      }
-    }
-
-    for(let i=0; i<2; i++){
-      for(let j=0; j<91; j++){
-        surprising[i][j] = p.loadImage("animations/agent_surprising/"+i+"/"+ p.nf(j, 3) + ".png");
-      }
-    }
+    // for(let i=0; i<3; i++){
+    //   for(let j=0; j<7; j++){
+    //     laughing[i][j] = p.loadImage("animations/agent_laughing/"+i+"/"+ p.nf(j, 2) + ".png");
+    //   }
+    // }
+    //
+    // for(let i=0; i<2; i++){
+    //   for(let j=0; j<271; j++){
+    //     depressing[i][j] = p.loadImage("animations/agent_depressing/"+i+"/"+ p.nf(j, 4) + ".png");
+    //   }
+    // }
+    //
+    // for(let i=0; i<2; i++){
+    //   for(let j=0; j<9; j++){
+    //     irritating[i][j] = p.loadImage("animations/agent_irritating/"+i+"/"+ p.nf(j, 2) + ".png");
+    //   }
+    // }
+    //
+    // for(let i=0; i<2; i++){
+    //   for(let j=0; j<121; j++){
+    //     disgusting[i][j] = p.loadImage("animations/agent_disgusting/"+i+"/"+ p.nf(j, 4) + ".png");
+    //   }
+    // }
+    //
+    // for(let i=0; i<2; i++){
+    //   for(let j=0; j<91; j++){
+    //     surprising[i][j] = p.loadImage("animations/agent_surprising/"+i+"/"+ p.nf(j, 3) + ".png");
+    //   }
+    // }
 
     for(let i=0; i<4; i++){
       for(let j=0; j<181; j++){
@@ -269,6 +280,8 @@ canvas = p => {
       console.log("----------");
     }
 
+
+
     //Add all of ambient sounds
     world.ambience();
   }
@@ -284,7 +297,7 @@ canvas = p => {
     //I'll make those ba able to switch in need.
 
     // p.mode_nonInterest(900);
-    p.mode_motorMimicry(900);
+    p.mode_motorMimicry();
     // p.mode_emotionalTransference(600);
     // p.mode_otherOriented(900);
 
@@ -296,8 +309,6 @@ canvas = p => {
     p.image(flares[0], 1118, 102, 1600 * 1.5, 889 * 1.5);
     p.image(flares[1], 497, 285, 1600 * 0.2, 1333 * 0.2);
     p.image(flares[2], 932, 280, 1600 * 0.2, 1333 * 0.2);
-
-    model.show();
   }
 
   // p.actionDuration = (min, max) => {
@@ -593,14 +604,19 @@ canvas = p => {
     // agent.put_iPhone();
   }
 
-  p.mode_motorMimicry = (duration) => {
-    // p.ellipse(faceCenter[0], faceCenter[1], 20, 20);
+  p.mode_motorMimicry = () => {
+    isTexting = false;
+    isTyping = true;
+    agent.mimic();
   }
 
   p.mode_emotionalTransference = (duration) => {
+
     p.defaultActionChoicer(duration);
 
     p.emotionProbability(duration);
+
+    model.show();//Display the circumplex coordinate of user's emotion.
 
     if(isThinking == true){
 

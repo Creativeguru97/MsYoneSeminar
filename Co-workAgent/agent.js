@@ -11,10 +11,28 @@ class Agent{
 
     this.samplingTime = 0;
 
+    this.isTypingSomething = false;
+    this.isScrolling = false;
+    this.isTappingSomething = false;
+
+    this.intervalCount = 0;
+    this.randomNum = 10;
+
+    //For motor mimic mode.
+    this.left_right_index = [30, 30, 30, 30, 30, 30];
+    //I set 30 as default sinse agent sit exactly vertical.
+    this.l_r_avg_index = 30;
+
     //To store elapsed time of each action state
     this.thinkingFrame = 0;
     this.typingFrame = 0;
     this.textingFrame = 0;
+
+
+    this.typing_L0 = false;
+    this.typing_L1 = false;
+    this.typing_R0 = false;
+
     //To store elapsed time of each emotion state
     this.laughingFrame = 0;
     this.depressingFrame = 0;
@@ -22,19 +40,7 @@ class Agent{
     this.disgustingFrame = 0;
     this.surprisedFrame = 0;
 
-
-    this.typing_L0 = false;
-    this.typing_L1 = false;
-    this.typing_R0 = false;
-
     this.epochCount = 0;
-
-    this.isTypingSomething = false;
-    this.isScrolling = false;
-    this.isTappingSomething = false;
-
-    this.intervalCount = 0;
-    this.randomNum = 10;
   }
 
   interval(min, max){
@@ -296,6 +302,28 @@ class Agent{
       }
     }
     this.textingFrame++;
+  }
+
+
+  mimic(){
+    if(faceCenter != undefined){
+      let value = myp5.map(faceCenter[0], 0+margin, video.width-margin, 0, 60);
+      if(value > 60) value = 60;
+      if(value < 0) value = 0;
+
+      this.left_right_index.push(value);//Adds new valut to the end of this array,
+      if(this.left_right_index.length > 6){
+        this.left_right_index.splice(0, 1);//Erase index 0
+      }
+    }
+
+    let sum = 0;
+    for(let i=0; i<this.left_right_index.length; i++){
+      sum += this.left_right_index[i];
+    }
+    this.l_r_avg_index = myp5.int(sum/this.left_right_index.length);//Calculate the average
+
+    myp5.image(mimicking[0][this.l_r_avg_index], 480, 270, 960, 540);
   }
 
 

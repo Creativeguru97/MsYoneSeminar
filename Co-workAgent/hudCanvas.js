@@ -30,7 +30,6 @@ canvas0 = p => { //let canvas0 = function(p){...
     p.clear();
     p.emotionalStatesHUD(25, 250);
 
-    p.ellipse(faceCenter[0], faceCenter[1], 20, 20);
   }
 
   p.emotionalStatesHUD = (x, y) => {
