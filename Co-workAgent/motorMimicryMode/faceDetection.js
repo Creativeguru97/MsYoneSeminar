@@ -53,3 +53,72 @@ video.addEventListener("play", () => {
       // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
   }, 200)
 })
+
+// // ml5 Face Detection Model
+// let faceapi;
+// let detections = [];
+//
+// // Video
+// let video;
+//
+// //Emotional states
+// let expressions;
+// let neutral;
+// let happy;
+// let angry;
+// let sad;
+// let disgusted;
+// let surprised;
+// let fearful;
+//
+// let faceCenter = [];
+//
+//
+// canvasD = p => {
+//   p.setup = () => {
+//     // p.createCanvas(640, 360);
+//
+//     // Creat the video and start face tracking
+//     video = p.createCapture(p.VIDEO);
+//     // video.size(width, height);
+//     video.size(480, 360);
+//     video.id('video');
+//     // Only need landmarks for this example
+//     const faceOptions = { withLandmarks: true, withExpressions: true, withDescriptors: false };
+//     faceapi = ml5.faceApi(video, faceOptions, p.faceReady);
+//
+//     // setInterval(() => {
+//     //   faceapi.detect(gotFaces);
+//     // }, 200);
+//   }
+//
+//   // Start detecting faces
+//   p.faceReady = () => {
+//     faceapi.detect(p.gotFaces);
+//   }
+//
+//   // Got faces
+//   p.gotFaces = (error, result) => {
+//     if (error) {
+//       console.log(error);
+//       return;
+//     }
+//     detections = result;
+//     faceapi.detect(p.gotFaces);
+//
+//     expressions = detections[0].expressions;
+//     neutral = detections[0].expressions.neutral;
+//     happy = detections[0].expressions.happy;
+//     angry = detections[0].expressions.angry;
+//     sad = detections[0].expressions.sad;
+//     disgusted = detections[0].expressions.disgusted;
+//     surprised = detections[0].expressions.surprised;
+//     fearful = detections[0].expressions.fearful;
+//
+//     faceCenter = [detections[0].landmarks.positions[30].x,
+//                   detections[0].landmarks.positions[30].y];
+//
+//   }
+// }
+//
+// let myp53 = new p5(canvasD);

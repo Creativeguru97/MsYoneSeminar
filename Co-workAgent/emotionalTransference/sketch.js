@@ -254,13 +254,6 @@ canvas = p => {
 
       let whichAction = p.int(p.random(0, 100));
 
-      //This value represent a need for checking social media.
-      //The more unread messsage, more become want to check it.
-      let instantGratification = iPhone.UnreadMessagesNum * 2.5;
-      if(instantGratification > 60){
-        instantGratification = 60;
-      }else{}
-
       //Which is normal condition
       if(isThinking == true){
         pRange0 = 70;
@@ -270,7 +263,6 @@ canvas = p => {
         pRange1 = 100;
       }
 
-      console.log("instantGratification: "+instantGratification);
       console.log("Next action probability: ");
       console.log("thinking: " + pRange0 + "%");
       console.log("typing: " + p.str(pRange1 - pRange0) + "%");
@@ -301,8 +293,10 @@ canvas = p => {
       agent.emotionArrayIndex = 0;
 
       agent.epochCount = 0;//reinitialize for loopAnimation()
+      agent.laughingFrame = 0;
       agent.irritatingFrame = 0;
       agent.depressingFrame = 0;
+      agent.surprisedFrame = 0;
 
       //Iniciating all booleans
       isDefaultState = false;
@@ -508,7 +502,7 @@ canvas = p => {
       }else if(isDisgusting == true){
         agent.disgusting("thinking", 1);
       }else if(isSurprised == true){
-        agent.surprised("thinking");
+        agent.surprised("thinking", 1);
       }
 
     }else if(isTyping == true){
@@ -524,7 +518,7 @@ canvas = p => {
       }else if(isDisgusting == true){
         agent.disgusting("typing", 1);
       }else if(isSurprised == true){
-        agent.surprised("typing");
+        agent.surprised("typing", 1);
       }
 
     }

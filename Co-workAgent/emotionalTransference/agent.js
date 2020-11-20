@@ -398,7 +398,7 @@ class Agent{
     this.disgustingFrame++;
   }
 
-  surprised(currentAction){
+  surprised(currentAction, epoch){
     if(currentAction == "thinking"){
       if(previousAction == "thinking"){
 
