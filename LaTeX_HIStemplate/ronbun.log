@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  12 FEB 2020 23:59
+This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  24 NOV 2020 00:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -128,162 +128,22 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 44.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 44.
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <7> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 49.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <7> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 49.
-
-
-LaTeX Warning: Citation `manabe' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `kanbara' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `display' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `rekimoto' on page 1 undefined on input line 49.
-
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 49.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 49.
-
-LaTeX Warning: Citation `hoshi' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `fran' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `ikea' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `ifip' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `ogawa' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `akahori' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `okumura' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `kokuban' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `suzuki' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `2005' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `environment' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `koizumi' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `hasegawa' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `ict' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `takezawa' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `okano' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `toida' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `terao' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `okano' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `rekishi' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Citation `hujimoto' on page 1 undefined on input line 57.
 
 [1
 
 
 ]
+No file ronbun.bbl.
+[2
 
-LaTeX Warning: Citation `hujimoto' on page 2 undefined on input line 63.
-
-
-LaTeX Warning: Citation `brien' on page 2 undefined on input line 63.
-
-
-LaTeX Warning: Citation `magic' on page 2 undefined on input line 65.
-
-
-LaTeX Warning: Citation `maekawa' on page 2 undefined on input line 65.
-
-
-LaTeX Warning: Citation `oaks' on page 2 undefined on input line 66.
-
-
-LaTeX Warning: Citation `tsuji' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `oomu' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `wbt' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `takahasi' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `komatsu' on page 2 undefined on input line 75.
-
-
-LaTeX Warning: Citation `setozaki' on page 2 undefined on input line 75.
-
-[2]
-
-LaTeX Warning: Reference `fig:image3' on page 3 undefined on input line 81.
-
-
-LaTeX Warning: Reference `fig:flow2' on page 3 undefined on input line 81.
-
-
-./ronbun.tex:85: LaTeX Error: File `image3' not found.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.85 {image3}
-             
-? 
-./ronbun.tex:85: Emergency stop.
- ...                                              
-                                                  
-l.85 {image3}
-             
-I could not locate the file with any of these extensions:
-.pdf,.PDF,.ai,.AI,.png,.PNG,.jpg,.JPG,.jpeg,.JPEG,.jp2,.JP2,.jpf,.JPF,.bmp,.BMP
-,.ps,.PS,.eps,.EPS,.mps,.MPS,.pz,.eps.Z,.ps.Z,.ps.gz,.eps.gz
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
- 
+] (./ronbun.aux) ) 
 Here is how much of TeX's memory you used:
- 964 strings out of 493223
- 10840 string characters out of 6144416
- 87865 words of memory out of 5000000
- 4960 multiletter control sequences out of 15000+600000
- 21873 words of font info for 88 fonts, out of 8000000 for 9000
+ 914 strings out of 493223
+ 10370 string characters out of 6144416
+ 83865 words of memory out of 5000000
+ 4944 multiletter control sequences out of 15000+600000
+ 19827 words of font info for 80 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 30i,10n,28p,1277b,363s stack positions out of 5000i,500n,10000p,200000b,80000s
-Output written on ronbun.dvi (2 pages, 19568 bytes).
+ 30i,10n,21p,671b,363s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on ronbun.dvi (2 pages, 12464 bytes).

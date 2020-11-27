@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  3 JUN 2020 18:03
+This is e-pTeX, Version 3.14159265-p3.8.2-190131-2.6 (utf8.euc) (TeX Live 2019) (preloaded format=platex 2019.5.8)  24 NOV 2020 00:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -39,12 +39,11 @@ hisken.cls; Version 1.0 [Jun. 13, 2007]
 \c@PROFILE=\count95
 \@heightofprofile=\dimen127
 \@profile=\box49
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty
-Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
-
-(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks15
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
 )
 (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
@@ -60,17 +59,19 @@ Package graphics Info: Driver file: dvipdfmx.def on input line 99.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-def/dvipdfmx.def
 File: dvipdfmx.def 2017/06/24 v5.0g Graphics/color driver for dvipdfmx
 ))
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/epsfig.sty
+Package: epsfig 2017/06/25 v1.7b (e)psfig emulation (SPQR)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+)
 \Gin@req@height=\dimen128
 \Gin@req@width=\dimen129
 )
-(/usr/local/texlive/2019/texmf-dist/tex/latex/base/latexsym.sty
-Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
-\symlasy=\mathgroup4
-LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
-(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
-)
-(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/epsfig.sty
-Package: epsfig 2017/06/25 v1.7b (e)psfig emulation (SPQR)
 \epsfxsize=\dimen130
 \epsfysize=\dimen131
 )
@@ -146,19 +147,22 @@ File: detection00.png Graphic file (type bmp)
  [3]
 File: StrangerAgent_hardware.png Graphic file (type bmp)
 <StrangerAgent_hardware.png>
-File: IntimateAgent_hardware.png Graphic file (type bmp)
-<IntimateAgent_hardware.png>
 
 [4]
+File: IntimateAgent_hardware.png Graphic file (type bmp)
+<IntimateAgent_hardware.png>
 File: IntimaterAgent_software.png Graphic file (type bmp)
 <IntimaterAgent_software.png>
+ [5]
 File: Speaker.png Graphic file (type bmp)
 <Speaker.png>
 File: CircumplexModel.png Graphic file (type bmp)
 <CircumplexModel.png>
- [5]
+ [6]
 No file ronbun.bbl.
-[6] (./ronbun.aux)
+[7
+
+] (./ronbun.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -166,10 +170,10 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  953 strings out of 493223
  11199 string characters out of 6144416
- 85813 words of memory out of 5000000
+ 86865 words of memory out of 5000000
  4969 multiletter control sequences out of 15000+600000
  19827 words of font info for 80 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 26i,10n,23p,948b,433s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,10n,23p,948b,433s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on ronbun.dvi (6 pages, 44532 bytes).
+Output written on ronbun.dvi (7 pages, 44696 bytes).
