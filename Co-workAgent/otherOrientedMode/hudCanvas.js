@@ -29,7 +29,7 @@ canvas0 = p => { //let canvas0 = function(p){...
 
     p.clear();
     p.emotionalStatesHUD(25, 250);
-      // 
+      //
       // if (detections.length > 0) {
       //   let points = detections[0].landmarks.positions;
       //   for (let i = 0; i < points.length; i++) {

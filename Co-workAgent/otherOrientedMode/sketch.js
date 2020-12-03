@@ -47,11 +47,10 @@ let isTyping = false;
 
 //User emotional emotionalStates
 let isDefaultState = true;
-let isDepressing = false;
 let isLaughing = false;
-let isIrritating = false;
-let isDisgusting = false;
-let isSurprised = false;
+let isCaring = false;
+
+let maxEValue = [0, 0, 0, 0, 0, 0];//To store all emoitons value in last 20 seconds
 
 //To impliment transittion animation between action to action
 //I need to store current action for later.
@@ -226,34 +225,36 @@ canvas = p => {
 
 
   p.emotionProbability = (duration) => {
-    if (p.frameCount % duration == 0) {
+    /*
+    In this function, we calculate the probability of thenext agent state.
+    May be I should've written this in the class Circumplex_model();
+    More specifically, I convert the distance between current agent emotion's
+    location and each emotion polar into probabilities.
 
-      agent.index = 0;//Re initialize
-      agent.emotionArrayIndex = 0;
+    The argorithms is quite arbitrary.
+    1: caculate distances between current emotion location and
+      every emotion polar (but except neutral)  in each 6 frames.
+    2: Divide a arbitrary number with the distance value.
+      The number should be bigger than the dist.
+    3: Add the divided value to correspond index in maxEvalue[];
 
-      agent.epochCount = 0;//reinitialize for loopAnimation()
+    4: In every 20 seconds, store the values in every index of the
+      maxEValue[] in the valiable Indivisually.
+      4-1: divide 100 with sum of every index of the maxEValue[];
+    5: Multiply the each valiable with the divided number.
+        This process 4 to 5 shrink the values in every index of the
+        maxEValue[] into 0 to 100.
+        After the mapping, the sum should be 100 and that allow us
+        to use the final values as probabilities.
 
-      agent.laughingFrame = 0;
-      agent.caringFrame = 0;
+        Hope you've made sense...
+    */
 
-      //Iniciating all booleans
-      isDefaultState = false;
-      isDepressing = false;
-      isLaughing = false;
-      isIrritating = false;
-      isDisgusting = false;
-      isSurprised = false;
+    if (p.frameCount % 6 == 0) {
 
       //If the agent's emotion is positive and arosal
       if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] >= -p.PI/2 &&
       model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < 0){
-
-        let dDefault = p.dist(
-          model.agentEmotionPosition.x,
-          model.agentEmotionPosition.y,
-          model.neutralPolar.x,
-          model.neutralPolar.y
-        );
 
         let dHappy = p.dist(
           model.agentEmotionPosition.x,
@@ -269,46 +270,19 @@ canvas = p => {
           model.surprisedPolar.y
         );
 
-        let pDefault = model.radius * p.sqrt(2) / dDefault;
-        let pHappy = model.radius * p.sqrt(2) / dHappy;
-        let pSurprised = model.radius * p.sqrt(2) / dSurprised;
+        if(happy * 100 >= 10){
+          let addHappy = model.radius * p.sqrt(2) / p.max(1, dHappy);
+          maxEValue[0] += addHappy;
+        }else{}
 
-
-        let multiRatio = 100 / (pDefault + pHappy + pSurprised);
-        pDefault = pDefault * multiRatio;
-        pHappy = pHappy * multiRatio;
-        pSurprised = pSurprised * multiRatio;
-
-        console.log("--- emotion probabilities ---");
-        console.log("pDefault: " + pDefault);
-        console.log("pHappy: " + pHappy);
-        console.log("pSurprised: " + pSurprised);
-
-        let whichEmotion = p.int(p.random(0, 100));
-        if(whichEmotion <= pDefault){
-          isDefaultState = true;
-          console.log("--- emotion ---");
-          console.log("Agent is default state");
-        }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pHappy) {
-          isLaughing = true;
-          console.log("--- emotion ---");
-          console.log("Agent is laughing");
-        }else if (whichEmotion > pDefault + pHappy && whichEmotion <= 100) {
-          isSurprised = true;
-          console.log("--- emotion ---");
-          console.log("Agent is surprised");
-        }
+        if(surprised * 100 >= 10){
+          let addSurprised = model.radius * p.sqrt(2) / p.max(1, dSurprised);
+          maxEValue[4] += addSurprised;
+        }else{}
 
         //If the agent's emotion is negative and arosal
       }else if (model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > -p.PI &&
       model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < -p.PI/2) {
-
-        let dDefault = p.dist(
-          model.agentEmotionPosition.x,
-          model.agentEmotionPosition.y,
-          model.neutralPolar.x,
-          model.neutralPolar.y
-        );
 
         let dAngry = p.dist(
           model.agentEmotionPosition.x,
@@ -317,74 +291,42 @@ canvas = p => {
           model.angryPolar.y
         );
 
-        let dFear = p.dist(
+        let dFearful = p.dist(
           model.agentEmotionPosition.x,
           model.agentEmotionPosition.y,
           model.fearfulPolar.x,
           model.fearfulPolar.y
         );
 
-        let dDisgust = p.dist(
+        let dDisgusted = p.dist(
           model.agentEmotionPosition.x,
           model.agentEmotionPosition.y,
           model.disgustedPolar.x,
           model.disgustedPolar.y
         );
 
-        let pDefault = model.radius * p.sqrt(2) / dDefault;
-        let pAngry = model.radius * p.sqrt(2) / dAngry;
-        let pFear = model.radius * p.sqrt(2) / dFear;
-        let pDisgust = model.radius * p.sqrt(2) / dDisgust;
+        if(angry * 100 >= 10){
+          let addAngry = model.radius * p.sqrt(2) / p.max(1, dAngry);
+          maxEValue[1] += addAngry;
+        }else{}
 
+        if(fearful * 100 >= 10){
+          let addFearful = model.radius * p.sqrt(2) / p.max(1, dFearful);
+          maxEValue[5] += addFearful;
+        }else{}
 
-        let multiRatio = 100 / (pDefault + pAngry + pFear + pDisgust);
-        pDefault = pDefault * multiRatio;
-        pAngry = pAngry * multiRatio;
-        pFear = pFear * multiRatio;
-        pDisgust = pDisgust * multiRatio;
-
-        console.log("-----------");
-        console.log("pDefault: " + pDefault);
-        console.log("pAngry: " + pAngry);
-        console.log("pFear: " + pFear);
-        console.log("pDisgust: " + pDisgust);
-
-        let whichEmotion = p.int(p.random(0, 100));
-        if(whichEmotion <= pDefault){
-          isDefaultState = true;
-          console.log("--- emotion ---");
-          console.log("Agent is default state");
-        }else if (whichEmotion > pDefault && whichEmotion <= pDefault + pAngry) {
-
-          isIrritating = true;
-          console.log("--- emotion ---");
-          console.log("Agent is irritating");
-        }else if (whichEmotion > pDefault + pAngry && whichEmotion <= pDefault + pAngry + pFear) {
-          isDisgusting = true;
-          console.log("--- emotion ---");
-          console.log("Agent is fearful");
-        }else if (whichEmotion > pDefault + pAngry + pFear && whichEmotion <= 100) {
-          isDisgusting = true;
-          console.log("--- emotion ---");
-          console.log("Agent is disgusted");
-        }
+        if(disgusted * 100 >= 10){
+          let addDisgusted = model.radius * p.sqrt(2) / p.max(1, dDisgusted);
+          maxEValue[3] += addDisgusted;
+        }else{}
 
       //If the agent's emotion is positive and unarosal
       }else if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > 0 &&
       model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < p.PI/2) {
 
-        isDefaultState = true;
-
       //If the agent's emotion is negative and unarosal
       }else if(model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] > p.PI/2 &&
       model.CtoP(model.agentEmotionPosition.x, model.agentEmotionPosition.y)[1] < p.PI) {
-
-        let dDefault = p.dist(
-          model.agentEmotionPosition.x,
-          model.agentEmotionPosition.y,
-          model.neutralPolar.x,
-          model.neutralPolar.y
-        );
 
         let dSad = p.dist(
           model.agentEmotionPosition.x,
@@ -393,75 +335,116 @@ canvas = p => {
           model.sadPolar.y
         );
 
-        let pDefault = model.radius * p.sqrt(2) / dDefault;
-        let pSad = model.radius * p.sqrt(2) / dSad;
+        if(sad * 100 >= 10){
+          let addSad = model.radius * p.sqrt(2) / p.max(1, dSad);
+          maxEValue[2] += addSad;
+        }
+      }
+
+      console.log(maxEValue);
+    }
 
 
-        let multiRatio = 100 / (pDefault + pSad);
-        pDefault = pDefault * multiRatio;
+    if (p.frameCount % duration == 0){
+
+      agent.index = 0;//Re initialize
+      agent.emotionArrayIndex = 0;
+
+      agent.epochCount = 0;//reinitialize for loopAnimation()
+
+      agent.laughingFrame = 0;
+      agent.caringFrame = 0;
+
+      //Iniciating all booleans
+      isDefaultState = false;
+      isLaughing = false;
+      isCaring = false;
+
+
+      let pHappy = maxEValue[0];
+      let pAngry = maxEValue[1];
+      let pSad = maxEValue[2];
+      let pDisgusted = maxEValue[3];
+      let pSurprised = maxEValue[4];
+      let pFearful = maxEValue[5];
+
+      let sum = 0;
+      for(let i=0; i<maxEValue.length; i++){
+        sum += maxEValue[i];
+      }
+
+      if(sum == 0){
+        isDefaultState = true;
+        isLaughing = false;
+        isCaring = false;
+
+
+      }else if (sum > 0) {
+        let multiRatio = 100 / (
+          // pDefault +
+          pHappy +
+          pAngry +
+          pSad +
+          pDisgusted +
+          pSurprised +
+          pFearful
+        );
+
+        // pDefault = pDefault * multiRatio;
+        pHappy = pHappy * multiRatio;
+        pAngry = pAngry * multiRatio;
         pSad = pSad * multiRatio;
+        pDisgusted = pDisgusted * multiRatio;
+        pSurprised = pSurprised * multiRatio;
+        pFearful = pFearful * multiRatio;
 
-        console.log("-----------");
-        console.log("pDefault: " + pDefault);
-        console.log("pSad: " + pSad);
+        console.log("-- probabilities ---");
+        console.log("pHappy: "+pHappy);
+        console.log("pAngry: "+pAngry);
+        console.log("pSad: "+pSad);
+        console.log("pDisgusted: "+pDisgusted);
+        console.log("pSurprised: "+pSurprised);
+        console.log("pFearful: "+pFearful);
+        console.log("-- sum ---");
+        console.log(pHappy+pAngry+pSad+pDisgusted+pSurprised+pFearful);
 
         let whichEmotion = p.int(p.random(0, 100));
-        if(whichEmotion <= pDefault){
-          isDefaultState = true;
-          console.log("--- emotion ---");
-          console.log("Agent is default state");
-        }else if (whichEmotion > pDefault && whichEmotion <= 100){
-          isDepressing = true;
-          console.log("--- emotion ---");
-          console.log("Agent is isDepressing");
+        if(whichEmotion <= pHappy){
+          isDefaultState = false;
+          isLaughing = true;
+          isCaring = false;
+        }else if (whichEmotion > pHappy && whichEmotion <= pHappy + pAngry) {
+          isDefaultState = false;
+          isLaughing = false;
+          isCaring = true;
+        }else if (whichEmotion > pHappy + pAngry && whichEmotion <= pHappy + pAngry + pSad) {
+          isDefaultState = false;
+          isLaughing = false;
+          isCaring = true;
+        }else if (whichEmotion > pHappy + pAngry + pSad &&
+        whichEmotion <= pHappy + pAngry + pSad + pDisgusted) {
+          isDefaultState = false;
+          isLaughing = false;
+          isCaring = true;
+        }else if (whichEmotion > pHappy + pAngry + pSad + pDisgusted &&
+        whichEmotion <= pHappy + pAngry + pSad + pDisgusted + pSurprised) {
+          isDefaultState = false;
+          isLaughing = false;
+          isCaring = true;
+        }else if (whichEmotion > pHappy + pAngry + pSad + pDisgusted + pSurprised &&
+        whichEmotion <= 100) {
+          isDefaultState = false;
+          isLaughing = false;
+          isCaring = true;
         }
-
-      }
-    }
-  }//emotionProbability finished
-
-
-  p.mode_emotionalTransference = (duration) => {
-    p.defaultActionChoicer(duration);
-
-    p.emotionProbability(duration);
-
-    model.show();//Display the circumplex coordinate of user's emotion.
-
-    if(isThinking == true){
-
-      if(isDefaultState == true){
-        agent.thinking();
-      }else if(isLaughing == true){
-        agent.laughing("thinking", p.int(p.random(6, 10)));
-      }else if(isDepressing == true){
-        agent.depressing("thinking", 1);
-      }else if(isIrritating == true){
-        agent.irritating("thinking", p.int(p.random(3, 6)));
-      }else if(isDisgusting == true){
-        agent.disgusting("thinking", 1);
-      }else if(isSurprised == true){
-        agent.surprised("thinking");
       }
 
-    }else if(isTyping == true){
-
-      if(isDefaultState == true){
-        agent.typing(8, "sustain", 0, 0.5);
-      }else if(isLaughing == true){
-        agent.laughing("typing", p.int(p.random(6, 10)));
-      }else if(isDepressing == true){
-        agent.depressing("typing", 1);
-      }else if(isIrritating == true){
-        agent.irritating("typing", p.int(p.random(3, 6)));
-      }else if(isDisgusting == true){
-        agent.disgusting("typing", 1);
-      }else if(isSurprised == true){
-        agent.surprised("typing");
+      for(let i=0; i<maxEValue.length; i++){
+        maxEValue[i] = 0;
       }
+    }//p.frameCount % duration == 0 end
 
-    }
-  }
+  }//emotionProbability end
 
   p.mode_otherOriented = (duration) => {
     p.emotionProbability(duration);
@@ -470,16 +453,9 @@ canvas = p => {
       agent.thinking();
     }else if(isLaughing == true){
       agent.laughing(8);
-    }else if(isDepressing == true){
-      agent.caring();
-    }else if(isIrritating == true){
-      agent.caring();
-    }else if(isDisgusting == true){
-      agent.caring();
-    }else if(isSurprised == true){
+    }else if(isCaring == true){
       agent.caring();
     }
-
   }
 
 
