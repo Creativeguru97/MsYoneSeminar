@@ -76,6 +76,7 @@ class Agent{
 
   emotionAnimation(animationArray, epoch){
     myp5.image(animationArray[this.emotionArrayIndex], 480, 270, 960, 540);
+    console.log("emotionArrayIndex"+this.emotionArrayIndex);
 
     //epochCount is reseted everytime in emotionProbability() in sketch.js!
     if(this.epochCount < epoch){
@@ -99,9 +100,9 @@ class Agent{
           index_ = index;
         }
 
-        console.log("soundArray: "+soundArray);
+        console.log(soundArray);
         console.log("soundArray.length: "+soundArray.length);
-        console.log("index_"+index_);
+        console.log("index_: "+index_);
 
         soundArray[index_].playMode(mode);
         soundArray[index_].setVolume(volume);
@@ -178,7 +179,7 @@ class Agent{
             console.log("previousAction is changed to thinking.");
           }
         }else if (isIrritating == true) {
-          if(this.thinkingFrame == actionDuration - irritating[0].length*6){
+          if(this.thinkingFrame == actionDuration - irritating[0].length*6+10){
             previousAction = "thinking";
             console.log("previousAction is changed to thinking.");
           }
@@ -222,7 +223,7 @@ class Agent{
         myp5.image(thinking[0], 480, 270, 960, 540);
       }
     }
-    console.log(this.thinkingFrame);
+    // console.log(this.thinkingFrame);
     this.thinkingFrame++;
   }
 
@@ -334,7 +335,7 @@ class Agent{
           console.log("previousAction is changed to typing.");
         }
       }else if (isIrritating == true) {
-        if(this.typingFrame == actionDuration - irritating[0].length*6){
+        if(this.typingFrame == actionDuration - irritating[0].length*6+10){
           previousAction = "typing";
           console.log("previousAction is changed to typing.");
         }
@@ -421,7 +422,7 @@ class Agent{
       this.pNoiseOffset = this.cNoiseOffset;
       this.samplingTime++;
     }
-    console.log(this.typingFrame);
+    // console.log(this.typingFrame);
     this.typingFrame++;
   }
 
@@ -504,7 +505,7 @@ class Agent{
           //Depressing move
           this.emotionAnimation(depressing[0], epoch);
           if(this.depressingFrame == 5){
-            this.emotionSound(depressingVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(depressingVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
         }else if (this.depressingFrame >= depressing[0].length * epoch) {
           this.thinking();
@@ -518,7 +519,7 @@ class Agent{
           this.emotionAnimation(depressing[0], epoch);
 
           if(this.depressingFrame == thinking_typing.length + 5){
-            this.emotionSound(depressingVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(depressingVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
 
         }else if (this.depressingFrame >= depressing[0].length * epoch + thinking_typing.length) {
@@ -535,7 +536,7 @@ class Agent{
           this.emotionAnimation(depressing[1], epoch);
 
           if(this.depressingFrame == thinking_typing.length + 5){
-            this.emotionSound(depressingVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(depressingVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
 
         }else if (this.depressingFrame >= depressing[1].length * epoch + thinking_typing.length) {
@@ -565,9 +566,16 @@ class Agent{
         if(this.irritatingFrame < irritating[0].length * epoch){
           this.emotionAnimation(irritating[0], epoch);
 
-          if(this.irritatingFrame == irritating[0].length){
-            this.emotionSound(irritatingVoice, "random", epoch, irritating[0].length, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          if(this.irritatingFrame == 1){
+            this.emotionSound(irritatingVoice, "random", 1, 1, 0.3, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
+          if(this.irritatingFrame == irritating[0].length - 1){
+            this.soundEpochCount = 0;
+          }
+          if(this.irritatingFrame >= irritating[0].length && this.irritatingFrame < irritating[0].length * epoch){
+            this.emotionSound(hitTableSound, 0, epoch, irritating[0].length, 1.0, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          }
+
         }else if(this.irritatingFrame >= irritating[0].length * epoch){
           this.thinking();
         }
@@ -578,9 +586,16 @@ class Agent{
         }else if (this.irritatingFrame >= thinking_typing.length && this.irritatingFrame < irritating[0].length * epoch + thinking_typing.length) {
           this.emotionAnimation(irritating[0], epoch);
 
-          if(this.irritatingFrame == thinking_typing.length + irritating[0].length){
-            this.emotionSound(irritatingVoice, "random", epoch, irritating[0].length, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          if(this.irritatingFrame == thinking_typing.length + 1){
+            this.emotionSound(irritatingVoice, "random", 1, 1, 0.3, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
+          if(this.irritatingFrame == irritating[0].length + thinking_typing.length - 1){
+            this.soundEpochCount = 0;
+          }
+          if(this.irritatingFrame >= irritating[0].length + thinking_typing.length && this.irritatingFrame < irritating[0].length * epoch + thinking_typing.length){
+            this.emotionSound(hitTableSound, 0, epoch, irritating[0].length, 1.0, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          }
+
         }else if (this.irritatingFrame >= irritating[0].length * epoch + thinking_typing.length) {
           this.thinking();
         }
@@ -593,9 +608,16 @@ class Agent{
         }else if (this.irritatingFrame >= thinking_typing.length && this.irritatingFrame < irritating[1].length * epoch + thinking_typing.length) {
           this.emotionAnimation(irritating[1], epoch);
 
-          if(this.irritatingFrame == thinking_typing.length + irritating[1].length){
-            this.emotionSound(irritatingVoice, "random", epoch, irritating[1].length, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          if(this.irritatingFrame == thinking_typing.length + 1){
+            this.emotionSound(irritatingVoice, "random", 1, 1, 0.3, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
+          if(this.irritatingFrame == irritating[0].length + thinking_typing.length - 1){
+            this.soundEpochCount = 0;
+          }
+          if(this.irritatingFrame >= irritating[0].length + thinking_typing.length && this.irritatingFrame < irritating[0].length * epoch + thinking_typing.length){
+            this.emotionSound(hitTableSound, 0, epoch, irritating[0].length, 1.0, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          }
+
         }else if (this.typingirritatingFrame >= irritating[1].length * epoch + thinking_typing.length) {
           this.typing(8, "sustain", 0, 0.5);
         }
@@ -604,9 +626,16 @@ class Agent{
         if(this.irritatingFrame < irritating[1].length * epoch){
           this.emotionAnimation(irritating[1], epoch);
 
-          if(this.irritatingFrame == thinking_typing.length + irritating[1].length){
-            this.emotionSound(irritatingVoice, "random", epoch, irritating[1].length, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          if(this.irritatingFrame == 1){
+            this.emotionSound(irritatingVoice, "random", 1, 1, 0.3, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
+          if(this.irritatingFrame == irritating[0].length - 1){
+            this.soundEpochCount = 0;
+          }
+          if(this.irritatingFrame >= irritating[0].length && this.irritatingFrame < irritating[0].length * epoch){
+            this.emotionSound(hitTableSound, 0, epoch, irritating[0].length, 1.0, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+          }
+
         }else if(this.irritatingFrame >= irritating[1].length * epoch){
           this.typing(8, "sustain", 0, 0.5);
         }
@@ -689,7 +718,7 @@ class Agent{
           this.emotionAnimation(surprising[0], epoch);
 
           if(this.surprisedFrame == 5){
-            this.emotionSound(suprisedVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(suprisedVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
         }else if (this.surprisedFrame >= surprising[0].length) {
           this.thinking();
@@ -703,7 +732,7 @@ class Agent{
           this.emotionAnimation(surprising[0], epoch);
 
           if(this.surprisedFrame == thinking_typing.length + 5){
-            this.emotionSound(suprisedVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(suprisedVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
         }else if (this.surprisedFrame >= surprising[0].length * epoch + thinking_typing.length) {
           this.thinking();
@@ -719,7 +748,7 @@ class Agent{
           this.emotionAnimation(surprising[1], epoch);
 
           if(this.surprisedFrame == thinking_typing.length + 5){
-            this.emotionSound(suprisedVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(suprisedVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
         }else if (this.surprisedFrame >= surprising[1].length * epoch + thinking_typing.length) {
           this.typing(8, "sustain", 0, 0.5);
@@ -731,7 +760,7 @@ class Agent{
           this.emotionAnimation(surprising[1], epoch);
 
           if(this.surprisedFrame == 5){
-            this.emotionSound(suprisedVoice, "random", 1, 1, 0.5, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+            this.emotionSound(suprisedVoice, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
           }
         }else if(this.surprisedFrame >= surprising[1].length * epoch){
           this.typing(8, "sustain", 0, 0.5);

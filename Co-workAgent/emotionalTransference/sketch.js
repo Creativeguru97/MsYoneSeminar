@@ -4,7 +4,6 @@ let background0;
 let background1;
 let flares = [];
 
-
 let agent;//Class
 let iPhone;//Class
 let world;//Class
@@ -584,11 +583,8 @@ canvas = p => {
 
 }//emotionProbability end
 
-
   p.mode_emotionalTransference = (duration) => {
-
     p.defaultActionChoicer(duration);
-
     p.emotionProbability(duration);
 
     if(isThinking == true){
