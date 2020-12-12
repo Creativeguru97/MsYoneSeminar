@@ -36,6 +36,9 @@ class Agent{
     //To store elapsed time of each emotion state
     this.laughingFrame = 0;
     this.caringFrame = 0;
+
+    this.epochCount = 0;
+    this.soundEpochCount = 0;
   }
 
   interval(min, max){
@@ -101,7 +104,6 @@ class Agent{
       }
     }else if(timeDirection == "inverted"){
 
-      console.log("emotionArrayIndex: " + this.emotionArrayIndex);
       myp5.image(animationArray[this.emotionArrayIndex], 480, 270, 960, 540);
       //epochCount is reseted everytime in emotionProbability() in sketch.js!
       if(this.epochCount < epoch){
@@ -117,6 +119,29 @@ class Agent{
     }
   }
 
+  emotionSound(soundArray, index, epoch, freqency, volume, mode){
+    if(myp5.frameCount % freqency == 0){
+      if(this.soundEpochCount < epoch){
+        let index_;
+
+        if(index = "random"){
+          index_ = myp5.int(myp5.random(0, soundArray.length));
+        }else{
+          index_ = index;
+        }
+
+        console.log(soundArray);
+        console.log("soundArray.length: "+soundArray.length);
+        console.log("index_: "+index_);
+
+        soundArray[index_].playMode(mode);
+        soundArray[index_].setVolume(volume);
+        soundArray[index_].play();
+
+        this.soundEpochCount++;
+      }
+    }
+  }
 
   thinking(){
     if(previousAction == "typing" && this.thinkingFrame < 21){
@@ -272,13 +297,16 @@ class Agent{
     }else if(this.laughingFrame >= laughingTransition.length &&
     this.laughingFrame < laughingTransition.length + (laughing.length - 1) * loop) {
 
-      console.log("laugh");
-
       if(this.laughingFrame == laughingTransition.length){
         this.emotionArrayIndex = 0;
       }
 
       this.emotionAnimation(laughing, loop, "forward");
+
+      if(this.laughingFrame == laughingTransition.length + 3){
+        this.emotionSound(laughingVoice, "random", 1, 1, 0.1, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+        console.log("hello?");
+      }
 
     }else if(this.laughingFrame >= laughingTransition.length + (laughing.length - 1) * loop &&
     this.laughingFrame < (laughingTransition.length - 1) * 2 + (laughing.length - 1) * loop) {
@@ -302,6 +330,10 @@ class Agent{
   caring(){
     if(this.caringFrame < caring.length){
       this.emotionAnimation(caring, 1, "forward");
+
+      if(this.caringFrame == 5){
+        this.emotionSound(sigh, "random", 1, 1, 0.2, "sustain"); //(soundArray, index, epoch, freqency, volume, mode)
+      }
     }else if(this.caringFrame >= caring.length && this.caringFrame < caring.length + 90) {
       myp5.image(caring[caring.length-1], 480, 270, 960, 540);
     }else if (this.caringFrame >= caring.length+90 && this.caringFrame < caring.length * 2 + 90) {

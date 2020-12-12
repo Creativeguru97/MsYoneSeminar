@@ -59,7 +59,8 @@ let previousAction = "thinking";
 let intervalCount = 0;
 let randomNum = Math.random(450, 1800);
 
-
+let laughingVoice = [];
+let sigh = [];
 
 canvas = p => {
 
@@ -122,6 +123,15 @@ canvas = p => {
       scrollingSound[i] = p.loadSound("/soundEffects/scrolling/scrolling"+i+".mp3");
     }
     ambientSound = p.loadSound("/soundEffects/citySounds/ambience.mp3");
+
+    //Emotions relevant
+    for(let i=0; i < 3; i++){
+      laughingVoice[i] = p.loadSound("/soundEffects/laughing/androgynous/laugh"+i+".mp3");
+    }
+
+    for(let i=0; i<3; i++){
+      sigh[i] = p.loadSound("/soundEffects/caring/androgynous/sigh"+i+".mp3");
+    }
   }
 
 
@@ -351,6 +361,7 @@ canvas = p => {
       agent.emotionArrayIndex = 0;
 
       agent.epochCount = 0;//reinitialize for loopAnimation()
+      agent.soundEpochCount = 0;
 
       agent.laughingFrame = 0;
       agent.caringFrame = 0;
