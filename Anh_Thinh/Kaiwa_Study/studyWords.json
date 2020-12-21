@@ -1,0 +1,20 @@
+
+{
+  "study_words":[
+    {
+    "english": "hello",
+    "pronounce": "ヘロー",
+    "meaning": "こんにちは"
+    },
+    {
+      "english": "Nice to meet you",
+      "pronounce": "ナイス・トゥー・ミート・ユー",
+      "meaning": "初めまして"
+    },
+    {
+      "english": "What your name",
+      "pronounce": "ウォット・ヨー・ネーム",
+      "meaning": "お名前は"
+    }
+  ]
+}
