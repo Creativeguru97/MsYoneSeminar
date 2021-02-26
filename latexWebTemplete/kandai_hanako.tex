@@ -1,0 +1,40 @@
+%%% 関西大学総合情報学部 松下研究室 所信表明用 TeX テンプレート Ver 1.０ (201９/３/７) %%%
+
+% スタイルファイルは matsushita-zemi.cls を使います
+\documentclass[a4j]{matsushita-zemi} 
+
+%図表を使うための設定です
+\usepackage[dvipdfmx]{graphicx}
+\graphicspath{{./fig/}}
+ \usepackage{framed}
+ \usepackage{url}
+
+%% タイトル (長くなる場合は\\で適宜改行すること)
+\title{タイトル}
+
+
+%%% 氏名 (姓・名の間は半角スペース) %%%
+\idnum{情12-3456}
+\author{関大 花子}
+
+
+% --------------------------------------------------------
+\begin{document}
+\maketitle
+
+%%% 以下，本文 %%%
+\section{はじめに}
+\label{background} 
+
+
+\section{おわりに}
+
+\section*{謝辞}
+
+
+%%% 参考文献 %%%
+%\bibliographystyle{matsort}
+\bibliographystyle{matsort}
+\bibliography{bibsample.bib}
+
+\end{document}
